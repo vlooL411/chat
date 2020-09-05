@@ -1,0 +1,39 @@
+$back: #111
+$usersvg: white
+$title: white
+$online: gray
+$toolsbtnsvg: white
+$toolsbtnsvghov: gray
+
+.bar
+    padding: .6em
+    background-color: $back
+    width: 100%
+    display: grid
+    grid-template-columns: 1fr auto
+    &_block
+        display: grid
+        grid-template-columns: auto 1fr
+        grid-template-rows: 1fr auto
+        & > img
+            max-height: 32px
+        &_title
+            margin: 0 .8rem
+            font-size: 1em
+            color: $title
+        &_online
+            font-size: .7em
+            color: $online
+        & > svg
+            color: $usersvg
+    &_tools
+        display: flex
+        align-items: center
+        & > button
+            background: none
+            & > svg
+                margin: 0 0.2em
+                font-size: 1.6em
+                color: $toolsbtnsvg
+                &:hover
+                    color: $toolsbtnsvghov

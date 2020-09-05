@@ -1,0 +1,105 @@
+$back: var(--sign)
+$border: #b88181
+$inputcolor: #fff
+$invalid: #d12929
+$title: white
+$switch: white
+$switcha: gray
+$switchahov: white
+$notife: #437388
+$button: #465961
+$buttonhover: #46596157
+
+.sign
+    background-color: $back
+    border: 1px solid $border
+    border-radius: 1rem
+    height: 23.5rem
+    width: 24rem
+    min-height: 90px
+    min-width: 120px
+    display: flex
+    align-content: center
+    justify-content: center
+    flex-wrap: wrap
+    &_title
+        text-align: center
+        color: $title
+        font-size: 1.7em
+        margin-bottom: .8rem
+    &_switch
+        user-select: none
+        text-align: center
+        width: 100%
+        height: 2.5rem
+        color: $switch
+        a
+            color: $switcha
+            &:hover
+                color: $switchahov
+                background: none
+    button
+        margin: .5rem 0 .7rem
+        padding: 1em
+        background-color: $button
+        width: 80%
+        border-radius: .7rem
+        justify-self: center
+        &:hover
+            background-color: $buttonhover
+    input
+        font-size: 1em
+        width: 90%
+        border: none
+        background: none
+        color: $inputcolor
+        margin: .5rem
+        padding: .4em .2em
+        border-radius: 5px
+        &[type=email], &[type=password], &[type=text]
+            &:invalid
+                background-color: $invalid
+    &_password
+        width: 90%
+        position: relative
+        user-select: none
+        display: flex
+        align-items: center
+        justify-items: flex-end
+        input
+            width: 100%
+            margin-left: 0
+            margin-right: 0
+            padding-right: 27px
+        svg
+            right: 5px
+            position: absolute
+            z-index: 999999
+            color: whitesmoke
+    &_notife
+        width: 100%
+        color: $notife
+        text-align: center
+        margin: .2rem 0 .8rem
+
+    &in
+        padding: 0 1em
+        display: flex
+        flex-wrap: wrap
+        flex-direction: row
+        justify-content: center
+        &_forms
+            width: 100%
+            display: flex
+            justify-content: center
+            & > form
+                & > button
+                    background: none
+                    width: auto
+                    width: 22px
+                    height: 22px
+                    background-size: cover
+                    & > img
+                        max-height: 22px
+    &up
+        background-color: red

@@ -1,0 +1,50 @@
+@import './themes/light'
+@import './themes/dark'
+
+*
+  box-sizing: border-box
+html, body, #__next, #__next > div
+  height: 100vh
+  width: 100%
+  padding: 0
+  margin: 0
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif
+  background: #09141c
+a
+  color: inherit
+  text-decoration: none
+button, a
+  padding: 1px
+  color: white
+  border: none
+  //background: #23272b
+  background: none
+  user-select: none
+  &:hover
+    background-color: #000
+  &:focus
+    outline: none
+    background: gray
+textarea
+  color: inherit
+  font-family: inherit
+  background: none
+  border: none
+  &:focus
+    outline: none
+
+.total_area
+  z-index: 9999
+  position: absolute
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100%
+  animation: total_fill 10s ease-out
+  background-color: #00000088
+@keyframes total_fill
+  0%
+    background-color: #000
+  100%
+    background-color: #00000088
