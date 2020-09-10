@@ -3,7 +3,7 @@ import { gql, useQuery } from '@apollo/client'
 import { ReactElement } from 'react'
 import { Chat, ID } from '../../apolloclient/types'
 import { WhatDate, GetYesterdey } from '../common/WhatDate'
-import Loader from '../common/Loader'
+import Loader from '../Loader'
 
 const GetChatsExploler = gql`
     query chats($start: Int!, $end: Int!) {

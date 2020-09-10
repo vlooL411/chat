@@ -2,9 +2,7 @@ import { NextApiRequest } from "next";
 import { ID, Friend, IMessangerAsync } from "./../apolloclient/types";
 import { Chat, User } from "../apolloclient/types";
 
-const { HOST } = process.env;
 const { HOST_API } = process.env;
-const { HOST_GRAPHQL } = process.env;
 
 export default class MessangerMongoDB implements IMessangerAsync {
   async PostQuery(
@@ -16,11 +14,7 @@ export default class MessangerMongoDB implements IMessangerAsync {
       method: "POST",
       body: JSON.stringify(body),
       credentials: "include",
-      headers: {
-        ...req?.headers,
-        "Access-Control-Allow-Origin": HOST,
-        "Access-Control-Allow-Credentials": "true",
-      } as any,
+      headers: { ...req?.headers } as any,
     });
 
     return data.json().then((el) => el?.data);
@@ -39,8 +33,8 @@ export default class MessangerMongoDB implements IMessangerAsync {
   Users = (start: number, end: number, req: NextApiRequest): Promise<User[]> =>
     this.PostQuery("User/gets", { start, end }, req);
 
-  Chat = (id: ID, req: NextApiRequest): Promise<Chat> =>
-    this.PostQuery("Chat", { id }, req);
+  Chat = (chatid: ID, req: NextApiRequest): Promise<Chat> =>
+    this.PostQuery("Chat", { chatid }, req);
 
   Chats = (start: number, end: number, req: NextApiRequest): Promise<Chat[]> =>
     this.PostQuery("Chat/gets", { start, end }, req);

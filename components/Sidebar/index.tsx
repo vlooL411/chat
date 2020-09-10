@@ -4,7 +4,7 @@ import { IconDefinition, faAlignJustify, faEject, faDoorOpen } from "@fortawesom
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { UrlObject } from 'url'
 import Link from 'next/link'
-import ChangeThemes from '../ChangeThemes/ChangeThemes'
+import ChangeThemes from '../ChangeThemes'
 import { signOut } from 'next-auth/client'
 
 type faText = {

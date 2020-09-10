@@ -33,13 +33,15 @@ detect(PORT_GRAPHQL, (err, port) => {
     tracing: isDev,
     subscriptions: {
       path: GRAPHQLSUB,
+      onConnect: () => console.log("Subscribtion connect".bgGreen),
+      onDisconnect: () => console.log("Subscribtion disconnect".bgGreen),
     },
   });
 
   //don't work
   apolloServer.graphqlPath = GRAPHQL;
 
-  // TODO figure out how to install another PORT, graphqlPath and subscriptionsPath
+  // TODO figure out how to set another PORT, graphqlPath
   apolloServer.listen().then(({ url, subscriptionsUrl }) => {
     console.log(`🚀 Server ready at ${url}`.bgMagenta);
     console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`.bgMagenta);

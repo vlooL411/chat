@@ -60,7 +60,7 @@ export default gql`
     User(id: ID!): User
     UserID(name: String, email: String): User
     Users(start: Int!, end: Int!): [User]
-    Chat(id: ID!): Chat
+    Chat(chatid: ID!): Chat
     Chats(start: Int!, end: Int!): [Chat]
     Friends(userid: ID!): [Friend]
   }
@@ -76,7 +76,7 @@ export default gql`
   }
 
   type Subscription {
-    AddMessage: Chat
+    AddMessage: Message
     ChangeMessage: Message
     RemoveMessage: Message
   }

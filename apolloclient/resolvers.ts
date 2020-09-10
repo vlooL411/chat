@@ -20,7 +20,8 @@ export const resolvers = (
     User: async (_, { id }, { req }): Promise<User> => iMessanger.User(id, req),
     Users: async (_, { start, end }, { req }): Promise<User[]> =>
       iMessanger.Users(start, end, req),
-    Chat: async (_, { id }, { req }): Promise<Chat> => iMessanger.Chat(id, req),
+    Chat: async (_, { chatid }, { req }): Promise<Chat> =>
+      iMessanger.Chat(chatid, req),
     Chats: async (_, { start, end }, { req }): Promise<Chat[]> =>
       iMessanger.Chats(start, end, req),
     Friends: async (_, { user_id }, { req }): Promise<Friend[]> =>
@@ -28,12 +29,10 @@ export const resolvers = (
   },
   Mutation: {
     SendMessage: async (_, { chatid, text }, { req }): Promise<string> =>
-      iMessanger.SendMessage(chatid, text, req).then(async (mes) => {
-        if (isString(mes)) return mes as string;
+      iMessanger.SendMessage(chatid, text, req).then(async (AddMessage) => {
+        if (isString(AddMessage)) return AddMessage as string;
 
-        await pubsub.publish(Sub.ADD_MESSAGE, {
-          AddMessage: { _id: chatid, messages: [mes as Message] } as Chat,
-        });
+        await pubsub.publish(Sub.ADD_MESSAGE, { AddMessage });
         return "Message send";
       }),
     ChangeMessage: async (

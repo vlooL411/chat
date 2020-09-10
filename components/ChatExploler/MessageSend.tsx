@@ -4,7 +4,7 @@ import { gql, useMutation } from '@apollo/client'
 import style from './styles/messageSend.module.sass'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperclip, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import Loader from '../common/Loader'
+import Loader from '../Loader'
 
 const SendMessage = gql`
     mutation sendMessage($chatid: ID!, $text: String!) {

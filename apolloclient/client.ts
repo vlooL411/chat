@@ -1,3 +1,4 @@
+import { Chat } from "./types";
 import {
   split,
   HttpLink,
@@ -22,6 +23,7 @@ export type ResolverContext = {
   res?: NextApiResponse;
 };
 
+const { HOST } = process.env;
 const { HOST_GRAPHQL } = process.env;
 const { HOST_GRAPHGQLSUB } = process.env;
 
@@ -34,6 +36,14 @@ const wsLink = new WebSocketLink({
   uri: HOST_GRAPHGQLSUB,
   reconnect: true,
   webSocketImpl: w3cwebsocket,
+  options: {
+    connectionParams: {
+      headers: {
+        "Access-Control-Allow-Origin": HOST,
+        "Access-Control-Allow-Credentials": "true",
+      },
+    },
+  },
 });
 
 const SplitHTTPWS = isBrowser
@@ -49,13 +59,25 @@ const SplitHTTPWS = isBrowser
     )
   : httpLink;
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Chat: {
+      fields: {
+        messages: {
+          merge: (_, incoming) => incoming,
+        },
+      },
+    },
+  },
+});
+
 const createApolloClient = (
   context?: ResolverContext
 ): ApolloClient<NormalizedCacheObject> =>
   new ApolloClient({
     ssrMode,
+    cache,
     link: ssrMode ? new SchemaLink({ schema, context }) : SplitHTTPWS,
-    cache: new InMemoryCache(),
   });
 
 export const initializeApollo = (

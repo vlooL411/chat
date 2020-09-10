@@ -1,4 +1,4 @@
-import Loader from '../common/Loader'
+import Loader from '../Loader'
 import { useRef, useState } from 'react'
 import style from './styles/messageBlock.module.sass'
 import { gql, useMutation, useQuery } from '@apollo/client'

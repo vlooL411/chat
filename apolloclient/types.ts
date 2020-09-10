@@ -59,7 +59,7 @@ export interface IMessanger {
   User(id: ID): User;
   UserID(name?: string, email?: string, req?: NextApiRequest): User;
   Users(start: number, end: number): User[];
-  Chat(id: ID): Chat;
+  Chat(chatid: ID): Chat;
   Chats(start: number, end: number): Chat[];
   Friends(id: ID): Friend[];
 
@@ -77,7 +77,7 @@ export interface IMessangerAsync {
   User(id: ID, req: NextApiRequest): Promise<User>;
   UserID(name?: string, email?: string, req?: NextApiRequest): Promise<User>;
   Users(start: number, end: number, req: NextApiRequest): Promise<User[]>;
-  Chat(id: ID, req: NextApiRequest): Promise<Chat>;
+  Chat(chatid: ID, req: NextApiRequest): Promise<Chat>;
   Chats(start: number, end: number, req: NextApiRequest): Promise<Chat[]>;
   Friends(id: ID, req: NextApiRequest): Promise<Friend[]>;
 

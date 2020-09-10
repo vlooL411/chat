@@ -10,7 +10,7 @@ const readyStates = [
   "disconnecting",
 ];
 
-const dbConnect = async () => {
+export default async () => {
   const { readyState } = connection;
 
   console.info("MongoDB State:".green, readyStates[readyState]);
@@ -26,5 +26,3 @@ const dbConnect = async () => {
   connection.on("error", console.error.bind(console, "connection error:"));
   connection.once("open", () => console.log("MongoDB Open connection"));
 };
-
-export default dbConnect;

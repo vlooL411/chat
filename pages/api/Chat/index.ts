@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { id: chatid } = body as { id: ID };
+        const { chatid } = body as { chatid: ID };
         if (dataApi.Wrong(!chatid, "Data wrong: Enter id for chat")) return;
 
         const userid = await dataApi.TrustUserID();

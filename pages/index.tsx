@@ -1,9 +1,9 @@
 import { ReactElement, useState, useMemo } from "react";
-import Chats from "../components/Chats/Chats"
-import FriendsList from "../components/FriendsList/FriendsList"
-import Sidebar from "../components/Sidebar/sidebar";
+import Chats from "../components/Chats"
+import FriendsList from "../components/FriendsList"
+import Sidebar from "../components/Sidebar";
 import { faComment, faUsers, faSlidersH } from "@fortawesome/free-solid-svg-icons"
-import ChatExploler from "../components/ChatExploler/ChatExploler";
+import ChatExploler from "../components/ChatExploler";
 import { ID } from "../apolloclient/types";
 
 enum Panes {
@@ -22,10 +22,6 @@ const Index = (): ReactElement => {
     }
   }, [paneCurrent])
 
-  const chatExploler =
-    useMemo<ReactElement>(() => <ChatExploler id={chatIDCurrent} />,
-      [chatIDCurrent])
-
   const sidebar = useMemo<ReactElement>(() =>
     <Sidebar faBlocks={
       [{ fa: faComment, text: 'Chats', onClick: () => setPaneCurrent(Panes.Chats) },
@@ -36,7 +32,7 @@ const Index = (): ReactElement => {
   return <div style={{ display: 'flex', height: 'inherit' }}>
     {sidebar}
     {switchPane}
-    {chatExploler}
+    <ChatExploler chatid={chatIDCurrent} />
   </div>
 }
 
