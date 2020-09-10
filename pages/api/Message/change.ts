@@ -1,7 +1,7 @@
-import { Chat, ID } from "../../../apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
 import chats from "../../../models/chats";
-import DataApi from "../DataApi";
+import DataApi from "../../../base/api/DataApi";
+import { NextApiRequest, NextApiResponse } from "next";
+import { ID, Message } from "../../../apolloclient/types";
 
 type BodyType = { chatid: ID; text: string; messageid: ID };
 
@@ -15,10 +15,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const { chatid, text, messageid } = body as BodyType;
 
         const condition = !chatid || !text || !messageid;
-        if (dataApi.Wrong(condition, "Data wrong: Enter chatid or text"))
-          return;
+        if (dataApi.Wrong(condition, "Enter chatid or text")) return;
 
-        const changeMessage: Chat = await chats.updateOne(
+        const message = {
+          _id: messageid,
+          text,
+          isChange: true,
+        } as Message;
+
+        const { ok } = await chats.updateOne(
           { _id: chatid, messages: { $elemMatch: { _id: messageid } } },
           {
             $set: {
@@ -28,9 +33,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           }
         );
 
-        dataApi.True<string>(
-          changeMessage ? "Message change" : "Message don't change"
-        );
+        dataApi.True<Message>(ok != 0 ? message : "Message don't change");
       } catch (error) {
         dataApi.Error(error, "Error request message change");
       }

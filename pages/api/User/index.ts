@@ -1,7 +1,7 @@
 import users from "../../../models/users";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ID, User } from "../../../apolloclient/types";
-import DataApi from "../DataApi";
+import DataApi from "../../../base/api/DataApi";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;

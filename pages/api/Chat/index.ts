@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { Chat, ID } from "./../../../apolloclient/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import chats from "../../../models/chats";
-import DataApi from "../DataApi";
+import DataApi from "../../../base/api/DataApi";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;

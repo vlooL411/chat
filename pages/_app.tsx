@@ -3,7 +3,14 @@ import { Provider } from 'next-auth/client'
 import { initializeApollo } from "../apolloclient/client"
 import Signin from "../components/Sign/Signin"
 import { ApolloProvider } from "@apollo/client"
-import { ReactElement, useState, createContext, useMemo, useEffect } from "react"
+import { ReactElement, useState, createContext } from "react"
+
+const { RUN_APOLLO_SERVER } = process.env;
+//TODO try change
+//need for run apollo server
+(async () => {
+  await fetch(RUN_APOLLO_SERVER)
+}).call(null)
 
 export enum Themes {
   light = 'light',

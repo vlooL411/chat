@@ -1,38 +1,37 @@
-import { Chat } from "../../../apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
 import chats from "../../../models/chats";
+import DataApi from "../../../base/api/DataApi";
+import { NextApiRequest, NextApiResponse } from "next";
+import { ID, Message } from "./../../../apolloclient/types";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
+
+  const dataApi = new DataApi(req, res);
   switch (method) {
     case "POST":
       try {
-        const { chat_id, message_id, user_id } = JSON.parse(body);
+        const { chatid, messageid } = body as { chatid: ID; messageid: ID };
 
-        if (!chat_id || !message_id) {
-          res.status(201).json({ success: false, error: "data don't trust" });
-          return;
-        }
-        const removeMessage: Chat = await chats.updateOne(
-          { _id: chat_id },
+        const condition = !chatid || !messageid;
+        if (dataApi.Wrong(condition, "Enter chatid or messageid")) return;
+
+        const { ok } = await chats.updateOne(
+          { _id: chatid },
           {
             $pull: {
-              messages: { _id: message_id } as never,
+              messages: { _id: messageid } as never,
             },
           },
           { multi: true }
         );
-
-        res.send({
-          success: true,
-          data: removeMessage ? "Message remove" : "Message don't exist",
-        });
+        dataApi.True<string>(
+          ok != 0 ? "Message remove" : "Message don't remove"
+        );
       } catch (error) {
-        res.status(400).json({ success: false, error });
+        dataApi.Error(error, "Error request message change");
       }
       break;
     default:
-      res.status(400).json({ success: false, error: "method don't exist" });
-      break;
+      dataApi.Default();
   }
 };

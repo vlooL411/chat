@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, KeyboardEvent } from 'react'
 import { ID } from '../../apolloclient/types'
 import { gql, useMutation } from '@apollo/client'
 import style from './styles/messageSend.module.sass'
@@ -34,6 +34,11 @@ const MessageSend = ({ chatid }: Props) => {
         }
     }
 
+    const sendMessageKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.ctrlKey && e.keyCode == 13 /* == Enter */)
+            sendMessage()
+    }
+
     const textAreaScroll = () => {
         const { current } = textBlockRef
         current.style.height = `${current.scrollHeight}px`
@@ -50,6 +55,7 @@ const MessageSend = ({ chatid }: Props) => {
         <Loader loading={loading} />
         <textarea ref={textBlockRef}
             onChange={textAreaChange} onScroll={textAreaScroll}
+            onKeyDown={e => sendMessageKey(e)}
             placeholder='Write a message...' />
         <button onClick={() => sendMessage()}>
             <FontAwesomeIcon icon={faArrowRight} />

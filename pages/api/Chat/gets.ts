@@ -1,7 +1,7 @@
 import { Chat, User } from "./../../../apolloclient/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import chats from "../../../models/chats";
-import DataApi from "../DataApi";
+import DataApi from "../../../base/api/DataApi";
 import users from "../../../models/users";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

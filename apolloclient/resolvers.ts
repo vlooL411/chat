@@ -1,110 +1,74 @@
-import { GetYesterdey } from "./../components/common/WhatDate";
-import {
-  User,
-  Chat,
-  Friend,
-  Message,
-  ChatCreater,
-  IMessangerAsync,
-} from "./types";
-import { IResolvers } from "apollo-server-micro";
+import { PubSub } from "graphql-subscriptions";
+/* import { MQTTPubSub } from "graphql-mqtt-subscriptions"; */
+import { IResolvers } from "apollo-server";
+import { User, Chat, Friend, IMessangerAsync, Message } from "./types";
 
-const Friends = (userID: number): Friend[] =>
-  Array.from(
-    { length: 10 },
-    (_, i) =>
-      ({
-        _id: i * userID,
-        user_id: i,
-        date: new Date(),
-        whoIsFriend: `Title ${i}`,
-      } as Friend)
-  );
+const pubsub = new PubSub();
 
-const Users: User[] = Array.from({ length: 10 }, (_, i) => ({
-  _id: i,
-  email: "",
-  name: `Name ${i}`,
-  password: `Pass ${i}`,
-  status: Array(i * i)
-    .fill(`Status ${i}`)
-    .join(" "),
-  chats_id: Array(i).fill(i),
-  friends: Friends(i),
-  isOnline: i % 2 == 0,
-  isOnlineMobile: i % 4 == 0,
-  dateLastOnline: i % 2 == 0 ? new Date() : GetYesterdey(new Date()),
-}));
-
-const Messages = (idChat: number, count: number): Message[] =>
-  Array.from({ length: count }, (_, i) => ({
-    _id: i,
-    userid: Users[i]._id,
-    date: new Date(),
-    text: `Text ${idChat} ${i}`,
-  }));
-
-const Chats: Chat[] = Array.from({ length: 10 }, (_, i) => ({
-  _id: i,
-  creater_id: Users[i]._id,
-  creater: ChatCreater.User,
-  date: new Date(),
-  title: `Title ${i}`,
-  users: Array(i).fill(Users[i]),
-  messages: Messages(i, i),
-}));
-
-//obj, args, context, info - Query
-export const resolverss: IResolvers | IResolvers[] = {
-  Query: {
-    Users: (_, { start, end }): User[] => Users.slice(start, end),
-    Chat: (_, { id }): Chat => Chats[Chats.findIndex((el) => el._id == id)],
-    Chats: (_, { start, end }): Chat[] => {
-      for (let i = 0; i < Chats.length; i++)
-        Chats[i].lastMessage = Chats[i].messages[Chats[i].messages.length - 1];
-      return Chats.slice(start, end);
-    },
-    Friends: (_, { id }): Friend => {
-      const user = Users[Users.findIndex((el) => el._id == id)];
-      return user.friends[user.friends.findIndex((el) => el.user_id == id)];
-    },
-  },
-};
-
-/* const pubsub = new PubSub(); */
 enum Sub {
-  ADD_MESSAGE,
-  CHANGE_MESSAGE,
+  ADD_MESSAGE = "ADD_MESSAGE",
+  CHANGE_MESSAGE = "CHANGE_MESSAGE",
+  REWOVE_MESSAGE = "REWOVE_MESSAGE",
 }
+
+const isString = (obj: any) => typeof obj === "string";
 
 export const resolvers = (
   iMessanger: IMessangerAsync
 ): IResolvers | IResolvers[] => ({
   Query: {
-    User: async (_, { id }, { req }): Promise<User> =>
-      await iMessanger.User(id, req),
+    User: async (_, { id }, { req }): Promise<User> => iMessanger.User(id, req),
     Users: async (_, { start, end }, { req }): Promise<User[]> =>
-      await iMessanger.Users(start, end, req),
-    Chat: async (_, { id }, { req }): Promise<Chat> =>
-      await iMessanger.Chat(id, req),
+      iMessanger.Users(start, end, req),
+    Chat: async (_, { id }, { req }): Promise<Chat> => iMessanger.Chat(id, req),
     Chats: async (_, { start, end }, { req }): Promise<Chat[]> =>
-      await iMessanger.Chats(start, end, req),
+      iMessanger.Chats(start, end, req),
     Friends: async (_, { user_id }, { req }): Promise<Friend[]> =>
-      await iMessanger.Friends(user_id, req),
+      iMessanger.Friends(user_id, req),
   },
   Mutation: {
     SendMessage: async (_, { chatid, text }, { req }): Promise<string> =>
-      await iMessanger.SendMessage(chatid, text, req),
+      iMessanger.SendMessage(chatid, text, req).then(async (mes) => {
+        if (isString(mes)) return mes as string;
+
+        await pubsub.publish(Sub.ADD_MESSAGE, {
+          AddMessage: { _id: chatid, messages: [mes as Message] } as Chat,
+        });
+        return "Message send";
+      }),
     ChangeMessage: async (
       _,
       { chatid, messageid, text },
       { req }
     ): Promise<string> =>
-      await iMessanger.ChangeMessage(chatid, messageid, text, req),
+      iMessanger
+        .ChangeMessage(chatid, messageid, text, req)
+        .then(async (ChangeMessage) => {
+          if (isString(ChangeMessage)) return ChangeMessage as string;
+
+          await pubsub.publish(Sub.CHANGE_MESSAGE, { ChangeMessage });
+          return "Message change";
+        }),
     RemoveMessage: async (_, { chatid, messageid }, { req }): Promise<string> =>
-      await iMessanger.RemoveMessage(chatid, messageid, req),
+      iMessanger
+        .RemoveMessage(chatid, messageid, req)
+        .then(async (mes: string) => {
+          if (mes == "Message remove")
+            await pubsub.publish(Sub.REWOVE_MESSAGE, {
+              RemoveMessage: { _id: messageid } as Message,
+            });
+          return mes;
+        }),
   },
   Subscription: {
-    AddMessage: async (_, { chatid }) => await iMessanger.AddMessage(chatid),
+    AddMessage: {
+      subscribe: () => pubsub.asyncIterator(Sub.ADD_MESSAGE),
+    },
+    ChangeMessage: {
+      subscribe: () => pubsub.asyncIterator(Sub.CHANGE_MESSAGE),
+    },
+    RemoveMessage: {
+      subscribe: () => pubsub.asyncIterator(Sub.REWOVE_MESSAGE),
+    },
   },
 });

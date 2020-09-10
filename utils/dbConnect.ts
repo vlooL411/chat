@@ -1,3 +1,4 @@
+import "colors";
 import { connect, connection } from "mongoose";
 
 const { DB_HOST } = process.env;
@@ -12,7 +13,7 @@ const readyStates = [
 const dbConnect = async () => {
   const { readyState } = connection;
 
-  console.info("State:", readyStates[readyState]);
+  console.info("MongoDB State:".green, readyStates[readyState]);
   if (connection.readyState == 1) return;
 
   await connect(DB_HOST, {
@@ -20,10 +21,10 @@ const dbConnect = async () => {
     useUnifiedTopology: true,
   });
 
-  console.info("Connection:", readyStates[readyState]);
+  console.info("MongoDB Connection:".green, readyStates[readyState]);
 
   connection.on("error", console.error.bind(console, "connection error:"));
-  connection.once("open", () => console.log("Open connection"));
+  connection.once("open", () => console.log("MongoDB Open connection"));
 };
 
 export default dbConnect;

@@ -1,7 +1,6 @@
-import { TokenType } from "./auth/[...nextauth]";
+import { TokenType } from "../../pages/api/auth/[...nextauth]";
 import jwt from "next-auth/jwt";
-import { ID } from "./../../apolloclient/types";
-import { getSession } from "next-auth/client";
+import { ID } from "../../apolloclient/types";
 import { NextApiRequest } from "next";
 import { NextApiResponse } from "next";
 
@@ -16,7 +15,7 @@ class DataApi {
   }
 
   private GetToken = async (): Promise<TokenType> =>
-    await jwt.getToken({ req: this.req, secret: GOOGLE_SECRET });
+    (await jwt.getToken({ req: this.req, secret: GOOGLE_SECRET })) as TokenType;
 
   private TokenRespone = async () =>
     await this.res.status(401).send({

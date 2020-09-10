@@ -1,6 +1,7 @@
+import { Message } from "./types";
 import { gql } from "@apollo/client";
 
-export const typeDefs = gql`
+export default gql`
   scalar Date
 
   type User {
@@ -70,7 +71,13 @@ export const typeDefs = gql`
     RemoveMessage(chatid: ID!, messageid: ID!): String
   }
 
+  type string {
+    field: String
+  }
+
   type Subscription {
-    AddMessage(chatid: ID!, lastmessageid: ID): String
+    AddMessage: Chat
+    ChangeMessage: Message
+    RemoveMessage: Message
   }
 `;

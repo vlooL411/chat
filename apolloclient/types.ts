@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
 import { NextApiRequest } from "next";
-export type ID = number | string;
+
+export type ID = number | string | Types.ObjectId;
 
 export type User = {
   _id: ID;
@@ -67,7 +69,7 @@ export interface IMessanger {
   RemoveMessage(chatid: ID, message_id: ID): string;
 
   //Subscription
-  AddMessage(chatid: ID, lastmessage_id?: ID): string;
+  AddMessage(): string;
 }
 
 export interface IMessangerAsync {
@@ -80,23 +82,20 @@ export interface IMessangerAsync {
   Friends(id: ID, req: NextApiRequest): Promise<Friend[]>;
 
   //Mutation
-  SendMessage(chatid: ID, text: string, req: NextApiRequest): Promise<string>;
+  SendMessage(
+    chatid: ID,
+    text: string,
+    req: NextApiRequest
+  ): Promise<string | Message>;
   ChangeMessage(
     chatid: ID,
     messageid: ID,
     text: string,
     req: NextApiRequest
-  ): Promise<string>;
+  ): Promise<string | Message>;
   RemoveMessage(
     chatid: ID,
     messageid: ID,
     req: NextApiRequest
-  ): Promise<string>;
-
-  //Subscription
-  AddMessage(
-    chatid: ID,
-    lastmessageid?: ID,
-    req?: NextApiRequest
   ): Promise<string>;
 }

@@ -5,6 +5,7 @@ import { gql, useMutation, useQuery } from '@apollo/client'
 import { Message, User, ID } from '../../apolloclient/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEdit, faSave, faBan, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import TextAreaMessage from './TextAreaMessage'
 
 const GetUserAvatar = gql`
     query user($id: ID!) {
@@ -20,7 +21,7 @@ const ChangeMessage = gql`
 `
 const RemoveMessage = gql`
     mutation removeMessage($chatid: ID!, $messageid: ID!) {
-        RemoveMessage(chatid: $chat_id, messageid: $messageid)
+        RemoveMessage(chatid: $chatid, messageid: $messageid)
     }
 `
 
@@ -44,24 +45,6 @@ const MessageBlock = ({ chatid, message, maxTextHeight = '250px', maxTextWidth =
     const { data }
         = useQuery(GetUserAvatar, { variables: { id: message?.userid } })
 
-    const textAreaScroll = () => {
-        const { current } = textBlockRef
-        current.style.height = `${current.scrollHeight}px`
-    }
-
-    const textAreaChange = () => {
-        const { current } = textBlockRef
-        const { scrollHeight, clientHeight, scrollWidth, clientWidth } = current
-        const { maxHeight, maxWidth } = current.style
-
-        if (scrollHeight <= clientHeight)
-            current.style.height = 'auto'
-        if (scrollWidth >= clientWidth &&
-            scrollHeight < Number.parseInt(maxHeight) &&
-            scrollWidth < Number.parseInt(maxWidth))
-            current.style.width = `calc(${scrollWidth}px + 5ch)`
-    }
-
     const getHHMMPA = (date: Date): string => {
         const minute = date.getMinutes()
         const localeDate = date.toLocaleTimeString()
@@ -84,23 +67,19 @@ const MessageBlock = ({ chatid, message, maxTextHeight = '250px', maxTextWidth =
         setIsReadOnly(!isReadOnly)
     }
 
-    const deleteMes = () => {
-        removeMessageMut({ variables: { chatid, messageid: message?._id } })
-        setIsReadOnly(!isReadOnly)
-    }
+    const removeMes = () => removeMessageMut({ variables: { chatid, messageid: message?._id } })
     //#endregion
 
     const user = data?.User as User
     const { EMPTY_AVATAR_USER } = process.env
     return <div className={mes}>
         <img src={user?.image ?? EMPTY_AVATAR_USER} />
-        <div className={mes_block}>
+        <div className={mes_block} onDoubleClick={() => removeMes()}>
             <Loader loading={loadingRemove} />
             {isReadOnly ? <p className={mes_block_text}>{message?.text}</p> :
-                <textarea ref={textBlockRef} defaultValue={message?.text}
+                <TextAreaMessage ref={textBlockRef} defaultValue={message?.text}
                     className={mes_block_text}
-                    style={{ maxWidth: maxTextWidth, maxHeight: maxTextHeight }}
-                    onChange={textAreaChange} onScroll={textAreaScroll} />}
+                    style={{ maxWidth: maxTextWidth, maxHeight: maxTextHeight }} />}
             <span className={mes_block_info}>
                 <p className={mes_block_info_date}>{getHHMMPA(new Date(message?.date))}</p>
                 {message?.isRead ?

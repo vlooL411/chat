@@ -5,46 +5,46 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
+import schema from "./schema";
 import { useMemo } from "react";
-import { schema } from "./schema";
-import { IncomingMessage, ServerResponse } from "http";
+import { w3cwebsocket } from "websocket";
+import { NextApiRequest, NextApiResponse } from "next";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { SubscriptionClient } from "subscriptions-transport-ws";
-import { WebSocketLink } from "@apollo/client/link/ws";
 
-let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
+let apolloClient: ApolloClient<NormalizedCacheObject>;
 const isBrowser = process.browser;
 const ssrMode = !isBrowser;
 
 export type ResolverContext = {
-  req?: IncomingMessage;
-  res?: ServerResponse;
+  req?: NextApiRequest;
+  res?: NextApiResponse;
 };
 
-const { GRAPHQL } = process.env;
-const { HOST_WS } = process.env;
+const { HOST_GRAPHQL } = process.env;
+const { HOST_GRAPHGQLSUB } = process.env;
 
 const httpLink = new HttpLink({
-  uri: `/api${GRAPHQL}`,
+  uri: HOST_GRAPHQL,
   credentials: "include",
+});
+
+const wsLink = new WebSocketLink({
+  uri: HOST_GRAPHGQLSUB,
+  reconnect: true,
+  webSocketImpl: w3cwebsocket,
 });
 
 const SplitHTTPWS = isBrowser
   ? split(
       ({ query }) => {
-        const definition = getMainDefinition(query);
+        const def = getMainDefinition(query);
         return (
-          definition.kind === "OperationDefinition" &&
-          definition.operation === "subscription"
+          def.kind == "OperationDefinition" && def.operation == "subscription"
         );
       },
-      isBrowser
-        ? new WebSocketLink(
-            new SubscriptionClient(HOST_WS, { reconnect: true })
-          )
-        : null,
-        
+      wsLink,
       httpLink
     )
   : httpLink;

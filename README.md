@@ -1,8 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project, within using:
+
+- TypeScript
+- MongoDB
+- Apollo Client(React)
+- Apollo Server
+- SASS
+- NextAuth.js
 
 ## Getting Started
 
-First, run the development server:
+First, define .env by the template .env.template:
+
+1. DB_NAME - name collection mongodb
+2. DB_LOGIN - login to mongo
+3. DB_PASSWORD - password to mongo
+   For autentification using google account, also
+4. GOOGLE_ID - more details [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow)
+5. GOOGLE_SECRET - point 4
+
+also:
+
+- PORT if chage, need in the package.json add next dev|prod|start -p port
+- PORT_GRAPHQL don't change
+
+Second, run the development server:
 
 ```bash
 npm run dev
@@ -11,8 +32,9 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:4000/graphql](http://localhost:4000/graphql), is opening playground apollo graphql (on the address work subscriprions)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `pages/index.ts`. The page auto-updates as you edit the file.
 
 ## Learn More
 

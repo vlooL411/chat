@@ -1,55 +1,47 @@
-import ws from "ws";
-import http from "http";
+import "colors";
+import detect from "detect-port";
+import { ApolloServer } from "apollo-server";
 import dbConnect from "../../utils/dbConnect";
-import { ApolloServer } from "apollo-server-micro";
-import { schema } from "./../../apolloclient/schema";
+import schema from "../../apolloclient/schema";
 
+const { HOST } = process.env;
+const { PORT_GRAPHQL } = process.env;
 const { GRAPHQL } = process.env;
 const { GRAPHQLSUB } = process.env;
-const { HOST_WS } = process.env;
 
 const isDev = process.env.NODE_ENV === "development";
 
-const apolloServer = new ApolloServer({
-  schema,
-  context: async (ctx) => {
-    await dbConnect();
-    return ctx;
-  },
-  playground: isDev,
-  introspection: true,
-  tracing: isDev,
-  subscriptions: {
-    path: `/api${GRAPHQLSUB}`,
-    keepAlive: 9000,
-    onConnect: () => console.log("connected subscriptions"),
-    onDisconnect: () => console.log("disconnected subscriptions"),
-  },
-});
+//TODO apollo-server-micro(better) check, current version have work trouble subscribes
+detect(PORT_GRAPHQL, (err, port) => {
+  if (err)
+    console.log(`Apollo server listen error (Port: ${port}):`.bgRed, err);
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+  if (PORT_GRAPHQL != port) return;
 
-const httpServer = http.createServer();
-
-const wss = new ws.Server({ path: `/api${GRAPHQL}`, server: httpServer });
-
-wss.on("connection", (ws: ws) => {
-  ws.on("message", (message: string) => {
-    console.log("received: %s", message);
-    ws.send(`Hello, you sent -> ${message}`);
+  const apolloServer = new ApolloServer({
+    schema,
+    context: async (ctx) => {
+      await dbConnect();
+      return ctx;
+    },
+    cors: {
+      origin: HOST,
+      credentials: true,
+    },
+    playground: isDev,
+    introspection: isDev,
+    tracing: isDev,
+    subscriptions: {
+      path: GRAPHQLSUB,
+    },
   });
-  ws.send("Hi there, I am a WebSocket server");
+
+  //don't work
+  apolloServer.graphqlPath = GRAPHQL;
+
+  // TODO figure out how to install another PORT, graphqlPath and subscriptionsPath
+  apolloServer.listen().then(({ url, subscriptionsUrl }) => {
+    console.log(`🚀 Server ready at ${url}`.bgMagenta);
+    console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`.bgMagenta);
+  });
 });
-
-/* httpServer.listen(`/api${GRAPHQL}`, () => {
-  console.log(`Server started on port ${httpServer.address()} :)`);
-});
- */
-
-apolloServer.installSubscriptionHandlers(wss);
-
-export default apolloServer.createHandler({ path: `/api${GRAPHQL}` });

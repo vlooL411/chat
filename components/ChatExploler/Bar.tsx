@@ -9,6 +9,7 @@ import { gql, useLazyQuery } from "@apollo/client"
 const GetUser = gql`
     query user($id: ID!) {
         User(id: $id) {
+            _id
             name
             image
             isOnline
