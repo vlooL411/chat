@@ -1,4 +1,3 @@
-import { Chat } from "./types";
 import {
   split,
   HttpLink,
@@ -9,6 +8,7 @@ import {
 import schema from "./schema";
 import { useMemo } from "react";
 import { w3cwebsocket } from "websocket";
+import { CacheConfig } from "./CacheConfig";
 import { NextApiRequest, NextApiResponse } from "next";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { SchemaLink } from "@apollo/client/link/schema";
@@ -59,17 +59,7 @@ const SplitHTTPWS = isBrowser
     )
   : httpLink;
 
-const cache = new InMemoryCache({
-  typePolicies: {
-    Chat: {
-      fields: {
-        messages: {
-          merge: (_, incoming) => incoming,
-        },
-      },
-    },
-  },
-});
+const cache = new InMemoryCache(CacheConfig);
 
 const createApolloClient = (
   context?: ResolverContext

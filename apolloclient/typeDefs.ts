@@ -1,8 +1,14 @@
-import { Message } from "./types";
+import { InfoMore } from "./types";
 import { gql } from "@apollo/client";
 
 export default gql`
   scalar Date
+
+  type InfoMore {
+    lastIndex: ID
+    size: Int!
+    isEnd: Boolean
+  }
 
   type User {
     _id: ID!
@@ -38,44 +44,66 @@ export default gql`
     isFavorite: Boolean
   }
 
-  enum ChatCreater {
+  enum Creater {
     User
     Chat
   }
 
+  enum Access {
+    Public
+    Private
+    Squad
+    Duo
+    Own
+  }
+
   type Chat {
     _id: ID!
-    date: Date!
-    creater_id: ID!
-    creater: ChatCreater
     title: String!
     image: String
-    users_id: [ID!]
-    messages: [Message!]
+    date: Date!
+    creater_id: ID!
+    creater: Creater
+    access: Access!
     lastMessage: Message
-    isNotifications: Boolean
+    users_id: [ID]
+    messages: [Message]
+  }
+
+  type Messages {
+    Chat: Chat!
+    InfoMore: InfoMore
   }
 
   type Query {
     User(id: ID!): User
+    UserCurrent: User
     UserID(name: String, email: String): User
     Users(start: Int!, end: Int!): [User]
     Chat(chatid: ID!): Chat
     Chats(start: Int!, end: Int!): [Chat]
+    Messages(chatid: ID!, lastMessageID: ID, limit: Int): Messages
+
     Friends(userid: ID!): [Friend]
+
+    FindChat(title: String!): [Chat]
+    FindMessage(text: String!): [Chat]
   }
 
   type Mutation {
+    InviteChat(chatid: ID): String
+    LeaveChat(chatid: ID): String
+    CreateChat(title: String): String
+    RemoveChat(chatid: ID): String
+
     SendMessage(chatid: ID!, text: String!): String
     ChangeMessage(chatid: ID!, messageid: ID!, text: String!): String
     RemoveMessage(chatid: ID!, messageid: ID!): String
   }
 
-  type string {
-    field: String
-  }
-
   type Subscription {
+    AddChat: Chat
+    RemoveChat: Chat
     AddMessage: Message
     ChangeMessage: Message
     RemoveMessage: Message

@@ -17,6 +17,7 @@ export default async () => {
   if (connection.readyState == 1) return;
 
   await connect(DB_HOST, {
+    useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

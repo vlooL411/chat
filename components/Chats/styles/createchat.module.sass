@@ -1,0 +1,87 @@
+$createchatback: var(--buttonback)
+$createchathov: var(--buttonhov)
+$titlecolor: #4f6071
+$titlecolorplace: #2f6ea5
+$transtime: .2s
+$warningmes: var(--warningmes)
+
+.createmodalwindow
+    background-color: #17212b
+    width: 200px
+.create
+    height: 100%
+    padding: 1em
+    margin-left: .7rem
+    display: grid
+    grid-template-columns: minmax(7.9rem, auto) 1fr
+    grid-template-rows: repeat(3, auto)
+    justify-items: center
+    justify-content: center
+    &_upload
+        grid-area: 1 / 1 / 3 / 2
+        padding: 2em
+        justify-self: center
+        align-self: center
+        background-color: #2f6ea5d8
+        border-radius: 50%
+        &:hover
+            background-color: #2f6ea5
+        & > svg
+            font-size: 4em
+    &_title
+        grid-area: 1 / 2 / 3 / 3
+        position: relative
+        display: flex
+        flex-direction: column
+        align-self: center
+        font-size: 1.1em
+        width: 100%
+        padding: 0 1.5em
+        input
+            align-self: center
+            position: absolute
+            padding: 0
+            min-height: 1.4rem
+            border: none
+            background: none
+            color: $titlecolor
+            font-size: inherit
+            border-bottom: 2px solid $titlecolor
+            &:focus
+                outline: none
+                border-bottom: 2px solid $titlecolorplace
+                &~label
+                    color: $titlecolorplace
+        label
+            margin-left: -0.5rem
+            margin-top: -0.1rem
+            font-size: inherit
+            color: $titlecolor
+            transition: all $transtime
+        .label_focus
+            font-size: .8em
+            margin-top: -1.3rem
+    &_chat
+        grid-area: 3 / 2 / 4 / 3
+        display: flex
+        button
+            margin: .1rem .5rem
+            align-self: center
+            max-height: 2rem
+            font-size: 1em
+            padding: .5em 1em
+            margin-bottom: 1.5rem
+            border-radius: .8em
+            background-color: $createchatback
+            &:hover
+                background-color: $createchathov
+.warning
+    grid-area: 3 / 1 / 4 / 2
+    color: $warningmes
+.loader
+    width: 100%
+    border-color: white
+    align-self: center
+    width: 1.2rem
+    height: 1.2rem
+    margin-left: 1rem

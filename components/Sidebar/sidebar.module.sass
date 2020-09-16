@@ -1,5 +1,8 @@
 $back: var(--sidebar)
 $back_extend: var(--sidebarext)
+$blockuser: var(--blockuser)
+$extend_on_trans: .4s
+$extend_off_trans: .2s
 
 .sidebar
     background-color: $back
@@ -12,15 +15,6 @@ $back_extend: var(--sidebarext)
     &_default
         overflow-y: auto
         width: 100%
-    &_extend
-        background-color: $back_extend
-        position: absolute
-        width: 0
-        left: 100%
-        height: 100%
-        transition: width .1s ease-in-out
-        &_on
-            width: 390%
     &_block
         display: flex
         flex-direction: column
@@ -29,9 +23,59 @@ $back_extend: var(--sidebarext)
         padding: 2.4em 0
         font-size: 1em
         width: 100%
-        min-height: 30px
-        max-height: 60px
+        min-height: 1rem
+        max-height: 4.9rem
         & > p
             margin: .2rem
         & > svg
             font-size: 1.8em
+
+.total
+    transition: background-color $extend_on_trans ease-in-out
+    background-color: #00000088
+.extend
+    overflow: auto
+    z-index: 999999999
+    position: absolute
+    left: 0
+    width: 0
+    height: 100%
+    width: 15rem 
+    background-color: $back_extend
+    &_on
+        transform: translateX(0%) 
+        transition: all $extend_on_trans ease-in-out
+    &_off
+        transform: translateX(-100%) 
+        transition: all $extend_off_trans ease-in-out
+    &_block
+        display: grid
+        grid-template-columns: minmax(3.4rem, auto) 1fr
+        padding: .7em 0
+        font-size: 1em
+        width: 100%
+        padding-left: .8em
+        & > p
+            margin: 0 0 0 .9rem
+        & > svg
+            justify-self: center
+            font-size: 1.65em
+    .blockuser
+        background: $blockuser
+        padding: 1em
+        color: white
+        margin-bottom: 1rem
+        & > img
+            border-radius: 100%
+            max-width: 48px
+        .login
+            font-size: 1em
+            margin: .4rem 0 .1rem
+        .email
+            font-size: .8em
+            margin-top: .1rem
+@keyframes extendside
+    0%
+        transform: translateX(-100%) 
+    100%
+        transform: translateX(0%)

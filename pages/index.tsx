@@ -1,10 +1,11 @@
-import { ReactElement, useState, useMemo } from "react";
-import Chats from "../components/Chats"
-import FriendsList from "../components/FriendsList"
-import Sidebar from "../components/Sidebar";
-import { faComment, faUsers, faSlidersH } from "@fortawesome/free-solid-svg-icons"
-import ChatExploler from "../components/ChatExploler";
-import { ID } from "../apolloclient/types";
+import Chats from "components/Chats"
+import { ID } from "apolloclient/types";
+import Sidebar from "components/Sidebar";
+import FriendsList from "components/FriendsList"
+import ChatExploler from "components/ChatExploler";
+import CreateChatModal from "components/Chats/CreateChatModal";
+import { ReactElement, useState, useMemo, useEffect } from "react";
+import { faComment, faUsers, faSlidersH, faUserFriends } from "@fortawesome/free-solid-svg-icons"
 
 enum Panes {
   Chats,
@@ -22,17 +23,25 @@ const Index = (): ReactElement => {
     }
   }, [paneCurrent])
 
+  const [createChat, setCreateChat] = useState<boolean>(false)
+
   const sidebar = useMemo<ReactElement>(() =>
     <Sidebar faBlocks={
       [{ fa: faComment, text: 'Chats', onClick: () => setPaneCurrent(Panes.Chats) },
-      { fa: faUsers, text: 'Friends', onClick: () => setPaneCurrent(Panes.FriendsList) },
-      { fa: faSlidersH, text: 'Settings' }]} />,
+      { fa: faUsers, text: 'Friends', onClick: () => setPaneCurrent(Panes.FriendsList) }]}
+      extendBlocks={
+        [{ fa: faUserFriends, text: 'Create chat', onClick: () => setCreateChat(!createChat) },
+        { fa: faUsers, text: 'Friends', onClick: () => { } },
+        { fa: faSlidersH, text: 'Settings' }]} />,
     [])
 
   return <div style={{ display: 'flex', height: 'inherit' }}>
     {sidebar}
     {switchPane}
     <ChatExploler chatid={chatIDCurrent} />
+    {createChat ? <CreateChatModal
+      onOpen={() => createChat}
+      onClose={() => setCreateChat(false)} /> : null}
   </div>
 }
 

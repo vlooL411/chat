@@ -1,7 +1,7 @@
-import { User } from "../apolloclient/types";
+import { User } from "apolloclient/types";
 import { model, Schema, models, Types } from "mongoose";
 
-var usersSchema = new Schema<User>({
+const usersSchema = new Schema<User>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

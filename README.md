@@ -15,7 +15,7 @@ First, define .env by the template .env.template:
 2. DB_LOGIN - login to mongo
 3. DB_PASSWORD - password to mongo
 
-   For autentification using google account, also
+For autentification using google account, also
 
 4. GOOGLE_ID - more details [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow)
 5. GOOGLE_SECRET - point 4

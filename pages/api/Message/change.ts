@@ -1,9 +1,8 @@
+import { API } from "./../index";
 import chats from "../../../models/chats";
-import DataApi from "../../../base/api/DataApi";
+import DataApi from "../../../base/DataApi";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ID, Message } from "../../../apolloclient/types";
-
-type BodyType = { chatid: ID; text: string; messageid: ID };
+import { Message } from "../../../apolloclient/types";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,10 +11,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, text, messageid } = body as BodyType;
+        const { chatid, text, messageid } = body as API.Message.ChangeBody;
 
         const condition = !chatid || !text || !messageid;
-        if (dataApi.Wrong(condition, "Enter chatid or text")) return;
+        if (!(await dataApi.WrongTrust(condition, "Enter chatid or text")))
+          return;
 
         const message = {
           _id: messageid,

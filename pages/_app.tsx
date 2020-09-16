@@ -1,4 +1,5 @@
 import "../styles/globals.sass"
+import "../styles/classes.sass"
 import { Provider } from 'next-auth/client'
 import { initializeApollo } from "../apolloclient/client"
 import Signin from "../components/Sign"

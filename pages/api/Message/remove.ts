@@ -1,7 +1,7 @@
+import { API } from "..";
 import chats from "../../../models/chats";
-import DataApi from "../../../base/api/DataApi";
+import DataApi from "../../../base/DataApi";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ID, Message } from "./../../../apolloclient/types";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -10,25 +10,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, messageid } = body as { chatid: ID; messageid: ID };
+        const { chatid, messageid } = body as API.Message.RemoveBody;
 
-        const condition = !chatid || !messageid;
-        if (dataApi.Wrong(condition, "Enter chatid or messageid")) return;
+        const userid = await dataApi.WrongTrustUserID(
+          !chatid || !messageid,
+          "Enter chatid or messageid"
+        );
+        if (!userid) return;
 
         const { ok } = await chats.updateOne(
-          { _id: chatid },
           {
-            $pull: {
-              messages: { _id: messageid } as never,
-            },
+            _id: chatid,
+            $or: [
+              { creater_id: userid },
+              { messages: { $elemMatch: { _id: messageid, userid } } },
+            ],
           },
+          { $pull: { messages: { _id: messageid } as never } },
           { multi: true }
         );
-        dataApi.True<string>(
-          ok != 0 ? "Message remove" : "Message don't remove"
-        );
+        dataApi.True<string>(ok != 0 ? null : "Message don't remove");
       } catch (error) {
-        dataApi.Error(error, "Error request message change");
+        dataApi.Error(error, "Error request message remove");
       }
       break;
     default:

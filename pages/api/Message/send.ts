@@ -1,9 +1,10 @@
-import { Message } from "./../../../apolloclient/types";
-import { ID } from "../../../apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
-import chats from "../../../models/chats";
+import { Access } from "apolloclient/types";
+import { API } from "./../index";
 import { Types } from "mongoose";
-import DataApi from "../../../base/api/DataApi";
+import chats from "../../../models/chats";
+import DataApi from "../../../base/DataApi";
+import { Message } from "./../../../apolloclient/types";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,11 +13,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, text } = body as { chatid: ID; text: string };
-        if (dataApi.Wrong(!chatid || !text, "Data wrong: Enter chatid or text"))
-          return;
+        const { chatid, text } = body as API.Message.SendBody;
 
-        const userid = await dataApi.TrustUserID();
+        const userid = await dataApi.WrongTrustUserID(
+          !chatid || !text,
+          "Enter chatid or text"
+        );
         if (!userid) return;
 
         const message: Message = {
@@ -24,16 +26,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           text,
           date: new Date(),
           userid,
-          isChange: false,
         };
 
         const { ok } = await chats.updateOne(
-          { _id: chatid },
           {
-            $push: {
-              messages: message as never,
-            },
-          }
+            _id: chatid,
+            $or: [
+              { access: Access.Public },
+              { creater_id: userid },
+              { users_id: userid },
+            ],
+          },
+          { $push: { messages: message as never } }
         );
 
         dataApi.True<Message>(ok != 0 ? message : "Message don't send");

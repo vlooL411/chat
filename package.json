@@ -8,6 +8,9 @@
     "start": "next start",
     "test": "jest"
   },
+  "optionalDependencies": {
+    "mongodb": "^3.6.2"
+  },
   "dependencies": {
     "@apollo/client": "^3.1.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",

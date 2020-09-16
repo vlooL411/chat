@@ -1,0 +1,36 @@
+$back: var(--chatsback)
+$border: var(--blockborder)
+$createchatback: var(--buttonback)
+$createchathov: #535cca
+
+.chats
+    background-color: $back
+    display: flex
+    flex-direction: column
+    height: 100%
+    width: 100%
+    max-width: 250px
+    overflow-y: auto
+    overflow-x: hidden
+    border: 1px solid $border
+    border-top: none
+    border-bottom: none
+    .create_chat //don't use
+        justify-self: center
+        font-size: 1em
+        padding: 1em
+        margin: 1rem
+        background-color: $createchatback
+        border-radius: .8em
+        &:hover
+            background-color: $createchathov
+    
+
+@import '../../../styles/screensize'
+@media screen and (max-width: $minscreen)
+    .chats
+        min-width: 70px
+        max-width: 70px
+@media screen and (max-width: $minscreen * 0.5)
+    .chats
+        display: none

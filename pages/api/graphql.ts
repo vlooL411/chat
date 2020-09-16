@@ -5,9 +5,9 @@ import dbConnect from "../../utils/dbConnect";
 import schema from "../../apolloclient/schema";
 
 const { HOST } = process.env;
-const { PORT_GRAPHQL } = process.env;
 const { GRAPHQL } = process.env;
 const { GRAPHQLSUB } = process.env;
+const { PORT_GRAPHQL } = process.env;
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -33,15 +33,19 @@ detect(PORT_GRAPHQL, (err, port) => {
     tracing: isDev,
     subscriptions: {
       path: GRAPHQLSUB,
-      onConnect: () => console.log("Subscribtion connect".bgGreen),
-      onDisconnect: () => console.log("Subscribtion disconnect".bgGreen),
+      onConnect: isDev
+        ? () => console.log("Subscription connect".bgGreen)
+        : null,
+      onDisconnect: isDev
+        ? () => console.log("Subscription disconnect".bgBlue)
+        : null,
     },
   });
 
   //don't work
   apolloServer.graphqlPath = GRAPHQL;
 
-  // TODO figure out how to set another PORT, graphqlPath
+  // TODO figure out how to set another PORT and graphqlPath
   apolloServer.listen().then(({ url, subscriptionsUrl }) => {
     console.log(`🚀 Server ready at ${url}`.bgMagenta);
     console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`.bgMagenta);

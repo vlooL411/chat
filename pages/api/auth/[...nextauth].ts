@@ -1,8 +1,8 @@
-import { ID } from "./../../../apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { InitOptions } from "next-auth";
+import { API } from "..";
+import { ID, User } from "@types";
 import Providers from "next-auth/providers";
-import MessangerMongoDB from "../../../base/MessangerMongoDB";
+import NextAuth, { InitOptions } from "next-auth";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const { DB_HOST } = process.env;
 const { GOOGLE_SECRET } = process.env;
@@ -13,31 +13,40 @@ export type TokenType = {
   email: string;
 };
 
-class StorageID {
-  static ID;
-  static lastEmail;
-  static lastName;
-}
+const getUserID = `
+  query userID($name: String!, $email: String!) {
+    UserID(name: $name, email: $email) {
+      _id
+    }
+  }
+`;
+
+const { HOST_GRAPHQL } = process.env;
 
 const options: InitOptions = {
   callbacks: {
     jwt: async (token) => {
-      token.id = StorageID.ID;
-      const { id, name, email } = token;
-      const { lastEmail, lastName } = StorageID;
+      const { name, email } = token;
 
-      if ((!id && name && email) || (lastEmail != email && lastName != name)) {
-        const data = await new MessangerMongoDB().UserID(name, email);
-        StorageID.ID = token.id = data?._id;
-        [StorageID.lastEmail, StorageID.lastName] = [email, name];
-      }
+      const json = await fetch(HOST_GRAPHQL, {
+        method: "POST",
+        body: JSON.stringify({
+          query: getUserID,
+          variables: { name, email } as API.User.idBody,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = (await json.json().then((el) => el?.data)) as {
+        UserID: User;
+      };
+      if (data) token.id = data?.UserID?._id;
 
       return await token;
     },
   },
   pages: {
     signOut: "/",
-    error: "/#?error=Invalid_data",
+    error: "/",
   },
   jwt: {
     secret: GOOGLE_SECRET,

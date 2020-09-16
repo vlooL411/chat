@@ -1,5 +1,5 @@
-import { Friend, User, Message, Chat, ChatCreater } from "./types";
-import { GetYesterdey } from "../components/common/WhatDate";
+import { Friend, User, Message, Chat, Creater, Access } from "./types";
+import { GetYesterdey } from "components/common/WhatDate";
 import { IResolvers } from "apollo-server";
 
 //#region Local data
@@ -41,8 +41,9 @@ const Messages = (idChat: number, count: number): Message[] =>
 const Chats: Chat[] = Array.from({ length: 10 }, (_, i) => ({
   _id: i,
   creater_id: Users[i]._id,
-  creater: ChatCreater.User,
+  creater: Creater.User,
   date: new Date(),
+  access: Access.Public,
   title: `Title ${i}`,
   users: Array(i).fill(Users[i]),
   messages: Messages(i, i),

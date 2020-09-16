@@ -1,0 +1,24 @@
+$back: var(--blockback)
+$border: var(--blockborder)
+
+.bardrop
+    z-index: 1000
+    position: absolute
+    right: 1rem 
+    top: 100%
+    display: flex
+    flex-direction: column
+    max-width: 120px
+    background-color: $back
+    border-top: 1px solid $border
+    transition: all .2s
+    opacity: 0
+    .block
+        font-size: .9em
+        padding: .5em .7em
+        &:hover
+            background-color: $back
+            filter: brightness(150%)
+    &_hidden
+        transition: all .3s
+        opacity: 1

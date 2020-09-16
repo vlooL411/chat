@@ -33,7 +33,7 @@ const Signin = (): ReactElement => {
             [csrfToken])
 
     return !session && !loading ?
-        <div className='total_area'>
+        <div className='total total_area'>
             <div className={sign}>
                 <p className={sign_title}>Sign in</p>
                 <div className={signin}>

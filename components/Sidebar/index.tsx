@@ -1,11 +1,24 @@
-import { ReactElement, useMemo, useState } from 'react'
-import style from './sidebar.module.sass'
-import { IconDefinition, faAlignJustify, faEject, faDoorOpen } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { UrlObject } from 'url'
 import Link from 'next/link'
+import { UrlObject } from 'url'
 import ChangeThemes from '../ChangeThemes'
 import { signOut } from 'next-auth/client'
+import { ReactElement, useMemo, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconDefinition, faAlignJustify, faDoorOpen } from "@fortawesome/free-solid-svg-icons"
+import style from './sidebar.module.sass'
+import { gql, useQuery } from '@apollo/client'
+import { User } from 'apolloclient/types'
+
+const GetUserCurrent = gql`
+    query {
+        UserCurrent {
+            _id
+            name
+            email
+            image
+        }
+    }
+`
 
 type faText = {
     fa: IconDefinition
@@ -16,12 +29,17 @@ type faText = {
 
 type Props = {
     faBlocks: faText[]
+    extendBlocks?: any[]
     extWidth?: string
 }
 
-const Sidebar = ({ faBlocks }: Props): ReactElement => {
-    const { sidebar, sidebar_default, sidebar_block, sidebar_extend, sidebar_extend_on } = style
-    const [extend, setExtend] = useState<boolean>(false)
+const { EMPTY_AVATAR_USER } = process.env
+
+const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
+    const { sidebar, sidebar_default, sidebar_block } = style
+    const { extend, extend_on, extend_off, extend_block, total, none } = style
+    const [isExtend, setIsExtend] = useState<boolean>(false)
+    const { data, loading, error } = useQuery(GetUserCurrent)
 
     const Block = ({ fa, text, href, onClick }: faText, key) =>
         <Link key={key} href={href ?? ''}>
@@ -29,22 +47,54 @@ const Sidebar = ({ faBlocks }: Props): ReactElement => {
                 <FontAwesomeIcon icon={fa} />
                 <p>{text}</p>
             </a>
-        </Link >
+        </Link>
+
+    const BlockUser = useMemo<ReactElement>(() => {
+        const user = data?.UserCurrent as User
+        const { blockuser, login, email } = style
+
+        return <div className={blockuser}>
+            <img src={user?.image ?? EMPTY_AVATAR_USER} />
+            <p className={login}>{user?.name}</p>
+            <p className={email}>{user?.email}</p>
+        </div>
+    }, [data])
+
+    const BlockExtend = ({ fa, text, href, onClick }: faText, key): ReactElement => {
+        return <Link key={key} href={href ?? ''}>
+            <a className={extend_block} onClick={onClick}>
+                <FontAwesomeIcon icon={fa} />
+                <p>{text}</p>
+            </a>
+        </Link>
+    }
 
     const blocks = useMemo<ReactElement[]>(() =>
         faBlocks?.map((faTextEl, key) => Block(faTextEl, key)),
-        [])
+        [faBlocks])
 
-    return <div className={sidebar}>
-        <div className={sidebar_default}>
-            <ChangeThemes className={sidebar_block} />
-            <Block fa={faAlignJustify} text='' onClick={() => setExtend(!extend)} key={-2} />
-            {blocks}
-            <Block fa={faDoorOpen} text='Exit' onClick={() => signOut({})} key={-1} />
+    const blocksExtend = useMemo<ReactElement[]>(() =>
+        extendBlocks?.map((faTextEl, key) => BlockExtend(faTextEl, key)),
+        [extendBlocks])
+
+
+    return <>
+        <div className={isExtend ? `total ${total}` : ''}>
+            <div className={`${extend} ${isExtend ? extend_on : extend_off}`}>
+                {BlockUser}
+                {blocksExtend}
+                <ChangeThemes className={sidebar_block} />
+            </div>
+            <div className={isExtend ? 'total' : ''} onMouseDown={() => setIsExtend(false)}></div>
         </div>
-        <div className={`${sidebar_extend} ${extend ? sidebar_extend_on : ''}`}>
+        <div className={sidebar}>
+            <div className={sidebar_default}>
+                <Block fa={faAlignJustify} text='' onClick={() => setIsExtend(true)} key={-2} />
+                {blocks}
+                <Block fa={faDoorOpen} text='Exit' onClick={() => signOut({})} key={-1} />
+            </div>
         </div>
-    </div>
+    </>
 }
 
 export default Sidebar

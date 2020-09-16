@@ -1,4 +1,5 @@
-$back: #111
+$back: var(--blockback)
+$border: var(--blockborder)
 $usersvg: white
 $title: white
 $online: gray
@@ -7,10 +8,11 @@ $toolsbtnsvghov: gray
 
 .bar
     padding: .6em
-    background-color: $back
     width: 100%
     display: grid
     grid-template-columns: 1fr auto
+    background-color: $back
+    border-bottom: 1px solid $border
     &_block
         display: grid
         grid-template-columns: auto 1fr

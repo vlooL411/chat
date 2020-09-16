@@ -1,42 +1,45 @@
+import { ID } from '@types'
+import { GQLT } from '@GQLT'
+import Loader from '../Loader'
 import { useRef, KeyboardEvent } from 'react'
-import { ID } from '../../apolloclient/types'
-import { gql, useMutation } from '@apollo/client'
-import style from './styles/messageSend.module.sass'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperclip, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import Loader from '../Loader'
-
-const SendMessage = gql`
-    mutation sendMessage($chatid: ID!, $text: String!) {
-        SendMessage(chatid: $chatid, text: $text)
-    }
-`
+import style from './styles/messageSend.module.sass'
 
 type Props = {
     chatid: ID
 }
 
+let amount = 1
+
 const MessageSend = ({ chatid }: Props) => {
     const { message } = style
     const textBlockRef = useRef<HTMLTextAreaElement>(null!)
-    const [sendMessageMut, { loading, error }] = useMutation(SendMessage)
+    const [sendMessageMut, { loading }] =
+        GQLT.Mutation.useSendMessage()
+
+    /* if (amount < 50 && !loading)
+        sendMessageMut({
+            variables: {
+                chatid,
+                text:
+                    `${amount++} ipsum dolor sit amet consectetur adipisicing elit.`
+            }
+        }) */
 
     const sendMessage = () => {
         const { value: text } = textBlockRef?.current
         if (text && chatid) {
-            sendMessageMut({
-                variables: {
-                    chatid,
-                    text
-                }
-            })
+            sendMessageMut({ variables: { chatid, text } })
             textBlockRef.current.value = ''
         }
     }
 
     const sendMessageKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.ctrlKey && e.keyCode == 13 /* == Enter */)
+        if (e.ctrlKey && e.key == 'Enter') {
             sendMessage()
+            textAreaChange()
+        }
     }
 
     const textAreaScroll = () => {
@@ -48,6 +51,10 @@ const MessageSend = ({ chatid }: Props) => {
         const { current } = textBlockRef
         if (current.scrollHeight <= current.clientHeight)
             current.style.height = 'auto'
+        if (current?.value == '') {
+            const { minHeight } = current.style
+            current.style.height = minHeight
+        }
     }
 
     return <div className={message}>

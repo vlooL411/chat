@@ -1,7 +1,8 @@
+import { API } from "..";
 import users from "../../../models/users";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ID, User } from "../../../apolloclient/types";
-import DataApi from "../../../base/api/DataApi";
+import { User } from "../../../apolloclient/types";
+import DataApi from "../../../base/DataApi";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -10,13 +11,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const id = body?.id as ID;
-        if (dataApi.Wrong(!id, "id empty")) return;
+        const { id } = body as API.User.GetBody;
+        if (!dataApi.WrongTrust(!id, "id empty")) return;
 
-        const userid = await dataApi.TrustUserID();
-        if (!userid) return;
-
-        const user: User = await users.findOne({ _id: id }, "name email image");
+        const user: User = await users.findOne(
+          { _id: id },
+          "_id name email image"
+        );
 
         dataApi.True(user ?? "User don't exist");
       } catch (error) {

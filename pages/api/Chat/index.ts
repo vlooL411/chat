@@ -1,8 +1,8 @@
-import { Types } from "mongoose";
-import { Chat, ID } from "./../../../apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
+import { API } from "..";
 import chats from "../../../models/chats";
-import DataApi from "../../../base/api/DataApi";
+import DataApi from "../../../base/DataApi";
+import { Access, Chat } from "./../../../apolloclient/types";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -11,24 +11,30 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid } = body as { chatid: ID };
-        if (dataApi.Wrong(!chatid, "Data wrong: Enter id for chat")) return;
+        const { chatid } = body as API.Chat.GetBody;
 
-        const userid = await dataApi.TrustUserID();
+        const userid = await dataApi.WrongTrustUserID(!chatid, "Enter chatid");
         if (!userid) return;
 
-        const chat: Chat = await chats.findOne(
+        let chat: Chat = await chats.findOne(
           {
             _id: chatid,
             $or: [
+              { access: Access.Public },
               { creater_id: userid },
-              {
-                users_id: { $elemMatch: { userid } },
-              },
+              { users_id: { $elemMatch: { userid } } },
             ],
           },
-          "_id creater_id creater date title messages"
+          "_id title image date creater creater_id access"
         );
+
+        /* if (chat) {
+          switch (chat?.access) {
+            case Access.Private:
+              chat = null;
+              break;
+          }
+        } */
 
         dataApi.True<Chat>(chat ?? "Chat don't exist or access");
       } catch (error) {

@@ -1,6 +1,6 @@
+import { API } from "@api/index";
 import { NextApiRequest } from "next";
-import { ID, Friend, IMessangerAsync } from "./../apolloclient/types";
-import { Chat, User } from "../apolloclient/types";
+import { Chat, User, Messages, IMessangerAsync } from "apolloclient/types";
 
 const { HOST_API } = process.env;
 
@@ -21,71 +21,72 @@ export default class MessangerMongoDB implements IMessangerAsync {
   }
 
   //#region Query
-  User = (id: ID, req: NextApiRequest): Promise<User> =>
-    this.PostQuery("User", { id }, req);
+  //#region User
+  User = (body: API.User.GetBody, req: NextApiRequest): Promise<User> =>
+    this.PostQuery("User", body, req);
+  UserCurrent = (req: NextApiRequest): Promise<User> =>
+    this.PostQuery("User/current", {}, req);
 
-  UserID = async (
-    name?: string,
-    email?: string,
-    req?: NextApiRequest
-  ): Promise<User> => await this.PostQuery("User/id", { name, email }, req);
+  UserID = (body: API.User.idBody, req: NextApiRequest = null): Promise<User> =>
+    this.PostQuery("User/id", body, req);
 
   Users = (start: number, end: number, req: NextApiRequest): Promise<User[]> =>
     this.PostQuery("User/gets", { start, end }, req);
+  //#endregion
 
-  Chat = (chatid: ID, req: NextApiRequest): Promise<Chat> =>
-    this.PostQuery("Chat", { chatid }, req);
+  //#region Chat
+  Chat = (body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat> =>
+    this.PostQuery("Chat", body, req);
 
   Chats = (start: number, end: number, req: NextApiRequest): Promise<Chat[]> =>
     this.PostQuery("Chat/gets", { start, end }, req);
 
-  Friends = (id: ID, req: NextApiRequest): Promise<Friend[]> =>
-    this.PostQuery("Friend/gets", { id }, req);
+  FindChat = (body: API.Chat.FindBody, req: NextApiRequest): Promise<Chat[]> =>
+    this.PostQuery("Chat/find", body, req);
+
+  Messages = (
+    body: API.Message.GetsBody,
+    req?: NextApiRequest
+  ): Promise<Messages> => this.PostQuery("Message/gets", body, req);
+
+  FindMessage = (
+    body: API.Message.FindBody,
+    req: NextApiRequest
+  ): Promise<Chat[]> => this.PostQuery("Message/find", body, req);
+  //#endregion
   //#endregion
 
   //#region Mutation
-  SendMessage = (
-    chatid: ID,
-    text: string,
+  InviteChat = (
+    body: API.Chat.InviteBody,
     req: NextApiRequest
-  ): Promise<string> =>
-    this.PostQuery(
-      "Message/send",
-      {
-        chatid,
-        text,
-      },
-      req
-    );
+  ): Promise<string> => this.PostQuery("Chat/invite", body, req);
+  LeaveChat = (
+    body: API.Chat.LeaveBody,
+    req: NextApiRequest
+  ): Promise<string> => this.PostQuery("Chat/leave", body, req);
+  CreateChat = (
+    body: API.Chat.CreateBody,
+    req: NextApiRequest
+  ): Promise<string> => this.PostQuery("Chat/create", body, req);
+  RemoveChat = (
+    body: API.Chat.RemoveBody,
+    req: NextApiRequest
+  ): Promise<string> => this.PostQuery("Chat/remove", body, req);
+
+  SendMessage = (
+    body: API.Message.SendBody,
+    req: NextApiRequest
+  ): Promise<string> => this.PostQuery("Message/send", body, req);
 
   ChangeMessage = (
-    chatid: ID,
-    messageid: ID,
-    text: string,
+    body: API.Message.ChangeBody,
     req: NextApiRequest
-  ): Promise<string> =>
-    this.PostQuery(
-      "Message/change",
-      {
-        chatid,
-        messageid,
-        text,
-      },
-      req
-    );
+  ): Promise<string> => this.PostQuery("Message/change", body, req);
 
   RemoveMessage = (
-    chatid: ID,
-    messageid: ID,
+    body: API.Message.RemoveBody,
     req: NextApiRequest
-  ): Promise<string> =>
-    this.PostQuery(
-      "Message/remove",
-      {
-        chatid,
-        messageid,
-      },
-      req
-    );
+  ): Promise<string> => this.PostQuery("Message/remove", body, req);
   //#endregion
 }

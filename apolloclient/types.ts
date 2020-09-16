@@ -1,7 +1,14 @@
 import { Types } from "mongoose";
+import { API } from "../pages/api";
 import { NextApiRequest } from "next";
 
 export type ID = number | string | Types.ObjectId;
+
+export type InfoMore = {
+  lastIndex?: ID;
+  size: number;
+  isEnd?: boolean;
+};
 
 export type User = {
   _id: ID;
@@ -29,22 +36,35 @@ export type Message = {
   isFavorite?: boolean;
 };
 
-export enum ChatCreater {
+export enum Creater {
   User = "User",
   Chat = "Chat",
 }
 
+export enum Access {
+  Public = "Public",
+  Private = "Private",
+  Squad = "Squad",
+  Duo = "Duo",
+  Own = "Own",
+}
+
 export type Chat = {
   _id: ID;
-  date: Date;
-  creater_id: ID;
-  creater: ChatCreater;
   title: string;
   image?: string;
+  date: Date;
+  creater_id: ID;
+  creater: Creater;
+  access: Access;
+  lastMessage?: Message;
   users_id?: User[];
   messages?: Message[];
-  lastMessage?: Message;
-  isNotifications?: boolean;
+};
+
+export type Messages = {
+  Chat: Chat;
+  InfoMore?: InfoMore;
 };
 
 export type Friend = {
@@ -73,29 +93,34 @@ export interface IMessanger {
 }
 
 export interface IMessangerAsync {
-  //Query
-  User(id: ID, req: NextApiRequest): Promise<User>;
-  UserID(name?: string, email?: string, req?: NextApiRequest): Promise<User>;
+  //#region Query
+  User(body: API.User.GetBody, req: NextApiRequest): Promise<User>;
   Users(start: number, end: number, req: NextApiRequest): Promise<User[]>;
-  Chat(chatid: ID, req: NextApiRequest): Promise<Chat>;
-  Chats(start: number, end: number, req: NextApiRequest): Promise<Chat[]>;
-  Friends(id: ID, req: NextApiRequest): Promise<Friend[]>;
+  UserID(body: API.User.idBody, req?: NextApiRequest): Promise<User>;
+  UserCurrent(req: NextApiRequest): Promise<User>;
 
-  //Mutation
-  SendMessage(
-    chatid: ID,
-    text: string,
-    req: NextApiRequest
-  ): Promise<string | Message>;
+  Chat(body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat>;
+  Chats(start: number, end: number, req: NextApiRequest): Promise<Chat[]>;
+  FindChat(body: API.Chat.FindBody, req: NextApiRequest): Promise<Chat[]>;
+
+  Messages(body: API.Message.GetsBody, req?: NextApiRequest): Promise<Messages>;
+  FindMessage(body: API.Message.FindBody, req: NextApiRequest): Promise<Chat[]>;
+  //#endregion
+
+  //#region Mutation
+  InviteChat(body: API.Chat.InviteBody, req: NextApiRequest): Promise<string>;
+  LeaveChat(body: API.Chat.LeaveBody, req: NextApiRequest): Promise<string>;
+  CreateChat(body: API.Chat.CreateBody, req: NextApiRequest): Promise<string>;
+  RemoveChat(body: API.Chat.RemoveBody, req: NextApiRequest): Promise<string>;
+
+  SendMessage(body: API.Message.SendBody, req: NextApiRequest): Promise<string>;
   ChangeMessage(
-    chatid: ID,
-    messageid: ID,
-    text: string,
-    req: NextApiRequest
-  ): Promise<string | Message>;
-  RemoveMessage(
-    chatid: ID,
-    messageid: ID,
+    body: API.Message.ChangeBody,
     req: NextApiRequest
   ): Promise<string>;
+  RemoveMessage(
+    body: API.Message.RemoveBody,
+    req: NextApiRequest
+  ): Promise<string>;
+  //#endregion
 }

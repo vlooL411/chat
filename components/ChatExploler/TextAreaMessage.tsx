@@ -1,33 +1,35 @@
-import { ReactElement, MutableRefObject, forwardRef, CSSProperties } from 'react'
+import { ReactElement, MutableRefObject, forwardRef, CSSProperties, KeyboardEvent, useEffect } from 'react'
 
 type Props = {
     className?: string
     style?: CSSProperties
     defaultValue?: string
+    onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void
 }
 
-const TextAreaMessage = forwardRef(({ className, style, defaultValue }: Props,
+const TextAreaMessage = forwardRef((
+    { className, style, defaultValue, onKeyDown = () => { } }: Props,
     ref: MutableRefObject<HTMLTextAreaElement>): ReactElement => {
+
+    useEffect(() => textAreaChange(), [ref])
 
     const textAreaScroll = () => {
         const { current } = ref
-        current.style.height = `${current.scrollHeight}px`
+        const { scrollHeight, clientHeight, clientWidth } = current
+        if (scrollHeight < clientHeight)
+            current.style.height = `${current.scrollHeight}px`
     }
 
     const textAreaChange = () => {
         const { current } = ref
-        const { scrollHeight, clientHeight, scrollWidth, clientWidth } = current
-        const { maxHeight, maxWidth } = current.style
+        const { scrollHeight, clientHeight } = current
 
-        if (scrollHeight <= clientHeight)
-            current.style.height = 'auto'
-        if (scrollWidth >= clientWidth &&
-            scrollHeight < Number.parseInt(maxHeight) &&
-            scrollWidth < Number.parseInt(maxWidth))
-            current.style.width = `calc(${scrollWidth}px + 5ch)`
+        if (scrollHeight > clientHeight)
+            current.style.height = `${current.scrollHeight}px`
     }
 
-    return <textarea ref={ref} defaultValue={defaultValue}
+    return <textarea ref={ref} defaultValue={defaultValue} wrap='hard'
+        onKeyDown={(e) => onKeyDown(e)}
         className={className} style={style}
         onChange={textAreaChange} onScroll={textAreaScroll} />
 })

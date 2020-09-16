@@ -1,6 +1,8 @@
 @import './themes/light'
 @import './themes/dark'
 
+$back: var(--background)
+
 *
   box-sizing: border-box
 html, body, #__next, #__next > div
@@ -9,7 +11,7 @@ html, body, #__next, #__next > div
   padding: 0
   margin: 0
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif
-  background: #09141c
+  background-color: $back
 a
   color: inherit
   text-decoration: none
@@ -20,12 +22,13 @@ button, a
   //background: #23272b
   background: none
   user-select: none
+  font: inherit
   &:hover
     background-color: #000
   &:focus
     outline: none
     background: gray
-textarea
+textarea, input
   color: inherit
   font-family: inherit
   background: none
@@ -33,14 +36,16 @@ textarea
   &:focus
     outline: none
 
-.total_area
+.total
+  user-select: none
   z-index: 9999
-  position: absolute
+  position: fixed
   display: flex
   align-items: center
   justify-content: center
   width: 100%
   height: 100%
+.total_area
   animation: total_fill 10s ease-out
   background-color: #00000088
 @keyframes total_fill

@@ -1,13 +1,15 @@
-$block: #111
-$color: white
+$back: var(--blockback)
+$border: var(--blockborder)
+$color: var(--foreground)
 
 .message
     padding: .6em
-    background-color: $block
+    background-color: $back
     width: 100%
     display: flex
     align-items: center
     color: $color
+    border-top: 1px solid $border
     & > button
         background: none
     & > svg, > button > svg

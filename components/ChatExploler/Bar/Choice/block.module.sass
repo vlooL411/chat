@@ -1,0 +1,19 @@
+$usersvg: white
+$title: white
+$online: gray
+
+.block
+    display: grid
+    grid-template-columns: auto 1fr
+    grid-template-rows: 1fr auto
+    & > img
+        max-height: 32px
+    &_title
+        margin: 0 .8rem
+        font-size: 1em
+        color: $title
+    &_online
+        font-size: .7em
+        color: $online
+    & > svg
+        color: $usersvg

@@ -1,12 +1,14 @@
 $color: white 
-$block: #2b5278
+$block: var(--blockmess)
 $info: #488dd3
 $infooff: black
 $infohov: white
 $edit: green
 $sendoff: #d86464
+$expend: #ef83dc
 
 .mes
+    margin-right: 1rem
     padding: .6em
     color: $color
     display: grid
@@ -14,9 +16,11 @@ $sendoff: #d86464
     align-items: center
     justify-content: start
     & > img
+        align-self: end
         margin: 0 .8rem
         grid-area: 1 / 1 / 3 / 2
-        max-width: 48px
+        max-width: 32px
+        margin-bottom: 2.5rem
         background: none
         border-radius: 10%
     &_block
@@ -25,23 +29,30 @@ $sendoff: #d86464
         padding: .25em .7em
         margin-left: .7rem
         position: relative
+        width: 100%
         &:before
             content: ''
             width: 0
             height: 0
             position: absolute
             right: 100%
-            top: 70%
+            bottom: 2.9rem
             border-top: .3rem solid transparent
             border-right: .6rem solid $block
             border-bottom: .4rem solid transparent
         &_text
-            width: 100%
-            max-width: 250px
-            max-height: 250px
-            resize: none
+            padding: 0
+            margin: .5rem
+            min-width: 3rem
+            max-width: 28rem
             font-size: 0.9em
-            scrollbar-width: none
+            resize: none
+            overflow: hidden
+            overflow-wrap: anywhere
+            &box
+                width: 28rem
+            .expend
+                color: $expend
         &_info
             display: flex
             justify-content: flex-end
@@ -62,7 +73,31 @@ $sendoff: #d86464
                     color: $infohov
             .edit
                 margin-left: .25em
-                color: $edit
             .send_off
                 color: $sendoff
                 
+@import '../../../styles/screensize'
+@media screen and (max-width: $minscreen)
+    .mes
+        &_block
+            &_text
+                &box
+                    width: 20rem
+@media screen and (max-width: $minscreen * 0.75)
+    .mes
+        &_block
+            &_text
+                &box
+                    width: 13rem
+@media screen and (max-width: $minscreen * 0.6)
+    .mes
+        &_block
+            &_text
+                &box
+                    width: 10rem
+@media screen and (max-width: $minscreen * 0.5)
+    .mes
+        &_block
+            &_text
+                &box
+                    width: 3.5rem

@@ -1,0 +1,50 @@
+$color: var(--foreground)
+$back: var(--chatsback)
+$backinput: #242f3d
+$svg: gray
+$svghov: white
+
+.container_search
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    background-color: $back
+    .search
+        position: relative
+        align-items: center
+        width: 100%
+        display: flex
+        input
+            margin: 1rem
+            width: 100%
+            color: $color
+            padding: .5em 2.5em .5em 1em
+            background-color: $backinput
+            border-radius: .3rem
+        &_char
+            display: none
+        .X
+            position: absolute
+            left: 83.5%    
+        .loader
+            border-color: $svghov
+            position: absolute
+            width: 1.2rem
+            height: 1.2rem
+            left: 82%
+    svg
+        cursor: pointer
+        color: $svg
+        &:hover
+            color: $svghov
+
+@import '../../../styles/screensize'
+@media screen and (max-width: $minscreen)
+    .container_search_media
+        .search
+            display: none
+            &_char
+                margin: 1rem
+                font-size: 1.2em
+                display: block
