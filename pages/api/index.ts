@@ -14,7 +14,7 @@ export namespace API {
     export type LeaveBody = { chatid: ID };
   }
   export namespace Message {
-    export type GetsBody = { chatid: ID; lastMessageID?: ID; limit?: number };
+    export type GetsBody = { chatid: ID; messageid?: ID; limit?: number };
     export type SendBody = { chatid: ID; text: string };
     export type ChangeBody = { chatid: ID; text: string; messageid: ID };
     export type RemoveBody = { chatid: ID; messageid: ID };

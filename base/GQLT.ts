@@ -73,16 +73,17 @@ export namespace GQLT {
     //#endregion
 
     //#region Messages
+    type MessagesBody = API.Message.GetsBody & { isIncoming: Boolean };
     export const useMessages = <
       T extends { Messages: Messages },
-      V extends API.Message.GetsBody
+      V extends MessagesBody
     >(
       options?: Query<T, V>,
       query: Node = GQL.Query.Messages
     ) => useQuery<T, V>(query, options);
     export const useMessagesLazy = <
       T extends { Messages: Messages },
-      V extends API.Message.GetsBody
+      V extends MessagesBody
     >(
       options?: Lazy<T, V>,
       query: Node = GQL.Query.Messages
@@ -165,7 +166,7 @@ export namespace GQLT {
 
     //#region AddMessage
     export const useAddMessage = <
-      T extends { AddMessage: Message },
+      T extends { AddMessage: Chat },
       V extends never
     >(
       options?: Subscription<T, V>,

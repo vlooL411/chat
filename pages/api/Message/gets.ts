@@ -1,8 +1,9 @@
 import { API } from "..";
 import { Types } from "mongoose";
 import DataApi from "base/DataApi";
+import { first } from "utils/array";
+import { ID, Chat, InfoMore, Messages } from "@types";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Chat, InfoMore, Messages } from "apolloclient/types";
 import chats from "models/chats";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,13 +13,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const {
-          chatid,
-          lastMessageID: lastID,
-          limit = 20,
-        } = body as API.Message.GetsBody;
+        const { chatid, messageid, limit = 20 } = body as API.Message.GetsBody;
 
-        if (!(await dataApi.WrongTrust(!chatid, "Enter chatid"))) return;
+        const condition = !chatid || !limit;
+        const resMes = "Enter chatid && limit != 0";
+        if (!(await dataApi.WrongTrust(condition, resMes))) return;
 
         const [{ index, size }]: {
           size: number;
@@ -28,51 +27,50 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           {
             $project: {
               index: {
-                $indexOfArray: ["$messages._id", new Types.ObjectId(lastID)],
+                $indexOfArray: ["$messages._id", new Types.ObjectId(messageid)],
               },
               size: { $size: "$messages" },
             },
           },
         ]);
 
-        let end = index == -1 ? size : index;
-        let start = end - limit;
+        let start;
+        if (limit > 0) start = index < 0 ? size - limit + 1 : index;
+        else start = (index < 0 ? 0 : index) + limit;
 
-        if (start < 0) {
-          start = 0;
-          if (index != -1) end = index;
-        }
-
-        const isEnd = size == 0 || start == 0;
-        const isEndSlice = start == 0 && end == 0;
-
-        const InfoMore: InfoMore = {
-          size,
-          isEnd,
-          lastIndex: lastID,
-        };
-
-        console.log(index, size, start, end, isEnd, isEndSlice);
-
-        if (isEndSlice) {
-          dataApi.True<Messages>({ Chat: null, InfoMore });
-          return;
-        }
-
-        const chat: Chat[] = await chats.aggregate([
+        const Limit = Math.abs(limit);
+        const end = start < 0 ? (index < 0 ? start + Limit : index) : Limit;
+        start = start < 0 ? 0 : start;
+        console.log(start, end);
+        const chat_s: Chat[] = await chats.aggregate([
           { $match: { _id: new Types.ObjectId(chatid) } },
           {
             $project: {
               _id: true,
+              firstMessage: { $arrayElemAt: ["$messages._id", 0] },
               lastMessage: { $arrayElemAt: ["$messages", -1] },
-              messages: isEndSlice
-                ? null
-                : { $slice: ["$messages", start, end < limit ? end : limit] },
+              messages: {
+                $slice: ["$messages", start, end],
+              },
             },
           },
         ]);
 
-        dataApi.True<Messages>({ Chat: chat[0], InfoMore } ?? "don't messages");
+        const chat = first(chat_s);
+        const isEndUp = (chat as any)?.firstMessage as ID;
+        const isEndDown = chat?.lastMessage?._id;
+
+        const InfoMore: InfoMore = {
+          size,
+          isEndUp,
+          isEndDown,
+          lastIndex: messageid,
+        };
+
+        console.log(messageid, chat_s[0]?.messages?.length);
+        console.log(index, size, limit, isEndUp, isEndDown);
+
+        dataApi.True<Messages>({ Chat: chat, InfoMore } ?? "don't messages");
       } catch (error) {
         dataApi.Error(error, "Error request messages");
       }

@@ -10,22 +10,18 @@ type Props = {
     chatid: ID
 }
 
-let amount = 1
+let amount = 0
+const str = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 
 const MessageSend = ({ chatid }: Props) => {
     const { message } = style
     const textBlockRef = useRef<HTMLTextAreaElement>(null!)
-    const [sendMessageMut, { loading }] =
-        GQLT.Mutation.useSendMessage()
+    const [sendMessageMut, { loading }] = GQLT.Mutation.useSendMessage()
 
-    /* if (amount < 50 && !loading)
-        sendMessageMut({
-            variables: {
-                chatid,
-                text:
-                    `${amount++} ipsum dolor sit amet consectetur adipisicing elit.`
-            }
-        }) */
+    /* if (amount < 250 && chatid && !loading) {
+        const text = `${amount++} ${str.repeat(Math.round(Math.random() * 100 % 10))}`
+        sendMessageMut({ variables: { chatid, text } })
+    } */
 
     const sendMessage = () => {
         const { value: text } = textBlockRef?.current

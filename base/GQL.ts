@@ -1,79 +1,62 @@
 import { gql } from "@apollo/client";
+import { Fragment } from "apolloclient/fragment";
 
 export namespace GQL {
   export namespace Query {
     export const User = gql`
       query user($id: ID!) {
         User(id: $id) {
-          _id
-          name
-          image
-          status
-          isOnline
-          isOnlineMobile
-          dateLastOnline
+          ...UserInfo
         }
       }
+      ${Fragment.UserInfo}
     `;
     export const UserCurrent = gql`
       query {
         UserCurrent {
-          _id
-          name
-          image
-          chats_id
-          isOnline
-          isOnlineMobile
-          dateLastOnline
+          ...UserInfo
         }
       }
+      ${Fragment.UserInfo}
     `;
 
     export const Chat = gql`
       query chat($chatid: ID!) {
         Chat(chatid: $chatid) {
-          _id
-          date
-          title
-          creater
-          creater_id
-          access
-          lastMessage {
-            _id
-            text
-          }
+          ...ChatInfo
+          ...LastMessage
         }
       }
+      ${Fragment.ChatInfo}
+      ${Fragment.LastMessage}
     `;
 
     export const Messages = gql`
-      query messages($chatid: ID!, $lastMessageID: ID, $limit: Int) {
+      query messages(
+        $chatid: ID!
+        $messageid: ID
+        $limit: Int
+        $isIncoming: Boolean = false
+      ) {
         Messages(
           chatid: $chatid
-          lastMessageID: $lastMessageID
+          messageid: $messageid
           limit: $limit
+          isIncoming: $isIncoming
         ) {
           Chat {
             _id
-            lastMessage {
-              _id
-              text
-            }
-            messages {
-              _id
-              userid
-              text
-              date
-              isChange
-            }
+            ...ChatMessages
+            ...LastMessage
           }
           InfoMore {
-            lastIndex
-            size
-            isEnd
+            ...InfoMore
           }
         }
       }
+      ${Fragment.InfoMore}
+      ${Fragment.LastMessage}
+      ${Fragment.ChatMessages}
     `;
   }
   export namespace Mutation {
@@ -115,19 +98,14 @@ export namespace GQL {
     export const AddChat = gql`
       subscription {
         AddChat {
-          _id
-          title
-          image
-          date
-          creater
-          creater_id
-          access
+          ...ChatInfo
           lastMessage {
             _id
             text
           }
         }
       }
+      ${Fragment.ChatInfo}
     `;
 
     export const RemoveChat = gql`
@@ -142,9 +120,9 @@ export namespace GQL {
       subscription {
         AddMessage {
           _id
+          userid
           text
           date
-          userid
           isChange
         }
       }

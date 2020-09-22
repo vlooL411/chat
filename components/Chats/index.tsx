@@ -7,19 +7,15 @@ import { Chat, ID, Message } from 'apolloclient/types'
 import { ReactElement, useEffect, useState } from 'react'
 import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import style from './styles/chats.module.sass'
+import { Fragment } from 'apolloclient/fragment'
 
 const GetChatsExploler = gql`
     query chats($start: Int!, $end: Int!) {
         Chats(start: $start, end: $end) {
-            _id
-            title
-            image
-            date
-            creater
-            creater_id
-            access
+            ...ChatInfo
             lastMessage {
                 _id
+                date
                 text
             }
         }
@@ -28,6 +24,7 @@ const GetChatsExploler = gql`
             chats_id
         }
     }
+    ${Fragment.ChatInfo}
 `
 
 const FindQuery = gql`
@@ -41,17 +38,13 @@ const FindQuery = gql`
     }
 
     fragment chatFragment on Chat {
-        _id
-        title
-        image
-        date
-        creater
-        creater_id
+        ...ChatInfo
         messages {
             _id
             text
         }
     }
+    ${Fragment.ChatInfo}
 `
 
 type Props = {

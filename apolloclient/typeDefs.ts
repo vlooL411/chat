@@ -1,13 +1,13 @@
-import { InfoMore } from "./types";
 import { gql } from "@apollo/client";
 
 export default gql`
   scalar Date
 
   type InfoMore {
+    isEndUp: ID
+    isEndDown: ID
     lastIndex: ID
-    size: Int!
-    isEnd: Boolean
+    size: Int
   }
 
   type User {
@@ -63,7 +63,7 @@ export default gql`
     image: String
     date: Date!
     creater_id: ID!
-    creater: Creater
+    creater: Creater!
     access: Access!
     lastMessage: Message
     users_id: [ID]
@@ -82,7 +82,12 @@ export default gql`
     Users(start: Int!, end: Int!): [User]
     Chat(chatid: ID!): Chat
     Chats(start: Int!, end: Int!): [Chat]
-    Messages(chatid: ID!, lastMessageID: ID, limit: Int): Messages
+    Messages(
+      chatid: ID!
+      messageid: ID
+      limit: Int
+      isIncoming: Boolean
+    ): Messages
 
     Friends(userid: ID!): [Friend]
 
@@ -91,10 +96,10 @@ export default gql`
   }
 
   type Mutation {
-    InviteChat(chatid: ID): String
-    LeaveChat(chatid: ID): String
-    CreateChat(title: String): String
-    RemoveChat(chatid: ID): String
+    InviteChat(chatid: ID!): String
+    LeaveChat(chatid: ID!): String
+    CreateChat(title: String!): String
+    RemoveChat(chatid: ID!): String
 
     SendMessage(chatid: ID!, text: String!): String
     ChangeMessage(chatid: ID!, messageid: ID!, text: String!): String
@@ -104,6 +109,7 @@ export default gql`
   type Subscription {
     AddChat: Chat
     RemoveChat: Chat
+
     AddMessage: Message
     ChangeMessage: Message
     RemoveMessage: Message

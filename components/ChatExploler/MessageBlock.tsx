@@ -8,10 +8,12 @@ import { getHHMMPA } from 'components/common/WhatDate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEdit, faSave, faBan, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import style from './styles/messageBlock.module.sass'
+import LocalStorage from 'utils/LocalSrorage'
 
 const GetUserAvatar = gql`
     query user($id: ID!) {
         User(id: $id) {
+            _id
             image
         }
     }
@@ -30,19 +32,18 @@ const MessageBlock = ({ chatid, message, countExpand = 300 }: Props) => {
     const [isReadOnly, setIsReadOnly] = useState<boolean>(true)
     const [isExpandMes, setIsExpandMes] = useState<boolean>(false)
 
-    const isExpand = message?.text.length > countExpand
+    const isExpand = message?.text?.length > countExpand
 
     useEffect(() => {
         if (isExpand)
             setIsExpandMes(true)
-    }, [message?.text])
+    }, [message?.text?.length])
 
     const [changeMessage, { loading: loadingChange, error: errorChange, data: dataChange }]
         = GQLT.Mutation.useChangeMessage()
     const [removeMessage, { loading: loadingRemove, error: errorRemove, data: dataRemove }]
         = GQLT.Mutation.useRemoveMessage()
-    const { data }
-        = useQuery(GetUserAvatar, { variables: { id: message?.userid } })
+    const { data } = useQuery(GetUserAvatar, { variables: { id: message?.userid } })
 
     //#region Action with message
     const editMes = () => setIsReadOnly(!isReadOnly)
@@ -59,9 +60,14 @@ const MessageBlock = ({ chatid, message, countExpand = 300 }: Props) => {
     const removeMes = () => removeMessage({ variables: { chatid, messageid: message?._id } })
     //#endregion
 
+    const onMouseEnter = () => {
+        if (chatid)
+            LocalStorage.setString('ChatLastMes', chatid.toString(), message?._id.toString())
+    }
+
     const user = data?.User as User
     const { EMPTY_AVATAR_USER } = process.env
-    return <div className={mes}>
+    return <div className={mes} onMouseEnter={onMouseEnter}>
         <img src={user?.image ?? EMPTY_AVATAR_USER} />
         <div className={mes_block} onDoubleClick={() => removeMes()}>
             <Loader loading={loadingRemove} />
@@ -69,7 +75,7 @@ const MessageBlock = ({ chatid, message, countExpand = 300 }: Props) => {
                 <p className={mes_block_text}>
                     {!isExpandMes ? message?.text : isExpand ?
                         <>
-                            {message?.text.slice(0, countExpand)}...
+                            {message?.text?.slice(0, countExpand)}...
                             <br />
                             <button className={expend}
                                 onClick={() => setIsExpandMes(false)}>

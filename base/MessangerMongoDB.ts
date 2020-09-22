@@ -1,6 +1,6 @@
-import { API } from "@api/index";
+import { API } from "@API";
 import { NextApiRequest } from "next";
-import { Chat, User, Messages, IMessangerAsync } from "apolloclient/types";
+import { Chat, User, Messages, IMessangerAsync } from "@types";
 
 const { HOST_API } = process.env;
 

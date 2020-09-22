@@ -1,7 +1,7 @@
 import { Query } from "./Query";
 import { Mutation } from "./Mutation";
 import { Subscription } from "./Subscription";
-import { IMessangerAsync } from "./types";
+import { IMessangerAsync } from "@types";
 import { IResolvers } from "apollo-server";
 import { PubSub } from "graphql-subscriptions";
 /* import { MQTTPubSub } from "graphql-mqtt-subscriptions"; */

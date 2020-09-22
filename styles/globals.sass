@@ -1,7 +1,21 @@
 @import './themes/light'
 @import './themes/dark'
 
+$scrollback: var(--scrollback) 
+$scrollhov: var(--scrollhov)
 $back: var(--background)
+$butthov: var(--buttonhov)
+
+::-webkit-scrollbar
+  width: .3rem
+  &-track
+    box-shadow: inset 0 0 2px grey
+    border-radius: 1rem
+  &-thumb
+    background: $scrollback
+    border-radius: 1rem
+    &:hover
+      background: $scrollhov
 
 *
   box-sizing: border-box
@@ -24,7 +38,7 @@ button, a
   user-select: none
   font: inherit
   &:hover
-    background-color: #000
+    background-color: $butthov
   &:focus
     outline: none
     background: gray

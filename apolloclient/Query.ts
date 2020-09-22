@@ -1,4 +1,4 @@
-import { Chat, User, Messages, IMessangerAsync } from "./types";
+import { Chat, User, Messages, IMessangerAsync } from "@types";
 
 export const Query = (iMessanger: IMessangerAsync) => ({
   User: async (_, body, { req }): Promise<User> => iMessanger.User(body, req),

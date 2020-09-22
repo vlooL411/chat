@@ -1,7 +1,7 @@
 import Choice from "./Choice"
 import BarDrop from "./BarDrop"
 import { Chat } from "apolloclient/types"
-import { ReactElement, useState } from "react"
+import { ReactElement, useMemo, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEllipsisV, faPalette } from "@fortawesome/free-solid-svg-icons"
 import style from './styles/bar.module.sass'
@@ -15,19 +15,24 @@ const Bar = ({ chat }: Props): ReactElement => {
 
     const [isBarDrop, setIsBarDrop] = useState<boolean>(false)
 
-    const barDrop = () => setIsBarDrop(true)
-    const barUnDrop = () => setIsBarDrop(false)
+    const onBarDrop = () => setIsBarDrop(true)
+    const onBarUnDrop = () => setIsBarDrop(false)
+
+    const choice = useMemo(() => <Choice chat={chat} />, [chat])
+    const barDrop = useMemo(() =>
+        <BarDrop chat={chat} visible={isBarDrop} />,
+        [chat, isBarDrop])
 
     return <div className={bar} style={{ position: 'relative' }}
-        onMouseLeave={barUnDrop}>
-        <Choice chat={chat} />
+        onMouseLeave={onBarUnDrop}>
+        {choice}
         <div className={bar_tools}>
             <button>
                 <FontAwesomeIcon icon={faPalette} />
             </button>
-            <button onClick={barDrop} >
+            <button onClick={onBarDrop} >
                 <FontAwesomeIcon icon={faEllipsisV} />
-                <BarDrop chat={chat} visible={isBarDrop} />
+                {barDrop}
             </button>
         </div>
     </div>

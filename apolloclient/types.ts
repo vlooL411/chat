@@ -1,5 +1,5 @@
+import { API } from "@API";
 import { Types } from "mongoose";
-import { API } from "../pages/api";
 import { NextApiRequest } from "next";
 
 export type ID = number | string | Types.ObjectId;
@@ -7,7 +7,8 @@ export type ID = number | string | Types.ObjectId;
 export type InfoMore = {
   lastIndex?: ID;
   size: number;
-  isEnd?: boolean;
+  isEndUp?: ID;
+  isEndDown?: ID;
 };
 
 export type User = {
