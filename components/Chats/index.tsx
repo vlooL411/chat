@@ -2,22 +2,18 @@ import { GQL } from '@GQL'
 import Choice from './Choice'
 import Loader from '../Loader'
 import Search from 'components/Search'
-import SearchInfo from 'components/Search/SearchInfo'
-import { Chat, ID, Message } from 'apolloclient/types'
-import { ReactElement, useEffect, useState } from 'react'
-import { gql, useLazyQuery, useQuery } from '@apollo/client'
-import style from './styles/chats.module.sass'
+import { Chat, ID, Message, User } from '@types'
 import { Fragment } from 'apolloclient/fragment'
+import BlockInfo from 'components/Search/BlockInfo'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
+import { ReactElement, useEffect, useState } from 'react'
+import style from './styles/chats.module.sass'
 
 const GetChatsExploler = gql`
-    query chats($start: Int!, $end: Int!) {
-        Chats(start: $start, end: $end) {
+    query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
+        Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
             ...ChatInfo
-            lastMessage {
-                _id
-                date
-                text
-            }
+            ...LastMessage
         }
         UserCurrent {
             _id
@@ -25,6 +21,7 @@ const GetChatsExploler = gql`
         }
     }
     ${Fragment.ChatInfo}
+    ${Fragment.LastMessage}
 `
 
 const FindQuery = gql`
@@ -42,15 +39,19 @@ const FindQuery = gql`
         messages {
             _id
             text
+            date
         }
+        ...LastMessage
     }
     ${Fragment.ChatInfo}
+    ${Fragment.LastMessage}
 `
 
 type Props = {
     onSelectChat: (id: ID) => void
 }
 
+//TODO static Date: Date ??????
 class StoreDate {
     static Date: Date
 }
@@ -60,36 +61,35 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 
     const [isSearch, setIsSearch] = useState<boolean>(false)
 
-    //#region Query
-    const { loading, data, subscribeToMore, refetch } =
-        useQuery(GetChatsExploler, { variables: { start: 0, end: 10 } })
+    const { loading, data, subscribeToMore } =
+        useQuery<{ Chats: Chat[], UserCurrent: User }>(GetChatsExploler)
     const [findChatMes, { loading: loadFind, data: findData }] = useLazyQuery(FindQuery)
-    //#endregion
 
     //#region Subscription
     const addMore = () => subscribeToMore({
         document: GQL.Subscription.AddChat,
-        updateQuery: (prev, { subscriptionData }) => {
-            refetch()
-            const data = subscriptionData?.data as any as { AddChat: Chat }
-            return Object.assign({}, prev, {
-                Chats: [data?.AddChat]
-            })
+        updateQuery: (_, { subscriptionData, variables }) => {
+            const AddChat = (subscriptionData?.data as any)?.AddChat as Chat
+            if (!AddChat) return null
+
+            variables.isIncoming = true
+            return {
+                Chats: [AddChat],
+                UserCurrent: { chats_id: [AddChat?._id] }
+            } as any
         }
     })
 
     const remMore = () => subscribeToMore({
         document: GQL.Subscription.RemoveChat,
-        updateQuery: (prev, { subscriptionData }) => {
-            refetch()
-            const data = subscriptionData?.data as any as { RemoveChat: Chat }
+        updateQuery: (prev, { subscriptionData, variables }) => {
+            const RemoveChat = (subscriptionData?.data as any)?.RemoveChat as Chat
+            if (!RemoveChat) return null
+            const chats = prev?.Chats?.filter(chat => chat._id != RemoveChat._id)
+            const chats_id = (prev as any)?.UserCurrent?.chats_id.filter(id => id != RemoveChat._id) as ID[]
 
-            const { RemoveChat } = data
-            const chats = Object.assign([], prev?.Chat)
-            const indexRemChat = chats?.findIndex(mes => mes._id == RemoveChat._id)
-            chats.splice(indexRemChat, 1)
-
-            return Object.assign({}, { Chat: chats })
+            variables.isIncoming = true
+            return { Chats: chats, UserCurrent: { chats_id: chats_id } } as any
         }
     })
 
@@ -128,6 +128,8 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
     const dataFindChats: Chat[] = findData?.FindChat
     const dataFindMess: Chat[] = findData?.FindMessage
 
+    const isChatsEmpty = dataChats?.length == 0
+    const countFindChats = dataFindChats?.length
     const countFindMess = dataFindMess?.
         reduce((sum, curr) => sum + (curr?.messages ? curr?.messages.length : 0), 0)
 
@@ -137,10 +139,14 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
             onClear={() => stopFind()}
             onChange={(e) => findMessage(e?.target?.value)} />
         <Loader loading={loading} />
-        {!isSearch ? dataChats?.map(choice) :
+        {!isSearch ?
+            !isChatsEmpty ?
+                dataChats?.map(choice) :
+                <BlockInfo what={`Chats empty`} /> :
             <>
+                <BlockInfo what={`Found chats ${countFindChats ?? 0}`} />
                 {dataFindChats?.map(choice)}
-                <SearchInfo what='messages' count={countFindMess} />
+                <BlockInfo what={`Found messages ${countFindMess ?? 0}`} />
                 {dataFindMess?.map(chat =>
                     chat?.messages?.map((mes, key) =>
                         choiceMes(chat, mes, key)))}

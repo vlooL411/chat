@@ -49,8 +49,6 @@ $expend: #ef83dc
             resize: none
             overflow: hidden
             overflow-wrap: anywhere
-            &box
-                width: 28rem
             .expend
                 color: $expend
         &_info
@@ -75,29 +73,3 @@ $expend: #ef83dc
                 margin-left: .25em
             .send_off
                 color: $sendoff
-                
-@import '../../../styles/screensize'
-@media screen and (max-width: $minscreen)
-    .mes
-        &_block
-            &_text
-                &box
-                    width: 20rem
-@media screen and (max-width: $minscreen * 0.75)
-    .mes
-        &_block
-            &_text
-                &box
-                    width: 13rem
-@media screen and (max-width: $minscreen * 0.6)
-    .mes
-        &_block
-            &_text
-                &box
-                    width: 10rem
-@media screen and (max-width: $minscreen * 0.5)
-    .mes
-        &_block
-            &_text
-                &box
-                    width: 3.5rem

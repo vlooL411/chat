@@ -41,7 +41,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const Limit = Math.abs(limit);
         const end = start < 0 ? (index < 0 ? start + Limit : index) : Limit;
         start = start < 0 ? 0 : start;
-        console.log(start, end);
+
         const chat_s: Chat[] = await chats.aggregate([
           { $match: { _id: new Types.ObjectId(chatid) } },
           {
@@ -61,14 +61,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const isEndDown = chat?.lastMessage?._id;
 
         const InfoMore: InfoMore = {
+          _id: chatid,
           size,
           isEndUp,
           isEndDown,
           lastIndex: messageid,
         };
-
-        console.log(messageid, chat_s[0]?.messages?.length);
-        console.log(index, size, limit, isEndUp, isEndDown);
 
         dataApi.True<Messages>({ Chat: chat, InfoMore } ?? "don't messages");
       } catch (error) {

@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import Block from "./Block";
 import BlockUser from "./BlockUser";
-import { Chat, Creater, ID, Message } from "apolloclient/types";
+import { ReactElement } from "react";
+import { Chat, Creater, ID, Message } from "@types";
 
 type Props = {
     chat: Chat

@@ -25,6 +25,7 @@ export namespace Fragment {
   `;
   export const InfoMore = gql`
     fragment InfoMore on InfoMore {
+      _id
       size
       isEndUp
       isEndDown

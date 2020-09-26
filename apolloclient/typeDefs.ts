@@ -4,6 +4,7 @@ export default gql`
   scalar Date
 
   type InfoMore {
+    _id: ID
     isEndUp: ID
     isEndDown: ID
     lastIndex: ID
@@ -17,7 +18,7 @@ export default gql`
     password: String!
     image: String
     status: String
-    chats_id: [ID!]
+    chats_id: [ID]
     friends: [Friend]
     permissions: Int
     isOnline: Boolean
@@ -81,7 +82,7 @@ export default gql`
     UserID(name: String, email: String): User
     Users(start: Int!, end: Int!): [User]
     Chat(chatid: ID!): Chat
-    Chats(start: Int!, end: Int!): [Chat]
+    Chats(chatid: ID, limit: Int, isIncoming: Boolean): [Chat]
     Messages(
       chatid: ID!
       messageid: ID

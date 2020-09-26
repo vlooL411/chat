@@ -3,10 +3,12 @@ import { ID } from "apolloclient/types";
 export namespace API {
   export namespace User {
     export type GetBody = { id: ID };
+    export type GetsBody = { id?: ID; limit?: number };
     export type idBody = { name: string; email: string };
   }
   export namespace Chat {
     export type GetBody = { chatid: ID };
+    export type GetsBody = { chatid?: ID; limit?: number };
     export type CreateBody = { title: string };
     export type RemoveBody = { chatid: ID };
     export type FindBody = { title: string };

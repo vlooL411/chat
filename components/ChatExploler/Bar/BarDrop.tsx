@@ -1,17 +1,7 @@
 import { GQLT } from "@GQLT";
 import { Chat, User } from "@types"
-import { gql } from "@apollo/client";
-import { ReactElement, useEffect, useMemo } from "react"
+import { ReactElement, useMemo } from "react"
 import style from './styles/bardrop.module.sass'
-
-const GetUserCurr = gql`
-    query {
-        UserCurrent {
-            _id
-            chats_id
-        }
-    }
-`;
 
 type Elem = {
     text: string
@@ -26,18 +16,15 @@ type Props = {
 const BarDrop = ({ chat, visible }: Props): ReactElement => {
     const { bardrop, bardrop_hidden, block } = style
 
-    const [getUserCurr, { data, refetch }] = GQLT.Query.useUserCurrentLazy(null, GetUserCurr)
+    const { data, refetch } = GQLT.Query.useUserCurrent()
     const [inviteChat, { data: dataInvite }] = GQLT.Mutation.useInviteChat()
     const [removeChat, { data: dataRemove }] = GQLT.Mutation.useRemoveChat()
     const [leaveChat, { data: dataLeave }] = GQLT.Mutation.useLeaveChat()
 
-    //TODO remake
-    useEffect(() => getUserCurr(), [])
-
     const user = data?.UserCurrent as User
 
     const list = useMemo<Elem[]>(() => {
-        if (!user) return null
+        if (!chat) return
 
         const dropList: Elem[] = []
 
@@ -46,7 +33,7 @@ const BarDrop = ({ chat, visible }: Props): ReactElement => {
                 onClick()
                 refetch()
             }
-            dropList.push({ text, onClick: Refetch } as Elem)
+            dropList.push({ text, onClick: Refetch })
         }
 
         const chatid = { variables: { chatid: chat?._id } }
@@ -58,7 +45,7 @@ const BarDrop = ({ chat, visible }: Props): ReactElement => {
         else pushElem('Invite chat', () => inviteChat(chatid))
 
         return dropList
-    }, [user, chat?._id])
+    }, [user?.chats_id, chat?._id])
 
     return <div className={`${bardrop} ${visible ? bardrop_hidden : ''}`}>
         {list?.map(({ text, onClick }, key) =>

@@ -1,4 +1,4 @@
-import { Chat } from "apolloclient/types";
+import { Chat } from "@types";
 import { model, Schema, models, Types } from "mongoose";
 
 const MessageSchema = {

@@ -2,14 +2,16 @@ import Bar from './Bar'
 import { GQL } from '@GQL'
 import { GQLT } from '@GQLT'
 import Loader from '../Loader'
-import MessageSend from './MessageSend'
+import MessageAction, { MessageActionMode } from './MessageAction'
 import MessageBlock from './MessageBlock'
 import { first, last } from 'utils/array'
 import { Chat, ID, Message } from '@types'
 import LocalStorage from 'utils/LocalSrorage'
-import { ReactElement, useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import ScrollLoadMore from '../Scroll/ScrollLoadMore'
 import style from './styles/chatExploler.module.sass'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
   chatid: ID
@@ -20,7 +22,11 @@ const limitQT: number = Math.round(limit / 4)
 const scrollLoad: number = 100
 
 const ChatExploler = ({ chatid }: Props): ReactElement => {
-  const { chatExploler, messages } = style
+  const { chatExploler, messages, scrollcontainer } = style
+  const { down, loader, loader_up, loader_down } = style
+
+  const [mesActionMode, setMesActionMode] =
+    useState<MessageActionMode>({ mes: null, mode: 'send' })
 
   const { loading, data } = GQLT.Query.useChat({ variables: { chatid } })
   const { data: dataMess, loading: loadMess, refetch, subscribeToMore } =
@@ -53,7 +59,7 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
 
       variables.isIncoming = true
       const messages = mess ? [...mess, AddMessage] : [AddMessage]
-      return { Messages: { Chat: { lastMessage, messages } } } as any
+      return { Messages: { Chat: { lastMessage, messages }, InfoMore: { isEndDown: lastMessage?._id } } } as any
     }
   })
 
@@ -64,7 +70,7 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
       if (!RemoveMessage) return null;
 
       variables.isIncoming = true
-      const messages = prev?.Messages?.Chat?.messages?.filter((el) => el._id == RemoveMessage._id)
+      const messages = prev?.Messages?.Chat?.messages?.filter((el) => el._id != RemoveMessage._id)
       return { Messages: { Chat: { messages } } } as any
     }
   })
@@ -80,6 +86,11 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
   const infoMore = dataMess?.Messages?.InfoMore
   const mess = dataMess?.Messages?.Chat?.messages
 
+  const ScrollElem = (mes: Message) =>
+    <MessageBlock chatid={chatid} message={mes} key={mes?._id as string}
+      switchMessageAction={(mes) => setMesActionMode({ mes, mode: 'change' })} />
+
+  //#region scroll
   const scrollZero = () => {
     if (!infoMore && !mess && infoMore?.size == mess?.length) return
 
@@ -94,23 +105,12 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
     Refetch(Limit, messageid)
   }
 
-
-  const loadMoreUp = (firstMessage: Message) => {
+  const loadMore = (message: Message, isUp: boolean) => {
     if (!infoMore || loadMess) return
-    // console.log('loadMoreUp', isEndUp, firstMessageID, loadMess, isEndUp == firstMessageID, mess)
-    Refetch(-limitQT, firstMessage?._id)
-  }
-
-  const loadMoreDown = (lastMessage: Message) => {
-    if (!infoMore || loadMess) return
-    // console.log('loadMoreDown', isEndDown, lastMessageID, isEndDown == lastMessageID, mess)
-    Refetch(limitQT, lastMessage?._id)
+    Refetch(limitQT * (isUp ? -1 : 1), message?._id)
   }
 
   const cmdEnd = (end: ID, el: Message) => end == el?._id
-
-  const ScrollElem = (mes: Message, key) =>
-    <MessageBlock chatid={chatid} message={mes} key={key} />
 
   const scroll = useMemo<ReactElement>(() => <ScrollLoadMore
     className={messages}
@@ -120,20 +120,26 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
     isEnd={{ up: infoMore?.isEndUp, down: infoMore?.isEndDown }}
     scrollUp={scrollLoad} scrollDown={scrollLoad}
     onScrollZero={scrollZero}
-    onScrollUp={loadMoreUp}
-    onScrollDown={loadMoreDown} />,
+    onScrollUp={(mes) => loadMore(mes, true)}
+    onScrollDown={(mes) => loadMore(mes, false)} />,
     [infoMore, mess, mess?.length])
+  //#endregion
 
   const bar = useMemo<ReactElement>(() => <Bar chat={chat} />, [chat])
-  const messageSend = useMemo<ReactElement>(() => <MessageSend chatid={chatid} />, [chatid])
+  const messageAction = useMemo<ReactElement>(() =>
+    <MessageAction chatid={chatid} action={mesActionMode} />,
+    [chatid, mesActionMode])
 
   return <div className={chatExploler}>
     {bar}
-    <p style={{ color: 'white', margin: 0 }}>Count messages: {mess?.length}</p>
-    <Loader loading={loadMess} />
-    {scroll}
-    <Loader loading={loadMess || loading} />
-    {messageSend}
+    <div className={scrollcontainer}>
+      <Loader loading={loadMess} className={`${loader} ${loader_up}`} />
+      {scroll}
+      {/* {loadMess || loading ? */}
+      <Loader loading={loadMess || loading} className={`${loader} ${loader_down}`} /> {/* : */}
+      {/* <FontAwesomeIcon icon={faChevronCircleDown} className={`${down} ${loader} ${loader_down}`} />} */}
+    </div>
+    {messageAction}
   </div >
 }
 

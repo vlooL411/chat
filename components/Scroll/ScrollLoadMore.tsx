@@ -1,6 +1,6 @@
-import { first, last } from 'utils/array'
-import { ReactElement, useEffect, useRef, useState } from 'react'
 import Scroll from '.'
+import { first, last } from 'utils/array'
+import { MutableRefObject, ReactElement, useEffect, useRef, useState } from 'react'
 
 type Props<T, C> = {
     className?: string
@@ -10,12 +10,12 @@ type Props<T, C> = {
     scrollDown?: number
     elemInit: (el: T, key) => ReactElement
     cmpEnd: (end: C, elem: T) => boolean
-    onScrollZero: () => void
+    onScrollZero: (ref: MutableRefObject<HTMLDivElement>) => void
     onScrollUp: (elem: T, e: EventTarget & HTMLDivElement) => void
     onScrollDown: (elem: T, e: EventTarget & HTMLDivElement) => void
 }
 
-//slow scrolling (worth rewriting to slice scroll)
+//TODO slow scrolling (worth rewriting to slice scroll)
 const ScrollLoadMore = function <T, C>({
     className, array,
     elemInit = () => <></>,
@@ -32,7 +32,7 @@ const ScrollLoadMore = function <T, C>({
     const [isLoadScroll, setIsLoadScroll] = useState<false | -1 | true>(true)
 
     useEffect(() => {
-        if (!array)
+        if (array)
             setIsLoadScroll(true)
     }, [array])
 
@@ -40,7 +40,7 @@ const ScrollLoadMore = function <T, C>({
         if (!isLoadScroll || !array) return
         const { scrollHeight, clientHeight } = scrollRef?.current
         if (scrollHeight == clientHeight) {
-            onScrollZero()
+            onScrollZero(scrollRef)
             setIsLoadScroll(isLoadScroll ? -1 : false)
             return
         }

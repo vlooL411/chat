@@ -5,11 +5,11 @@ import { Chat, User, Messages, IMessangerAsync } from "@types";
 const { HOST_API } = process.env;
 
 export default class MessangerMongoDB implements IMessangerAsync {
-  async PostQuery(
+  async PostQuery<T>(
     relativeUrl: string,
     body,
     req: NextApiRequest
-  ): Promise<any> {
+  ): Promise<T> {
     const data = await fetch(`${HOST_API}/${relativeUrl}`, {
       method: "POST",
       body: JSON.stringify(body),
@@ -30,16 +30,16 @@ export default class MessangerMongoDB implements IMessangerAsync {
   UserID = (body: API.User.idBody, req: NextApiRequest = null): Promise<User> =>
     this.PostQuery("User/id", body, req);
 
-  Users = (start: number, end: number, req: NextApiRequest): Promise<User[]> =>
-    this.PostQuery("User/gets", { start, end }, req);
+  Users = (body: API.User.GetsBody, req: NextApiRequest): Promise<User[]> =>
+    this.PostQuery("User/gets", body, req);
   //#endregion
 
   //#region Chat
   Chat = (body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat> =>
     this.PostQuery("Chat", body, req);
 
-  Chats = (start: number, end: number, req: NextApiRequest): Promise<Chat[]> =>
-    this.PostQuery("Chat/gets", { start, end }, req);
+  Chats = (body: API.Chat.GetsBody, req: NextApiRequest): Promise<Chat[]> =>
+    this.PostQuery("Chat/gets", body, req);
 
   FindChat = (body: API.Chat.FindBody, req: NextApiRequest): Promise<Chat[]> =>
     this.PostQuery("Chat/find", body, req);

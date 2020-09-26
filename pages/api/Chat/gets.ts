@@ -1,7 +1,7 @@
 import chats from "models/chats";
 import users from "models/users";
 import DataApi from "base/DataApi";
-import { Chat, User } from "apolloclient/types";
+import { Chat, User } from "@types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,6 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           { _id: userid },
           "chats_id"
         );
+        
         const chat_s: Chat[] = await chats.aggregate([
           { $match: { _id: { $in: chats_id } } },
           {

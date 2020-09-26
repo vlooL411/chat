@@ -1,6 +1,6 @@
 import { Sub } from "./Subscription";
 import { PubSub } from "graphql-subscriptions";
-import { Chat, Message, IMessangerAsync } from "./types";
+import { Chat, Message, IMessangerAsync } from "@types";
 
 const isString = (obj: any) => typeof obj === "string";
 

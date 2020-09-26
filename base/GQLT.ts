@@ -72,6 +72,21 @@ export namespace GQLT {
     ) => useLazyQuery<T, V>(query, options);
     //#endregion
 
+    //#region Chats
+    type ChatsBody = API.Chat.GetsBody & { isIncoming?: Boolean };
+    export const useChats = <T extends { Chats: Chat[] }, V extends ChatsBody>(
+      options?: Query<T, V>,
+      query: Node = GQL.Query.Chats
+    ) => useQuery<T, V>(query, options);
+    export const useChatsLazy = <
+      T extends { Chats: Chat[] },
+      V extends ChatsBody
+    >(
+      options?: Lazy<T, V>,
+      query: Node = GQL.Query.Chats
+    ) => useLazyQuery<T, V>(query, options);
+    //#endregion
+
     //#region Messages
     type MessagesBody = API.Message.GetsBody & { isIncoming: Boolean };
     export const useMessages = <

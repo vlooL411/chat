@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { GQLT } from '@GQLT'
+import { User } from '@types'
 import { UrlObject } from 'url'
 import ChangeThemes from '../ChangeThemes'
 import { signOut } from 'next-auth/client'
@@ -6,19 +8,6 @@ import { ReactElement, useMemo, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition, faAlignJustify, faDoorOpen } from "@fortawesome/free-solid-svg-icons"
 import style from './sidebar.module.sass'
-import { gql, useQuery } from '@apollo/client'
-import { User } from 'apolloclient/types'
-
-const GetUserCurrent = gql`
-    query {
-        UserCurrent {
-            _id
-            name
-            email
-            image
-        }
-    }
-`
 
 type faText = {
     fa: IconDefinition
@@ -39,7 +28,7 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
     const { sidebar, sidebar_default, sidebar_block } = style
     const { extend, extend_on, extend_off, extend_block, total, none } = style
     const [isExtend, setIsExtend] = useState<boolean>(false)
-    const { data, loading, error } = useQuery(GetUserCurrent)
+    const { data, loading, error } = GQLT.Query.useUserCurrent()
 
     const Block = ({ fa, text, href, onClick }: faText, key) =>
         <Link key={key} href={href ?? ''}>

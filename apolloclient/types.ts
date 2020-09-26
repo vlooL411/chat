@@ -5,6 +5,7 @@ import { NextApiRequest } from "next";
 export type ID = number | string | Types.ObjectId;
 
 export type InfoMore = {
+  _id: ID;
   lastIndex?: ID;
   size: number;
   isEndUp?: ID;
@@ -96,12 +97,12 @@ export interface IMessanger {
 export interface IMessangerAsync {
   //#region Query
   User(body: API.User.GetBody, req: NextApiRequest): Promise<User>;
-  Users(start: number, end: number, req: NextApiRequest): Promise<User[]>;
+  Users(body: API.User.GetsBody, req: NextApiRequest): Promise<User[]>;
   UserID(body: API.User.idBody, req?: NextApiRequest): Promise<User>;
   UserCurrent(req: NextApiRequest): Promise<User>;
 
   Chat(body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat>;
-  Chats(start: number, end: number, req: NextApiRequest): Promise<Chat[]>;
+  Chats(body: API.Chat.GetsBody, req: NextApiRequest): Promise<Chat[]>;
   FindChat(body: API.Chat.FindBody, req: NextApiRequest): Promise<Chat[]>;
 
   Messages(body: API.Message.GetsBody, req?: NextApiRequest): Promise<Messages>;

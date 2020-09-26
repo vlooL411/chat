@@ -1,4 +1,4 @@
-import { User } from "apolloclient/types";
+import { User } from "@types";
 import { model, Schema, models, Types } from "mongoose";
 
 const usersSchema = new Schema<User>({

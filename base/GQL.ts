@@ -15,6 +15,7 @@ export namespace GQL {
       query {
         UserCurrent {
           ...UserInfo
+          chats_id
         }
       }
       ${Fragment.UserInfo}
@@ -23,6 +24,17 @@ export namespace GQL {
     export const Chat = gql`
       query chat($chatid: ID!) {
         Chat(chatid: $chatid) {
+          ...ChatInfo
+          ...LastMessage
+        }
+      }
+      ${Fragment.ChatInfo}
+      ${Fragment.LastMessage}
+    `;
+
+    export const Chats = gql`
+      query chats($start: Int!, $end: Int!) {
+        Chats(start: $start, end: $end) {
           ...ChatInfo
           ...LastMessage
         }
