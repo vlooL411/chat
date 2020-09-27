@@ -1,17 +1,17 @@
-import { API } from "@API";
-import { GQL } from "@GQL";
+import { API } from '@API'
+import { GQL } from '@GQL'
 import {
-  useQuery,
-  useLazyQuery,
-  useMutation,
-  useSubscription,
   DocumentNode,
   LazyQueryHookOptions,
-  QueryHookOptions,
   MutationHookOptions,
+  QueryHookOptions,
   SubscriptionHookOptions,
-} from "@apollo/client";
-import { User, Chat, Message, Messages } from "@types";
+  useLazyQuery,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from '@apollo/client'
+import { Chat, Contact, Message, Messages, User } from '@types'
 
 type Node = DocumentNode;
 type Query<T, V> = QueryHookOptions<T, V>;
@@ -24,14 +24,14 @@ export namespace GQLT {
   export namespace Query {
     //#region User
     export const useUser = <
-      T extends { UserCurrent: User },
+      T extends { User: User },
       V extends API.User.GetBody
     >(
       options?: Query<T, V>,
       query: Node = GQL.Query.User
     ) => useQuery<T, V>(query, options);
     export const useUserLazy = <
-      T extends { UserCurrent: User },
+      T extends { User: User },
       V extends API.User.GetBody
     >(
       options?: Lazy<T, V>,
@@ -52,6 +52,40 @@ export namespace GQLT {
     >(
       options?: Lazy<T, V>,
       query: Node = GQL.Query.UserCurrent
+    ) => useLazyQuery<T, V>(query, options);
+    //#endregion
+
+    //#region Contacts
+    export const useContacts = <
+      T extends { Contacts: Contact[] },
+      V extends never
+    >(
+      options?: Query<T, V>,
+      query: Node = GQL.Query.Contacts
+    ) => useQuery<T, V>(query, options);
+    export const useContactsLazy = <
+      T extends { Contacts: Contact[] },
+      V extends never
+    >(
+      options?: Lazy<T, V>,
+      query: Node = GQL.Query.Contacts
+    ) => useLazyQuery<T, V>(query, options);
+    //#endregion
+
+    //#region FindContact
+    export const useFindContact = <
+      T extends { FindContact: Contact[] },
+      V extends API.Contact.FindBody
+    >(
+      options?: Query<T, V>,
+      query: Node = GQL.Query.FindContact
+    ) => useQuery<T, V>(query, options);
+    export const useFindContactLazy = <
+      T extends { FindContact: Contact[] },
+      V extends API.Contact.FindBody
+    >(
+      options?: Lazy<T, V>,
+      query: Node = GQL.Query.FindContact
     ) => useLazyQuery<T, V>(query, options);
     //#endregion
 
@@ -131,6 +165,15 @@ export namespace GQLT {
     >(
       options?: Mutation<T, V>,
       query: Node = GQL.Mutation.RemoveChat
+    ) => useMutation<T, V>(query, options);
+    //#endregion
+    //#region CreateChat
+    export const useCreateChat = <
+      T extends { CreateChat: Chat },
+      V extends API.Chat.CreateBody
+    >(
+      options?: Mutation<T, V>,
+      query: Node = GQL.Mutation.CreateChat
     ) => useMutation<T, V>(query, options);
     //#endregion
 

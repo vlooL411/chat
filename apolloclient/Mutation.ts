@@ -1,6 +1,7 @@
-import { Sub } from "./Subscription";
-import { PubSub } from "graphql-subscriptions";
-import { Chat, Message, IMessangerAsync } from "@types";
+import { PubSub } from 'graphql-subscriptions'
+import { Chat, IMessangerAsync, Message } from '@types'
+
+import { Sub } from './Subscription'
 
 const isString = (obj: any) => typeof obj === "string";
 

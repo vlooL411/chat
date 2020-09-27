@@ -1,10 +1,11 @@
-import "../styles/globals.sass"
-import "../styles/classes.sass"
+import 'styles/globals.sass'
+import 'styles/classes.sass'
+
+import Signin from 'components/Sign'
 import { Provider } from 'next-auth/client'
-import { initializeApollo } from "../apolloclient/client"
-import Signin from "../components/Sign"
-import { ApolloProvider } from "@apollo/client"
-import { ReactElement, useState, createContext } from "react"
+import { ApolloProvider } from '@apollo/client'
+import { createContext, ReactElement, useState } from 'react'
+import { initializeApollo } from 'apolloclient/client'
 
 const { RUN_APOLLO_SERVER } = process.env;
 //TODO try change

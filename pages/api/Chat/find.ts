@@ -15,30 +15,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const userid = await dataApi.WrongTrustUserID(!title, "Enter title");
         if (!userid) return;
 
-        const chat_s: Chat[] = await chats.aggregate([
-          {
-            $match: {
-              title: { $regex: title, $options: "i" },
-              $or: [{ creater: { $ne: Creater.User } }, { creater_id: userid }],
-              access: { $nin: [Access.Private, Access.Own] },
-            },
-          },
-          {
-            $project: {
-              _id: true,
-              date: true,
-              title: true,
-              creater: true,
-              creater_id: true,
-              access: true,
-              lastMessage: { $arrayElemAt: ["$messages", -1] },
-            },
-          },
-        ]);
+        const chat_s: Chat[] = await chats
+          .aggregate()
+          .match({
+            title: { $regex: title, $options: "i" },
+            $or: [
+              { creater: { $ne: Creater.Contact } },
+              { creaters_id: { $elemMatch: { $eq: userid } } },
+            ],
+            access: { $nin: [Access.Private, Access.Own] },
+          })
+          .project({
+            _id: true,
+            date: true,
+            title: true,
+            creater: true,
+            creaters_id: true,
+            access: true,
+            lastMessage: { $arrayElemAt: ["$messages", -1] },
+          });
 
-        dataApi.True<Chat[]>(chat_s ?? "Find empty chats");
+        dataApi.True<Chat[]>(chat_s ?? "Chats don't finded");
       } catch (error) {
-        dataApi.Error(error, "Error request chats");
+        dataApi.Error(error, "Error request find chats");
       }
       break;
     default:

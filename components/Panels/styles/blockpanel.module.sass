@@ -1,0 +1,56 @@
+$chatfocus: #0e0e0e6e
+$chathover: #6762626e
+$title: gray
+$date: whitesmoke
+$lastmessage: white
+
+.block
+    text-align: start
+    user-select: none
+    width: 100%
+    display: grid
+    grid-template-columns: auto 1fr auto
+    grid-template-rows: auto auto
+    background: none
+    padding: 0 .5em
+    &:focus
+        background-color: $chatfocus
+    &:hover
+        background-color: $chathover
+    & > img
+        border-radius: 50%
+        background-size: cover
+        margin: .5rem .6rem
+        grid-area: 1 / 1 / 3 / 2
+        align-self: center
+        max-height: 48px
+    &_title
+        margin: .5rem .25rem .2rem
+        color: $title
+        font-size: .9em
+        white-space: nowrap
+        text-overflow: ellipsis
+    &_date
+        margin: .7rem .6rem .2rem
+        color: $date
+        font-size: .7em
+    &_text
+        font-size: .7em
+        margin: 0 .4rem .5rem
+        grid-area: 2 / 2 / 3 / 4
+        color: $lastmessage
+        overflow: hidden
+        white-space: nowrap
+        text-overflow: ellipsis
+
+@import 'styles/screensize'
+@media screen and (max-width: $minscreen)
+    .block
+        padding: 0
+        display: flex
+        justify-content: center
+        & > p
+            margin: 0
+            padding: 0
+        &_title, &_date, &_text
+            display: none

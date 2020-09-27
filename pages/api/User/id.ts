@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const user: User = await users.findOne({ name, email }, "_id");
         dataApi.True(user ?? "User don't exist");
       } catch (error) {
-        dataApi.Error(error, "Error request id user");
+        dataApi.Error(error, "Error request get id user");
       }
       break;
     default:

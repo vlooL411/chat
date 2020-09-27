@@ -1,9 +1,8 @@
-import { Access } from "apolloclient/types";
-import { API } from "./../index";
+import { API } from "..";
 import { Types } from "mongoose";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
-import { Message } from "./../../../apolloclient/types";
+import chats from "models/chats";
+import DataApi from "base/DataApi";
+import { Message, Access } from "@types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -33,8 +32,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             _id: chatid,
             $or: [
               { access: Access.Public },
-              { creater_id: userid },
-              { users_id: userid },
+              { creaters_id: { $elemMatch: { $eq: userid } } },
+              { users_id: { $elemMatch: { $eq: userid } } },
             ],
           },
           { $push: { messages: message as never } }

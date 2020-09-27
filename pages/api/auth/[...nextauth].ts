@@ -1,8 +1,9 @@
-import { API } from "..";
-import { ID, User } from "@types";
-import Providers from "next-auth/providers";
-import NextAuth, { InitOptions } from "next-auth";
-import { NextApiRequest, NextApiResponse } from "next";
+import Providers from 'next-auth/providers'
+import NextAuth, { InitOptions } from 'next-auth'
+import { ID, User } from '@types'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { API } from '..'
 
 const { DB_HOST } = process.env;
 const { GOOGLE_SECRET } = process.env;

@@ -1,7 +1,7 @@
-import { User } from "@types";
-import users from "models/users";
-import DataApi from "base/DataApi";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import users from 'models/users'
+import { User } from '@types'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

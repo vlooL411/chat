@@ -1,6 +1,6 @@
 import { API } from "..";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
+import chats from "models/chats";
+import DataApi from "base/DataApi";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           {
             _id: chatid,
             $or: [
-              { creater_id: userid },
+              { creaters_id: userid },
               { messages: { $elemMatch: { _id: messageid, userid } } },
             ],
           },

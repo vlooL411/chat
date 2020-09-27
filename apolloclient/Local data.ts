@@ -1,18 +1,18 @@
-import { Friend, User, Message, Chat, Creater, Access } from "./types";
+import { Contact, User, Message, Chat, Creater, Access } from "./types";
 import { GetYesterdey } from "components/common/WhatDate";
 import { IResolvers } from "apollo-server";
 
 //#region Local data
-const Friends = (userID: number): Friend[] =>
+const Friends = (userID: number): Contact[] =>
   Array.from(
     { length: 10 },
     (_, i) =>
       ({
         _id: i * userID,
-        user_id: i,
+        userid: i,
         date: new Date(),
         whoIsFriend: `Title ${i}`,
-      } as Friend)
+      } as Contact)
   );
 
 const Users: User[] = Array.from({ length: 10 }, (_, i) => ({
@@ -24,7 +24,7 @@ const Users: User[] = Array.from({ length: 10 }, (_, i) => ({
     .fill(`Status ${i}`)
     .join(" "),
   chats_id: Array(i).fill(i),
-  friends: Friends(i),
+  contacts: Friends(i),
   isOnline: i % 2 == 0,
   isOnlineMobile: i % 4 == 0,
   dateLastOnline: i % 2 == 0 ? new Date() : GetYesterdey(new Date()),
@@ -40,8 +40,8 @@ const Messages = (idChat: number, count: number): Message[] =>
 
 const Chats: Chat[] = Array.from({ length: 10 }, (_, i) => ({
   _id: i,
-  creater_id: Users[i]._id,
-  creater: Creater.User,
+  creaters_id: Users[i]._id,
+  creater: Creater.Contact,
   date: new Date(),
   access: Access.Public,
   title: `Title ${i}`,
@@ -61,7 +61,7 @@ export const resolverss: IResolvers | IResolvers[] = {
     },
     Friends: (_, { id }): Friend => {
       const user = Users[Users.findIndex((el) => el._id == id)];
-      return user.friends[user.friends.findIndex((el) => el.user_id == id)];
+      return user.contacts[user.contacts.findIndex((el) => el.userid == id)];
     },
   },
 };

@@ -1,7 +1,7 @@
 import { API } from "..";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
-import { Access, Chat } from "./../../../apolloclient/types";
+import chats from "models/chats";
+import DataApi from "base/DataApi";
+import { Access, Chat } from "@types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -21,11 +21,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             _id: chatid,
             $or: [
               { access: Access.Public },
-              { creater_id: userid },
-              { users_id: { $elemMatch: { userid } } },
+              { creaters_id: { $elemMatch: { $eq: userid } } },
+              { users_id: { $elemMatch: { $eq: userid } } },
             ],
           },
-          "_id title image date creater creater_id access"
+          "_id title image date creater creaters_id access"
         );
 
         /* if (chat) {

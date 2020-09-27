@@ -1,10 +1,10 @@
 import { API } from "..";
 import { Types } from "mongoose";
-import { Access, Chat, Creater } from "../../../apolloclient/types";
+import users from "models/users";
+import chats from "models/chats";
+import DataApi from "base/DataApi";
+import { Access, Chat, Creater } from "@types";
 import { NextApiRequest, NextApiResponse } from "next";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
-import users from "../../../models/users";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           _id: new Types.ObjectId(),
           title,
           date: new Date(),
-          creater_id: userid,
+          creaters_id: [userid],
           creater: Creater.Chat,
           access: Access.Public,
         };

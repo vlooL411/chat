@@ -1,11 +1,12 @@
 import { Chat } from "@types";
 import { model, Schema, models, Types } from "mongoose";
+import { Collection } from "./collections";
 
 const MessageSchema = {
   _id: { type: Types.ObjectId },
   text: { type: String, required: true },
   date: { type: Date, required: true },
-  userid: { type: String, required: true },
+  userid: { type: Types.ObjectId, required: true, ref: Collection.users },
   isChange: { type: Boolean },
 };
 
@@ -14,10 +15,12 @@ const chatsSchema = new Schema<Chat>({
   image: { type: String },
   date: { type: Date, required: true },
   creater: { type: String, required: true },
-  creater_id: { type: Types.ObjectId, required: true }, //type User
+  creaters_id: {
+    type: [{ type: Types.ObjectId, required: true, ref: Collection.users }],
+  },
   access: { type: String, required: true },
-  users_id: { type: [{ type: Types.ObjectId }] },
+  users_id: { type: [{ type: Types.ObjectId, ref: Collection.users }] },
   messages: { type: [MessageSchema] },
 });
 
-export default models.chats ?? model("chats", chatsSchema);
+export default models.chats ?? model(Collection.chats, chatsSchema);

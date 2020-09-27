@@ -1,9 +1,10 @@
-import { API } from "..";
-import DataApi from "base/DataApi";
-import { Chat } from "apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
-import chats from "models/chats";
-import users from "models/users";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import users from 'models/users'
+import { Chat } from '@types'
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { API } from '..'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,19 +14,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST":
       try {
         const { chatid } = body as API.Chat.InviteBody;
-        const { id: userid, name } = await dataApi.WrongTrust(
-          !chatid,
-          "Enter chatid"
-        );
+        const userid = await dataApi.WrongTrustUserID(!chatid, "Enter chatid");
         if (!userid) return;
 
         const { okUser } = await users.updateOne(
           { _id: userid },
-          {
-            $addToSet: {
-              chats_id: chatid as never,
-            },
-          }
+          { $addToSet: { chats_id: chatid as never } }
         );
 
         if (okUser == 0) {
@@ -45,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           okUser != 0 && okChat != 0 ? chat : "User don't join chat"
         );
       } catch (error) {
-        dataApi.Error(error, "Error request insert chat");
+        dataApi.Error(error, "Error request invite chat");
       }
       break;
     default:

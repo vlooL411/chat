@@ -22,17 +22,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const [{ index, size }]: {
           size: number;
           index?: number;
-        }[] = await chats.aggregate([
-          { $match: { _id: new Types.ObjectId(chatid) } },
-          {
-            $project: {
-              index: {
-                $indexOfArray: ["$messages._id", new Types.ObjectId(messageid)],
-              },
-              size: { $size: "$messages" },
+        }[] = await chats
+          .aggregate()
+          .match({ _id: new Types.ObjectId(chatid) })
+          .project({
+            index: {
+              $indexOfArray: ["$messages._id", new Types.ObjectId(messageid)],
             },
-          },
-        ]);
+            size: { $size: "$messages" },
+          });
 
         let start;
         if (limit > 0) start = index < 0 ? size - limit + 1 : index;

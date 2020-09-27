@@ -1,6 +1,6 @@
-import { API } from "@API";
-import { Types } from "mongoose";
-import { NextApiRequest } from "next";
+import { API } from '@API'
+import { Types } from 'mongoose'
+import { NextApiRequest } from 'next'
 
 export type ID = number | string | Types.ObjectId;
 
@@ -12,6 +12,16 @@ export type InfoMore = {
   isEndDown?: ID;
 };
 
+export type Contact = {
+  _id: ID;
+  userid: ID;
+  date: Date;
+  name?: string;
+  image?: string;
+  status?: string;
+  whoIsContact?: string;
+};
+
 export type User = {
   _id: ID;
   name: string;
@@ -19,8 +29,8 @@ export type User = {
   password: string;
   image?: string;
   status?: string;
-  chats_id: ID[];
-  friends: Friend[];
+  chats_id?: ID[];
+  contacts?: Contact[];
   permissions?: number;
   isOnline?: boolean;
   isOnlineMobile?: boolean;
@@ -39,7 +49,7 @@ export type Message = {
 };
 
 export enum Creater {
-  User = "User",
+  Contact = "Contact",
   Chat = "Chat",
 }
 
@@ -56,24 +66,17 @@ export type Chat = {
   title: string;
   image?: string;
   date: Date;
-  creater_id: ID;
+  creaters_id: ID[];
   creater: Creater;
   access: Access;
+  users_id?: ID[];
   lastMessage?: Message;
-  users_id?: User[];
   messages?: Message[];
 };
 
 export type Messages = {
   Chat: Chat;
   InfoMore?: InfoMore;
-};
-
-export type Friend = {
-  _id: ID;
-  user_id: ID;
-  date: Date;
-  whoIsFriend?: string;
 };
 
 export interface IMessanger {
@@ -83,7 +86,7 @@ export interface IMessanger {
   Users(start: number, end: number): User[];
   Chat(chatid: ID): Chat;
   Chats(start: number, end: number): Chat[];
-  Friends(id: ID): Friend[];
+  Friends(id: ID): Contact[];
 
   //Mutation
   SendMessage(chatid: ID, text: string): string;
@@ -95,11 +98,18 @@ export interface IMessanger {
 }
 
 export interface IMessangerAsync {
+  UpdateOnlineUser(req: NextApiRequest): Promise<string>;
+
   //#region Query
   User(body: API.User.GetBody, req: NextApiRequest): Promise<User>;
   Users(body: API.User.GetsBody, req: NextApiRequest): Promise<User[]>;
   UserID(body: API.User.idBody, req?: NextApiRequest): Promise<User>;
   UserCurrent(req: NextApiRequest): Promise<User>;
+  Contacts(req?: NextApiRequest): Promise<Contact[]>;
+  FindContact(
+    body: API.Contact.FindBody,
+    req: NextApiRequest
+  ): Promise<Contact[]>;
 
   Chat(body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat>;
   Chats(body: API.Chat.GetsBody, req: NextApiRequest): Promise<Chat[]>;

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export default gql`
   scalar Date
@@ -19,18 +19,21 @@ export default gql`
     image: String
     status: String
     chats_id: [ID]
-    friends: [Friend]
+    contacts: [Contact]
     permissions: Int
     isOnline: Boolean
     isOnlineMobile: Boolean
     dateLastOnline: Date
   }
 
-  type Friend {
+  type Contact {
     _id: ID!
-    user_id: ID!
+    userid: ID!
     date: Date!
-    whoIsFriend: String
+    name: String
+    image: String
+    status: String
+    whoIsContact: String
   }
 
   type Message {
@@ -46,7 +49,7 @@ export default gql`
   }
 
   enum Creater {
-    User
+    Contact
     Chat
   }
 
@@ -63,7 +66,7 @@ export default gql`
     title: String!
     image: String
     date: Date!
-    creater_id: ID!
+    creaters_id: [ID]!
     creater: Creater!
     access: Access!
     lastMessage: Message
@@ -77,12 +80,17 @@ export default gql`
   }
 
   type Query {
+    UpdateOnlineUser: String
+
     User(id: ID!): User
     UserCurrent: User
     UserID(name: String, email: String): User
     Users(start: Int!, end: Int!): [User]
+    Contacts: [Contact]
+
     Chat(chatid: ID!): Chat
     Chats(chatid: ID, limit: Int, isIncoming: Boolean): [Chat]
+
     Messages(
       chatid: ID!
       messageid: ID
@@ -90,10 +98,9 @@ export default gql`
       isIncoming: Boolean
     ): Messages
 
-    Friends(userid: ID!): [Friend]
-
     FindChat(title: String!): [Chat]
     FindMessage(text: String!): [Chat]
+    FindContact(text: String!): [Contact]
   }
 
   type Mutation {

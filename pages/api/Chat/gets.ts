@@ -18,21 +18,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           { _id: userid },
           "chats_id"
         );
-        
-        const chat_s: Chat[] = await chats.aggregate([
-          { $match: { _id: { $in: chats_id } } },
-          {
-            $project: {
-              _id: true,
-              date: true,
-              title: true,
-              creater: true,
-              creater_id: true,
-              access: true,
-              lastMessage: { $arrayElemAt: ["$messages", -1] },
-            },
-          },
-        ]);
+
+        const chat_s: Chat[] = await chats
+          .aggregate()
+          .match({ _id: { $in: chats_id } })
+          .project({
+            _id: true,
+            date: true,
+            title: true,
+            creater: true,
+            creaters_id: true,
+            access: true,
+            lastMessage: { $arrayElemAt: ["$messages", -1] },
+          });
 
         dataApi.True<Chat[]>(chat_s ?? "Chats empty");
       } catch (error) {

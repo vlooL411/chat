@@ -21,6 +21,24 @@ export namespace GQL {
       ${Fragment.UserInfo}
     `;
 
+    export const Contacts = gql`
+      query {
+        Contacts {
+          ...ContactInfo
+        }
+      }
+      ${Fragment.ContactInfo}
+    `;
+
+    export const FindContact = gql`
+      query findContact($text: String!) {
+        FindContact(text: $text) {
+          ...ContactInfo
+        }
+      }
+      ${Fragment.ContactInfo}
+    `;
+
     export const Chat = gql`
       query chat($chatid: ID!) {
         Chat(chatid: $chatid) {
@@ -85,6 +103,11 @@ export namespace GQL {
     export const RemoveChat = gql`
       mutation removeChat($chatid: ID!) {
         RemoveChat(chatid: $chatid)
+      }
+    `;
+    export const CreateChat = gql`
+      mutation createChat($title: String!) {
+        CreateChat(title: $title)
       }
     `;
 

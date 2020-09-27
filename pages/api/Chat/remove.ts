@@ -1,8 +1,8 @@
 import { API } from "..";
-import { Chat } from "../../../apolloclient/types";
+import { Chat } from "@types";
+import chats from "models/chats";
+import DataApi from "base/DataApi";
 import { NextApiRequest, NextApiResponse } from "next";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -17,10 +17,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const { deletedCount } = await chats.deleteOne({
           _id: chatid,
-          creater_id: userid,
+          creaters_id: { $elemMatch: { $eq: userid } },
         });
 
-        dataApi.True<Chat>(deletedCount == 1 ? null : "Chat don't remove");
+        dataApi.True<Chat>(
+          deletedCount > 0 ? ({ _id: chatid } as any) : "Chat don't remove"
+        );
       } catch (error) {
         dataApi.Error(error, "Error request remove chat");
       }

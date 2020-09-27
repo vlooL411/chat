@@ -1,6 +1,6 @@
-import { API } from "@API";
-import { NextApiRequest } from "next";
-import { Chat, User, Messages, IMessangerAsync } from "@types";
+import { API } from '@API'
+import { NextApiRequest } from 'next'
+import { Chat, Contact, IMessangerAsync, Messages, User } from '@types'
 
 const { HOST_API } = process.env;
 
@@ -20,6 +20,9 @@ export default class MessangerMongoDB implements IMessangerAsync {
     return data.json().then((el) => el?.data);
   }
 
+  UpdateOnlineUser = (req: NextApiRequest): Promise<string> =>
+    this.PostQuery("User/online", {}, req);
+
   //#region Query
   //#region User
   User = (body: API.User.GetBody, req: NextApiRequest): Promise<User> =>
@@ -32,6 +35,14 @@ export default class MessangerMongoDB implements IMessangerAsync {
 
   Users = (body: API.User.GetsBody, req: NextApiRequest): Promise<User[]> =>
     this.PostQuery("User/gets", body, req);
+
+  Contacts = (req: NextApiRequest): Promise<Contact[]> =>
+    this.PostQuery("Contact/gets", {}, req);
+
+  FindContact = (
+    body: API.Contact.FindBody,
+    req: NextApiRequest
+  ): Promise<Contact[]> => this.PostQuery("Contact/find", body, req);
   //#endregion
 
   //#region Chat
@@ -53,7 +64,6 @@ export default class MessangerMongoDB implements IMessangerAsync {
     body: API.Message.FindBody,
     req: NextApiRequest
   ): Promise<Chat[]> => this.PostQuery("Message/find", body, req);
-  //#endregion
   //#endregion
 
   //#region Mutation

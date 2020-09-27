@@ -12,6 +12,19 @@ export namespace Fragment {
       dateLastOnline
     }
   `;
+
+  export const ContactInfo = gql`
+    fragment ContactInfo on Contact {
+      _id
+      userid
+      date
+      name
+      image
+      status
+      whoIsContact
+    }
+  `;
+
   export const ChatInfo = gql`
     fragment ChatInfo on Chat {
       _id
@@ -19,10 +32,11 @@ export namespace Fragment {
       image
       date
       creater
-      creater_id
+      creaters_id
       access
     }
   `;
+
   export const InfoMore = gql`
     fragment InfoMore on InfoMore {
       _id
@@ -32,6 +46,7 @@ export namespace Fragment {
       lastIndex
     }
   `;
+
   export const ChatMessages = gql`
     fragment ChatMessages on Chat {
       messages {

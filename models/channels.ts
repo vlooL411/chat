@@ -1,4 +1,5 @@
 import { Chat } from "@types";
+import { Collection } from "./collections";
 import { model, Schema, models, Types } from "mongoose";
 
 const MessageSchema = {
@@ -10,7 +11,7 @@ const MessageSchema = {
 };
 
 const channelsSchema = new Schema<Chat>({
-  creater_id: { type: Types.ObjectId, required: true }, //type User
+  creaters_id: { type: Types.ObjectId, required: true }, //type User
   creater: { type: String },
   date: { type: Date, required: true },
   title: { type: String },
@@ -19,4 +20,4 @@ const channelsSchema = new Schema<Chat>({
   messages: { type: [MessageSchema] },
 });
 
-export default models.channels ?? model("channels", channelsSchema);
+export default models.channels ?? model(Collection.channels, channelsSchema);

@@ -1,4 +1,4 @@
-export type Store = "ChatLastMes" | "" | string;
+export type Store = "Panel" | "ChatLastMes" | "" | string;
 
 export default class LocalStorage {
   static localStorage = globalThis?.localStorage;
@@ -8,7 +8,7 @@ export default class LocalStorage {
     localValue: string,
     defaultValue: T = null
   ) => {
-    const postsLocal = localStorage?.getItem(local + localValue);
+    const postsLocal = LocalStorage?.localStorage?.getItem(local + localValue);
     return postsLocal ? (JSON.parse(postsLocal) as T) : defaultValue;
   };
 
@@ -17,15 +17,15 @@ export default class LocalStorage {
     localValue: string,
     defaultValue: string = null
   ) => {
-    const postsLocal = localStorage?.getItem(local + localValue);
+    const postsLocal = LocalStorage?.localStorage?.getItem(local + localValue);
     return postsLocal ? postsLocal : defaultValue;
   };
 
   static set = (local: Store, localValue: string, value): void =>
-    LocalStorage.setString(local, localValue, JSON.stringify({ ...value }));
+    LocalStorage?.setString(local, localValue, JSON.stringify({ ...value }));
 
   static setString = (local: Store, localValue: string, value: string): void =>
-    localStorage?.setItem(local + localValue, value);
+    LocalStorage?.localStorage?.setItem(local + localValue, value);
 }
 
 globalThis.LocalStorage = LocalStorage;
