@@ -7,13 +7,6 @@ import { ApolloProvider } from '@apollo/client'
 import { createContext, ReactElement, useState } from 'react'
 import { initializeApollo } from 'apolloclient/client'
 
-const { RUN_APOLLO_SERVER } = process.env;
-//TODO try change
-//need for run apollo server
-(async () => {
-  await fetch(RUN_APOLLO_SERVER)
-}).call(null)
-
 export enum Themes {
   light = 'light',
   dark = 'dark'
@@ -27,12 +20,11 @@ type ThemeProps = {
 export const ThemeContext = createContext<ThemeProps>({ theme: Themes.dark, toggleThemes: null })
 
 const App = ({ Component, pageProps }): ReactElement => {
-  const [theme, setTheme] = useState(Themes.dark)
-  const toggleThemes = (theme: Themes) => setTheme(theme)
+  const [theme, setTheme] = useState<Themes>(Themes.dark)
 
   return <>
     <ApolloProvider client={initializeApollo()} >
-      <ThemeContext.Provider value={{ theme, toggleThemes }}>
+      <ThemeContext.Provider value={{ theme, toggleThemes: setTheme }}>
         <Provider session={pageProps.session}>
           <div className={theme}>
             <Signin />

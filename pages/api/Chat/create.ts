@@ -1,10 +1,9 @@
-import { API } from "..";
-import { Types } from "mongoose";
-import users from "models/users";
-import chats from "models/chats";
-import DataApi from "base/DataApi";
-import { Access, Chat, Creater } from "@types";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import users from 'models/users'
+import { Types } from 'mongoose'
+import { Access, Chat, Creater, MutationCreateChatArgs } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,7 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { title } = body as API.Chat.CreateBody;
+        const { title } = body as MutationCreateChatArgs;
         const userid = await dataApi.WrongTrustUserID(!title, "Enter title");
         if (!userid) return;
 
@@ -24,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const chat: Chat = {
-          _id: new Types.ObjectId(),
+          _id: new Types.ObjectId() as any,
           title,
           date: new Date(),
           creaters_id: [userid],

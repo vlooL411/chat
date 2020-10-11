@@ -1,8 +1,9 @@
-import "colors";
-import detect from "detect-port";
-import { ApolloServer } from "apollo-server";
-import dbConnect from "../../utils/dbConnect";
-import schema from "../../apolloclient/schema";
+import 'colors'
+
+import schema from 'apolloclient/schema'
+import detect from 'detect-port'
+import dbConnect from 'utils/dbConnect'
+import { ApolloServer } from 'apollo-server'
 
 const { HOST } = process.env;
 const { GRAPHQL } = process.env;

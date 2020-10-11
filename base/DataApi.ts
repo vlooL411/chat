@@ -1,10 +1,17 @@
-import jwt from "next-auth/jwt";
-import { NextApiRequest } from "next";
-import { NextApiResponse } from "next";
-import { ID } from "../apolloclient/types";
-import { TokenType } from "../pages/api/auth/[...nextauth]";
+import jwt from 'next-auth/jwt'
+import { NextApiRequest } from 'next'
+import { NextApiResponse } from 'next'
+import { ID } from '@types'
+import { TokenType } from 'pages/api/auth/[...nextauth]'
 
 const { GOOGLE_SECRET } = process.env;
+
+enum Error {
+  True = 201,
+  ProblemsAutorization = 401,
+  Request = 422,
+  DataWrong = 400,
+}
 
 class DataApi {
   req: NextApiRequest;
@@ -18,9 +25,10 @@ class DataApi {
     (await jwt.getToken({ req: this.req, secret: GOOGLE_SECRET })) as TokenType;
 
   private TokenRespone = async () =>
-    await this.res.status(401).send({
+    await this.res.status(Error.ProblemsAutorization).send({
       success: true,
       data: "You have problems on the autorization",
+      
     });
 
   async TrustUser(): Promise<TokenType> {
@@ -38,12 +46,12 @@ class DataApi {
   }
 
   True = <T>(data: T | string) =>
-    this.res.status(201).send({ success: true, data });
+    this.res.status(Error.True).send({ success: true, data });
 
   //if true => return; else continue
   Wrong(condition: boolean, mes: string = "Data wrong") {
     if (!condition) return false;
-    this.res.status(400).send({ success: true, data: mes });
+    this.res.status(Error.DataWrong).send({ success: true, data: mes });
     return true;
   }
 
@@ -68,10 +76,14 @@ class DataApi {
   }
 
   Error = (error, mes: string = "Error request") =>
-    this.res.status(422).send({ success: false, data: { error, mes } });
+    this.res
+      .status(Error.Request)
+      .send({ success: false, data: { error, mes } });
 
   Default = () =>
-    this.res.status(400).json({ success: false, data: "Method wrong" });
+    this.res
+      .status(Error.DataWrong)
+      .json({ success: false, data: "Method wrong" });
 }
 
 export default DataApi;

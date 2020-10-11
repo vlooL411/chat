@@ -1,6 +1,6 @@
 import DataApi from 'base/DataApi'
 import users from 'models/users'
-import { User } from '@types'
+import { User } from '@backend'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

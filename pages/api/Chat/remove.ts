@@ -1,8 +1,7 @@
-import { API } from "..";
-import { Chat } from "@types";
-import chats from "models/chats";
-import DataApi from "base/DataApi";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import { Chat, MutationRemoveChatArgs } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -11,7 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid } = body as API.Chat.RemoveBody;
+        const { chatid } = body as MutationRemoveChatArgs;
         const userid = await dataApi.WrongTrustUserID(!chatid, "Enter chatid");
         if (!userid) return;
 

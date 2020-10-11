@@ -1,10 +1,11 @@
 import DataApi from 'base/DataApi'
 import users from 'models/users'
 import { Types } from 'mongoose'
-import { Contact } from '@types'
+import { Contact, Contacts, QueryFindContactArgs, User } from '@backend'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { ID } from '@types'
 
-import { API } from '..'
+import { AggregateFilter, AggregateLookUp, ContactProject } from './common'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,38 +14,49 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { text } = body as API.Contact.FindBody;
+        const { text } = body as QueryFindContactArgs;
         const userid = await dataApi.WrongTrustUserID(!text, "Enter text");
         if (!userid) return;
 
-        const contacts: Contact[] = await users
-          .aggregate()
-          .match({ _id: new Types.ObjectId(userid) })
-          .project({ _id: false, contacts: true })
-          .unwind("$contacts")
-          .lookup({
-            from: "users",
-            localField: "contacts.userid",
-            foreignField: "_id",
-            as: "contacts.user",
-          })
-          .replaceRoot("$contacts")
+        const Existing: Contact[] = await AggregateLookUp(userid)
           .match({
             $or: [
-              { "user.name": { $regex: text, $options: "i" } },
-              { whoIsContact: { $regex: text, $options: "i" } },
+              { "contacts.User.name": { $regex: text, $options: "i" } },
+              { "contacts.whoIsContact": { $regex: text, $options: "i" } },
             ],
           })
-          .project({
-            userid: true,
-            date: true,
-            whoIsContact: true,
-            name: { $arrayElemAt: ["$user.name", 0] },
-            image: { $arrayElemAt: ["$user.image", 0] },
-            status: { $arrayElemAt: ["$user.status", 0] },
-          });
+          .replaceRoot("$contacts")
+          .unwind("$User")
+          .project(ContactProject);
 
-        dataApi.True(contacts ?? "Contacts are empty");
+        const contactUserID: ID[] = (
+          await AggregateFilter(userid).group({
+            _id: "$contacts.userid",
+          })
+        ).map((user: User) => user._id);
+
+        contactUserID.push(new Types.ObjectId(userid) as any);
+        const Incoming: Contact[] = await users
+          .aggregate()
+          .match({
+            _id: { $nin: contactUserID },
+            name: { $regex: text, $options: "i" },
+            $or: [{ isClosed: false }, { isClosed: null }],
+          })
+          .addFields({
+            userid: "$_id",
+            date: "Don't exist",
+            User: {
+              _id: "$_id",
+              name: "$name",
+              image: "$image",
+              status: "$status",
+              dateLastOnline: "$dateLastOnline",
+            },
+          })
+          .project(ContactProject);
+
+        dataApi.True<Contacts>({ Existing, Incoming } ?? "Contacts are empty");
       } catch (error) {
         dataApi.Error(error, "Error request find contacts");
       }

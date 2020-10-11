@@ -1,10 +1,17 @@
 import Loader from 'components/Loader'
 import LocalStorage from 'utils/LocalSrorage'
-import { GQL } from '@GQL'
-import { GQLT } from '@GQLT'
 import { last } from 'utils/array'
-import { Chat, ID, Message } from '@types'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
+import {
+  AddMessageDocument,
+  Chat,
+  DeleteMessageDocument,
+  Message,
+  useChatQuery,
+  useMessagesQuery,
+  useSwapMessageSubscription,
+} from '@frontend'
+import { ID } from '@types'
 
 import Scroll from '../Scroll'
 import style from './exploler.module.sass'
@@ -23,12 +30,10 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
     const { exploler, scrollcontainer } = style
     const { down, loader, loader_up, loader_down } = style
 
-    const [mesActionMode, setMesActionMode] =
-        useState<MessageActionMode>({ mes: null, mode: 'send' })
+    const [mesActionMode, setMesActionMode] = useState<MessageActionMode>({ mes: null, mode: 'send' })
 
-    const { loading, data } = GQLT.Query.useChat({ variables: { chatid } })
-    const { data: dataMess, loading: loadMess, refetch, subscribeToMore } =
-        GQLT.Query.useMessages()
+    const { loading, data } = useChatQuery({ variables: { chatid } })
+    const { data: dataMess, loading: loadMess, refetch, subscribeToMore } = useMessagesQuery()
 
     const Refetch = (limit: number, messageid: ID, isIncoming: boolean = false) =>
         refetch({ chatid, limit, messageid, isIncoming })
@@ -40,10 +45,10 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
     }, [chatid])
 
     //#region Subscribtion
-    GQLT.Subscription.useChangeMessage();
+    useSwapMessageSubscription();
 
     const addMore = () => subscribeToMore({
-        document: GQL.Subscription.AddMessage,
+        document: AddMessageDocument,
         updateQuery: (prev, { subscriptionData, variables }) => {
             console.log(prev, subscriptionData)
             const AddMessage = (subscriptionData?.data as any)?.AddMessage as Chat
@@ -63,7 +68,7 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
     })
 
     const remMore = () => subscribeToMore({
-        document: GQL.Subscription.RemoveMessage,
+        document: DeleteMessageDocument,
         updateQuery: (prev, { subscriptionData, variables }) => {
             const RemoveMessage = (subscriptionData?.data as any)?.RemoveMessage as Message
             if (!RemoveMessage) return null;
@@ -86,7 +91,7 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
     const chatMess = dataMess?.Messages?.Chat
 
     const scroll = useMemo(() =>
-        <Scroll chat={chatMess}
+        <Scroll chat={chatMess as Chat}
             infoMore={infoMore}
             loadMess={loadMess}
             limit={limit}
@@ -96,7 +101,7 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
         [infoMore, chatMess])
 
     const bar = useMemo<ReactElement>(() =>
-        <BarExploler {...BarProps(chat)} />,
+        <BarExploler {...BarProps(chat as Chat)} />,
         [chatid, chat])
     const messageAction = useMemo<ReactElement>(() =>
         <MessageAction chatid={chatid} action={mesActionMode} />,

@@ -1,10 +1,8 @@
 import DataApi from 'base/DataApi'
 import chats from 'models/chats'
 import users from 'models/users'
-import { Chat } from '@types'
+import { Chat, MutationLeaveChatArgs } from '@backend'
 import { NextApiRequest, NextApiResponse } from 'next'
-
-import { API } from '..'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid } = body as API.Chat.LeaveBody;
+        const { chatid } = body as MutationLeaveChatArgs;
         const userid = await dataApi.WrongTrustUserID(!chatid, "Enter chatid");
         if (!userid) return;
 

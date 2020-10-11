@@ -1,8 +1,7 @@
-import { API } from "..";
-import users from "models/users";
-import DataApi from "base/DataApi";
-import { User } from "apolloclient/types";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import users from 'models/users'
+import { QueryUserIdArgs, User } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST":
       try {
         //public api
-        const { name, email } = body as API.User.idBody;
+        const { name, email } = body as QueryUserIdArgs;
         if (dataApi.Wrong(!name || !email, "Enter name and email")) return;
 
         const user: User = await users.findOne({ name, email }, "_id");

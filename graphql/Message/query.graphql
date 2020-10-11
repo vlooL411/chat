@@ -1,0 +1,22 @@
+query messages(
+  $chatid: ID!
+  $messageid: ID
+  $limit: Int
+  $isIncoming: Boolean = false
+) {
+  Messages(
+    chatid: $chatid
+    messageid: $messageid
+    limit: $limit
+    isIncoming: $isIncoming
+  ) {
+    Chat {
+      _id
+      ...ChatMessages
+      ...LastMessage
+    }
+    InfoMore {
+      ...InfoMore
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Chat, Contact, IMessangerAsync, Messages, User } from '@types'
+import { Chat, Contact, Contacts, IMessangerAsync, Messages, User } from '@types'
 
 export const Query = (iMessanger: IMessangerAsync) => ({
   UpdateOnlineUser: async (_, __, { req }) => iMessanger.UpdateOnlineUser(req),
@@ -12,7 +12,7 @@ export const Query = (iMessanger: IMessangerAsync) => ({
     iMessanger.UserID(body, req),
   Contacts: async (_, __, { req }): Promise<Contact[]> =>
     iMessanger.Contacts(req),
-  FindContact: async (_, body, { req }): Promise<Contact[]> =>
+  FindContact: async (_, body, { req }): Promise<Contacts> =>
     iMessanger.FindContact(body, req),
 
   Chat: async (_, body, { req }): Promise<Chat> => iMessanger.Chat(body, req),

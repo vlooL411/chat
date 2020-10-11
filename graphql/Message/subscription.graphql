@@ -1,0 +1,23 @@
+subscription addMessage {
+  AddMessage {
+    _id
+    userid
+    text
+    date
+    isChange
+  }
+}
+
+subscription swapMessage {
+  SwapMessage {
+    _id
+    text
+    isChange
+  }
+}
+
+subscription deleteMessage {
+  DeleteMessage {
+    _id
+  }
+}

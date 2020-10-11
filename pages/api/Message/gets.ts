@@ -1,10 +1,10 @@
-import { API } from "..";
-import { Types } from "mongoose";
-import DataApi from "base/DataApi";
-import { first } from "utils/array";
-import { ID, Chat, InfoMore, Messages } from "@types";
-import { NextApiRequest, NextApiResponse } from "next";
-import chats from "models/chats";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import { Types } from 'mongoose'
+import { first } from 'utils/array'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Chat, InfoMore, Messages, QueryMessagesArgs } from '@backend'
+import { ID } from '@types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, messageid, limit = 20 } = body as API.Message.GetsBody;
+        const { chatid, messageid, limit = 20 } = body as QueryMessagesArgs;
 
         const condition = !chatid || !limit;
         const resMes = "Enter chatid && limit != 0";

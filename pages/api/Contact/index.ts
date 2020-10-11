@@ -1,10 +1,8 @@
 import DataApi from 'base/DataApi'
-import users from 'models/users'
-import { Types } from 'mongoose'
-import { Contact } from '@types'
+import { Contact } from '@backend'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { API } from '..'
+import { AggregateLookUp, ContactProject } from './common'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -13,46 +11,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { contactid } = body as API.Contact.GetBody;
+        const { contactid } = body as any;
 
-        const userid = await dataApi.TrustUserID();
+        const userid = await dataApi.WrongTrustUserID(
+          !contactid,
+          "Enter contactid"
+        );
         if (!userid) return;
 
-        const contacts: Contact[] = await users
-          .aggregate()
-          .match({ _id: new Types.ObjectId(userid) })
-          .project({
-            _id: false,
-            contacts: {
-              $filter: {
-                input: "$contacts",
-                as: "contact",
-                cond: { "$$contact._id": contactid },
-              },
-            },
-          })
-          .unwind("$contacts")
-          .lookup({
-            from: "users",
-            localField: "contacts.userid",
-            foreignField: "_id",
-            as: "contacts.user",
-          })
+        const contacts: Contact[] = await AggregateLookUp(userid)
           .replaceRoot("$contacts")
-          .project({
-            userid: true,
-            date: true,
-            whoIsContact: true,
-            name: { $arrayElemAt: ["$user.name", 0] },
-            image: { $arrayElemAt: ["$user.image", 0] },
-            status: { $arrayElemAt: ["$user.status", 0] },
-          });
+          .unwind("$User")
+          .project(ContactProject);
 
         console.log(contacts);
 
-        dataApi.True<Contact[]>(contacts ?? "Contacts are empty");
+        dataApi.True<Contact>(contacts.pop() ?? "Contact absent");
       } catch (error) {
-        dataApi.Error(error, "Error request get contacts");
+        dataApi.Error(error, "Error request get contact");
       }
       break;
     default:

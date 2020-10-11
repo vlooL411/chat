@@ -1,6 +1,7 @@
 import { API } from '@API'
 import { NextApiRequest } from 'next'
-import { Chat, Contact, IMessangerAsync, Messages, User } from '@types'
+import { IMessangerAsync } from '@types'
+import { Chat, Contact, Contacts, Messages, User } from '@frontend'
 
 const { HOST_API } = process.env;
 
@@ -42,7 +43,7 @@ export default class MessangerMongoDB implements IMessangerAsync {
   FindContact = (
     body: API.Contact.FindBody,
     req: NextApiRequest
-  ): Promise<Contact[]> => this.PostQuery("Contact/find", body, req);
+  ): Promise<Contacts> => this.PostQuery("Contact/find", body, req);
   //#endregion
 
   //#region Chat

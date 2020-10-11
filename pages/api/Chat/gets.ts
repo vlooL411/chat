@@ -1,8 +1,8 @@
-import chats from "models/chats";
-import users from "models/users";
-import DataApi from "base/DataApi";
-import { Chat, User } from "@types";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import users from 'models/users'
+import { Chat, User } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

@@ -19,7 +19,7 @@ export const Mutation = (iMessanger: IMessangerAsync, pubsub: PubSub) => ({
     iMessanger.LeaveChat(body, req).then(async (LeaveChat: Chat | string) => {
       if (isString(LeaveChat)) return LeaveChat as string;
 
-      await pubsub.publish(Sub.REMOVE_CHAT, { RemoveChat: LeaveChat });
+      await pubsub.publish(Sub.DELETE_CHAT, { RemoveChat: LeaveChat });
       return "User leave chat";
     }),
   CreateChat: async (_, body, { req }): Promise<string> =>
@@ -33,7 +33,7 @@ export const Mutation = (iMessanger: IMessangerAsync, pubsub: PubSub) => ({
     iMessanger.RemoveChat(body, req).then(async (RemoveChat: Chat | string) => {
       if (isString(RemoveChat)) return RemoveChat as string;
 
-      await pubsub.publish(Sub.REMOVE_CHAT, { RemoveChat });
+      await pubsub.publish(Sub.DELETE_CHAT, { RemoveChat });
       return "Chat remove";
     }),
 
@@ -52,13 +52,13 @@ export const Mutation = (iMessanger: IMessangerAsync, pubsub: PubSub) => ({
       .then(async (ChangeMessage: Message | string) => {
         if (isString(ChangeMessage)) return ChangeMessage as string;
 
-        await pubsub.publish(Sub.CHANGE_MESSAGE, { ChangeMessage });
+        await pubsub.publish(Sub.SWAP_MESSAGE, { ChangeMessage });
         return "Message change";
       }),
   RemoveMessage: async (_, body, { req }): Promise<string> =>
     iMessanger.RemoveMessage(body, req).then(async (mes: string) => {
       if (mes == null) {
-        await pubsub.publish(Sub.REWOVE_MESSAGE, {
+        await pubsub.publish(Sub.DELETE_MESSAGE, {
           RemoveMessage: { _id: body?.messageid } as Message,
         });
         return "Message remove";

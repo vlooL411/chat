@@ -1,9 +1,8 @@
-import { API } from "..";
-import { Types } from "mongoose";
-import chats from "models/chats";
-import DataApi from "base/DataApi";
-import { Message, Access } from "@types";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import { Access, Message, MutationSendMessageArgs } from '@backend'
+import { Types } from 'mongoose'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, text } = body as API.Message.SendBody;
+        const { chatid, text } = body as MutationSendMessageArgs;
 
         const userid = await dataApi.WrongTrustUserID(
           !chatid || !text,
@@ -21,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!userid) return;
 
         const message: Message = {
-          _id: new Types.ObjectId(),
+          _id: new Types.ObjectId() as any,
           text,
           date: new Date(),
           userid,

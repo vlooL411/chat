@@ -16,9 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@types": ["apolloclient/types"],
-      "@API": ["pages/api"],
-      "@GQL": ["base/GQL"],
-      "@GQLT": ["base/GQLT"]
+      "@backend": ["generated/graphql-backend.ts"],
+      "@frontend": ["generated/graphql-frontend.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

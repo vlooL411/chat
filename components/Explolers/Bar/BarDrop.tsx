@@ -1,4 +1,4 @@
-import { GQLT } from "@GQLT"
+import { useUserCurrentQuery } from "@frontend"
 import { User } from "@types"
 import { ReactElement, useMemo } from "react"
 import style from './styles/bardrop.module.sass'
@@ -16,7 +16,7 @@ type Props = {
 const BarDrop = ({ visible, dropList = () => null }: Props): ReactElement => {
     const { bardrop, bardrop_hidden, block } = style
 
-    const { data } = GQLT.Query.useUserCurrent({ fetchPolicy: 'cache-only' })
+    const { data } = useUserCurrentQuery({ fetchPolicy: 'cache-only' })
     const user = data?.UserCurrent as User
 
     const list = useMemo<DropElem[]>(() => dropList(user), [user, visible])

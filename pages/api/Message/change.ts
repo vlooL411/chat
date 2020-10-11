@@ -1,8 +1,7 @@
-import { API } from "./../index";
-import chats from "../../../models/chats";
-import DataApi from "../../../base/DataApi";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Message } from "../../../apolloclient/types";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import { Message, MutationChangeMessageArgs } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -11,7 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { chatid, text, messageid } = body as API.Message.ChangeBody;
+        const { chatid, text, messageid } = body as MutationChangeMessageArgs;
 
         const condition = !chatid || !text || !messageid;
         if (!(await dataApi.WrongTrust(condition, "Enter chatid or text")))

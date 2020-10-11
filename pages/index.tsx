@@ -1,14 +1,16 @@
 import CreateChatModal from 'components/CreateChat'
+import CreateContactModal from 'components/CreateChat/CreateContactModal'
 import ChatExploler from 'components/Explolers/ChatExploler'
 import ContactExploler from 'components/Explolers/ContactExploler'
 import Chats from 'components/Panels/Chats'
 import Contacts from 'components/Panels/Contacts'
 import Sidebar from 'components/Sidebar'
 import LocalStorage from 'utils/LocalSrorage'
-import { Contact, ID } from '@types'
+import { ID } from '@types'
 import { ReactElement, useMemo, useState } from 'react'
 import { faComment, faQuoteRight, faSlidersH, faUserFriends, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { gql, useQuery } from '@apollo/client'
+import { Contact } from '@frontend'
 
 const updateOnline = gql`
   query {
@@ -22,6 +24,12 @@ enum Panels {
   Channels
 }
 
+enum CreateChat {
+  None,
+  Chat,
+  Contact
+}
+
 const lastPanel = +LocalStorage.getString('Panel', '', Panels.Chats.toString())
 
 const Index = (): ReactElement => {
@@ -29,13 +37,16 @@ const Index = (): ReactElement => {
 
   const [panelCurrent, setPanelCurrent] = useState<Panels>(lastPanel)
   const [chatIDCurrent, setIDCurrent] = useState<ID | Contact>(null!)
-  const [createChat, setCreateChat] = useState<boolean>(false)
+
+  const [createChat, setCreateChat] = useState<CreateChat>(null)
 
   const switchPanel = useMemo<ReactElement>(() => {
     LocalStorage.setString('Panel', '', panelCurrent.toString())
     switch (panelCurrent) {
       case Panels.Chats: return <Chats onSelectChat={setIDCurrent} />
-      case Panels.Contacts: return <Contacts onSelectContact={setIDCurrent} />
+      case Panels.Contacts:
+        return <Contacts onSelectContact={setIDCurrent}
+          onCreateContact={() => setCreateChat(CreateChat.Contact)} />
       default: return null
     }
   }, [panelCurrent])
@@ -48,13 +59,23 @@ const Index = (): ReactElement => {
     }
   }, [chatIDCurrent])
 
+  const switchCreateChat = useMemo<ReactElement>(() => {
+    switch (createChat) {
+      case CreateChat.Chat:
+        return <CreateChatModal onClose={() => setCreateChat(CreateChat.None)} />
+      case CreateChat.Contact:
+        return <CreateContactModal onClose={() => setCreateChat(CreateChat.None)} />
+      default: return null
+    }
+  }, [createChat])
+
   const sidebar = useMemo<ReactElement>(() =>
     <Sidebar faBlocks={
       [{ fa: faComment, text: 'Chats', onClick: () => setPanelCurrent(Panels.Chats) },
       { fa: faUsers, text: 'Contacts', onClick: () => setPanelCurrent(Panels.Contacts) },
       { fa: faQuoteRight, text: 'Channels', onClick: () => setPanelCurrent(Panels.Channels) }]}
       extendBlocks={
-        [{ fa: faUserFriends, text: 'Create chat', onClick: () => setCreateChat(!createChat) },
+        [{ fa: faUserFriends, text: 'Create chat', onClick: () => setCreateChat(CreateChat.Chat) },
         { fa: faUsers, text: 'Contacts', onClick: () => { } },
         { fa: faSlidersH, text: 'Settings' }]} />,
     [])
@@ -63,9 +84,7 @@ const Index = (): ReactElement => {
     {sidebar}
     {switchPanel}
     {switchExploler}
-    {createChat ? <CreateChatModal
-      onOpen={() => createChat}
-      onClose={() => setCreateChat(false)} /> : null}
+    {switchCreateChat}
   </div>
 }
 

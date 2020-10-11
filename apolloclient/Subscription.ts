@@ -2,11 +2,11 @@ import { PubSub } from "graphql-subscriptions";
 
 export enum Sub {
   ADD_CHAT = "ADD_CHAT",
-  REMOVE_CHAT = "REMOVE_CHAT",
+  DELETE_CHAT = "DELETE_CHAT",
 
   ADD_MESSAGE = "ADD_MESSAGE",
-  CHANGE_MESSAGE = "CHANGE_MESSAGE",
-  REWOVE_MESSAGE = "REWOVE_MESSAGE",
+  SWAP_MESSAGE = "SWAP_MESSAGE",
+  DELETE_MESSAGE = "DELETE_MESSAGE",
 }
 
 const subscribe = (pubsub: PubSub, sub: Sub) => ({
@@ -15,8 +15,9 @@ const subscribe = (pubsub: PubSub, sub: Sub) => ({
 
 export const Subscription = (pubsub: PubSub) => ({
   AddChat: subscribe(pubsub, Sub.ADD_CHAT),
-  RemoveChat: subscribe(pubsub, Sub.REMOVE_CHAT),
+  DeleteChat: subscribe(pubsub, Sub.DELETE_CHAT),
+
   AddMessage: subscribe(pubsub, Sub.ADD_MESSAGE),
-  ChangeMessage: subscribe(pubsub, Sub.CHANGE_MESSAGE),
-  RemoveMessage: subscribe(pubsub, Sub.REWOVE_MESSAGE),
+  SwapMessage: subscribe(pubsub, Sub.SWAP_MESSAGE),
+  DeleteMessage: subscribe(pubsub, Sub.DELETE_MESSAGE),
 });

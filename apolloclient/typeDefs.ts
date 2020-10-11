@@ -20,8 +20,7 @@ export default gql`
     status: String
     chats_id: [ID]
     contacts: [Contact]
-    permissions: Int
-    isOnline: Boolean
+    isClosed: Boolean
     isOnlineMobile: Boolean
     dateLastOnline: Date
   }
@@ -30,10 +29,8 @@ export default gql`
     _id: ID!
     userid: ID!
     date: Date!
-    name: String
-    image: String
-    status: String
     whoIsContact: String
+    User: User
   }
 
   type Message {
@@ -79,6 +76,11 @@ export default gql`
     InfoMore: InfoMore
   }
 
+  type Contacts {
+    Existing: [Contact]
+    Incoming: [Contact]
+  }
+
   type Query {
     UpdateOnlineUser: String
 
@@ -100,7 +102,7 @@ export default gql`
 
     FindChat(title: String!): [Chat]
     FindMessage(text: String!): [Chat]
-    FindContact(text: String!): [Contact]
+    FindContact(text: String!): Contacts
   }
 
   type Mutation {
@@ -116,10 +118,10 @@ export default gql`
 
   type Subscription {
     AddChat: Chat
-    RemoveChat: Chat
+    DeleteChat: Chat
 
     AddMessage: Message
-    ChangeMessage: Message
-    RemoveMessage: Message
+    SwapMessage: Message
+    DeleteMessage: Message
   }
 `;

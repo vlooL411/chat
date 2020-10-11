@@ -1,22 +1,13 @@
-import { GQLT } from '@GQLT'
 import Loader from 'components/Loader'
-import { Message, User, ID } from '@types'
-import { useEffect, useState } from 'react'
 import LocalStorage from 'utils/LocalSrorage'
-import { gql, useQuery } from '@apollo/client'
+import { useEffect, useState } from 'react'
 import { getHHMMSSPA } from 'components/common/WhatDate'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import style from './styles/messageBlock.module.sass'
+import { Message, User, useRemoveMessageMutation, useUserQuery } from '@frontend'
+import { ID } from '@types'
 
-const GetUserAvatar = gql`
-    query user($id: ID!) {
-        User(id: $id) {
-            _id
-            image
-        }
-    }
-`
+import style from './styles/messageBlock.module.sass'
 
 type Props = {
     chatid: ID
@@ -37,8 +28,8 @@ const MessageBlock = ({ chatid, message, countExpand = 300, switchMessageAction 
             setIsExpandMes(true)
     }, [message?.text?.length])
 
-    const [removeMessage, { loading: loadingRemove }] = GQLT.Mutation.useRemoveMessage()
-    const { data } = useQuery(GetUserAvatar, { variables: { id: message?.userid } })
+    const [removeMessage, { loading: loadingRemove }] = useRemoveMessageMutation()
+    const { data } = useUserQuery({ variables: { id: message?.userid } })
 
     const removeMes = () => removeMessage({ variables: { chatid, messageid: message?._id } })
 

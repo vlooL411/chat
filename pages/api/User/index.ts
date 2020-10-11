@@ -1,9 +1,8 @@
 import DataApi from 'base/DataApi'
 import users from 'models/users'
-import { User } from '@types'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { API } from '..'
+import { QueryUserArgs, User } from './../../../generated/graphql-backend'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { id } = body as API.User.GetBody;
+        const { id } = body as QueryUserArgs;
         if (!dataApi.WrongTrust(!id, "id empty")) return;
 
         const user: User = await users.findOne(

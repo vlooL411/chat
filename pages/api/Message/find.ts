@@ -1,9 +1,8 @@
-import { API } from "..";
-import users from "models/users";
-import chats from "models/chats";
-import DataApi from "base/DataApi";
-import { User, Chat } from "@types";
-import { NextApiRequest, NextApiResponse } from "next";
+import DataApi from 'base/DataApi'
+import chats from 'models/chats'
+import users from 'models/users'
+import { Chat, QueryFindMessageArgs, User } from '@backend'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -12,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { text } = body as API.Message.FindBody;
+        const { text } = body as QueryFindMessageArgs;
         const userid = await dataApi.WrongTrustUserID(!text, "Enter text");
         if (!userid) return;
 

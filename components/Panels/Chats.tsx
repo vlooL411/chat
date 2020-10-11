@@ -1,53 +1,22 @@
 import Loader from 'components/Loader'
 import Search from 'components/Search'
 import BlockInfo from 'components/Search/BlockInfo'
-import { GQL } from '@GQL'
-import { gql, useQuery } from '@apollo/client'
-import { Chat, ID, Message, User } from '@types'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
+import { ID } from '@types'
 import { Fragment } from 'apolloclient/fragment'
 import { ReactElement, useEffect, useState } from 'react'
 import { WhatDate } from 'components/common/WhatDate'
+import {
+  AddChatDocument,
+  Chat,
+  DeleteChatDocument,
+  Message,
+  useChatsUserCurrentQuery,
+  useFindQueryChatLazyQuery,
+} from '@frontend'
 
 import BlockPanel from './BlockPanel'
 import style from './styles/panel.module.sass'
-
-const GetChatsExploler = gql`
-    query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-        Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
-            ...ChatInfo
-            ...LastMessage
-        }
-        UserCurrent {
-            _id
-            chats_id
-        }
-    }
-    ${Fragment.ChatInfo}
-    ${Fragment.LastMessage}
-`
-
-const FindQuery = gql`
-    query findQuery($text: String!) {
-        FindMessage(text: $text) {
-            ...chatFragment
-        }
-        FindChat(title: $text) {
-            ...chatFragment
-        }
-    }
-
-    fragment chatFragment on Chat {
-        ...ChatInfo
-        messages {
-            _id
-            text
-            date
-        }
-        ...LastMessage
-    }
-    ${Fragment.ChatInfo}
-    ${Fragment.LastMessage}
-`
 
 type Props = {
     onSelectChat: (id: ID) => void
@@ -57,16 +26,16 @@ const { EMPTY_AVATAR_CHAT } = process.env
 const Chats = ({ onSelectChat }: Props): ReactElement => {
     const { panel } = style
 
-    const [isSearch, setIsSearch] = useState<boolean>(false)
-    const [storageDate, _] = useState<{ Date?: Date }>({})
+    const [storage, _] = useState<{ IsSearch: boolean, Date?: Date }>({ IsSearch: false })
+    const runFind = () => storage.IsSearch = true
+    const stopFind = () => storage.IsSearch = false
 
-    const { loading, data, subscribeToMore } =
-        useQuery<{ Chats: Chat[], UserCurrent: User }>(GetChatsExploler)
-    const { loading: loadFind, data: dataFind, refetch } = useQuery(FindQuery, { fetchPolicy: 'no-cache' })
+    const { loading, data, subscribeToMore } = useChatsUserCurrentQuery()
+    const [getFind, { loading: loadFind, data: dataFind }] = useFindQueryChatLazyQuery({ fetchPolicy: 'no-cache' })
 
     //#region Subscription
     const addMore = () => subscribeToMore({
-        document: GQL.Subscription.AddChat,
+        document: AddChatDocument,
         updateQuery: (_, { subscriptionData, variables }) => {
             const AddChat = (subscriptionData?.data as any)?.AddChat as Chat
             if (!AddChat) return null
@@ -80,7 +49,7 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
     })
 
     const remMore = () => subscribeToMore({
-        document: GQL.Subscription.RemoveChat,
+        document: DeleteChatDocument,
         updateQuery: (prev, { subscriptionData, variables }) => {
             const RemoveChat = (subscriptionData?.data as any)?.RemoveChat as Chat
             if (!RemoveChat) return null
@@ -99,21 +68,18 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
     }, [])
     //#endregion
 
-    const runFind = () => setIsSearch(true)
-    const stopFind = () => setIsSearch(false)
-
     const onFindChatsMess = (text: string) => {
         if (!text) {
-            storageDate.Date = null
+            storage.Date = null
             stopFind()
             return
         }
 
         const date = new Date()
-        storageDate.Date = date
+        storage.Date = date
         setTimeout(() => {
-            if (storageDate.Date == date) {
-                refetch({ text })
+            if (storage.Date == date) {
+                getFind({ variables: { text } })
                 runFind()
             }
         }, 400)
@@ -128,9 +94,9 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 
     const block = (chat: Chat, key): ReactElement => blockMes(chat, chat?.lastMessage, key)
 
-    const dataChats: Chat[] = data?.Chats
-    const dataFindChats: Chat[] = dataFind?.FindChat
-    const dataFindMess: Chat[] = dataFind?.FindMessage
+    const dataChats: Chat[] = data?.Chats as any
+    const dataFindChats: Chat[] = dataFind?.FindChat as any
+    const dataFindMess: Chat[] = dataFind?.FindMessage as any
 
     const isChatsEmpty = dataChats?.length == 0
     const countFindChats = dataFindChats?.length
@@ -143,10 +109,10 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
             onClear={stopFind}
             onChange={(e) => onFindChatsMess(e?.target?.value)} />
         <Loader loading={loading} />
-        {!isSearch ?
-            !isChatsEmpty ?
-                dataChats?.map(block) :
+        {!storage.IsSearch ?
+            isChatsEmpty ?
                 <BlockInfo what={`Chats empty`} /> :
+                dataChats?.map(block) :
             <>
                 <BlockInfo what={`Found chats ${countFindChats ?? 0}`} />
                 {dataFindChats?.map(block)}

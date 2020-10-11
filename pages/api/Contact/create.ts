@@ -2,10 +2,8 @@ import DataApi from 'base/DataApi'
 import chats from 'models/chats'
 import users from 'models/users'
 import { Types } from 'mongoose'
-import { Access, Chat, Contact, Creater } from '@types'
+import { Access, Chat, Contact, Creater } from '@backend'
 import { NextApiRequest, NextApiResponse } from 'next'
-
-import { API } from '..'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -14,7 +12,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case "POST":
       try {
-        const { title, contactid } = body as API.Contact.CreateBody;
+        const { title, contactid } = body as any;
+
         const userid = await dataApi.WrongTrustUserID(
           !title || !contactid,
           "Enter title and contactid"
@@ -28,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const chat: Chat = {
-          _id: new Types.ObjectId(),
+          _id: new Types.ObjectId() as any,
           title,
           date: new Date(),
           creaters_id: [userid, contactid],

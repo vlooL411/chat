@@ -1,9 +1,10 @@
-import { GQLT } from '@GQLT'
-import { ID, Message } from '@types'
 import Loader from 'components/Loader'
+import { ID } from '@types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useRef, KeyboardEvent, useState, useEffect, useMemo, ReactElement } from 'react'
-import { faPaperclip, faArrowRight, faEdit, faAnchor, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { KeyboardEvent, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { faAnchor, faArrowRight, faCheck, faEdit, faPaperclip } from '@fortawesome/free-solid-svg-icons'
+import { Message, useChangeMessageMutation, useSendMessageMutation } from '@frontend'
+
 import style from './styles/messageAction.module.sass'
 
 export type MessageActionMode = { mes?: Message, mode: 'send' | 'change' }
@@ -20,8 +21,8 @@ const MessageAction = ({ chatid, action }: Props) => {
     const textBlockRef = useRef<HTMLTextAreaElement>(null!)
     const [currentMode, setCurrentMode] = useState<MessageActionMode>(action)
 
-    const [sendMessage, { loading: loadingSend }] = GQLT.Mutation.useSendMessage()
-    const [changeMessage, { loading: loadingChange }] = GQLT.Mutation.useChangeMessage()
+    const [sendMessage, { loading: loadingSend }] = useSendMessageMutation()
+    const [changeMessage, { loading: loadingChange }] = useChangeMessageMutation()
 
     useEffect(() => {
         setCurrentMode(action)

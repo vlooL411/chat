@@ -1,8 +1,7 @@
-import { GQLT } from '@GQLT'
-import { User } from '@types'
 import { signOut } from 'next-auth/client'
 import { ReactElement, useMemo, useState } from 'react'
 import { faAlignJustify, faDoorOpen } from '@fortawesome/free-solid-svg-icons'
+import { User, useUserCurrentQuery } from '@frontend'
 
 import ChangeThemes from '../ChangeThemes'
 import style from './sidebar.module.sass'
@@ -19,7 +18,7 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
     const { sidebar, sidebar_default, sidebar_block } = style
     const { extend, extend_on, extend_off, extend_block, total } = style
     const [isExtend, setIsExtend] = useState<boolean>(false)
-    const { data } = GQLT.Query.useUserCurrent()
+    const { data } = useUserCurrentQuery()
 
     const BlockUser = useMemo<ReactElement>(() => {
         const user = data?.UserCurrent as User

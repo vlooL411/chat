@@ -1,10 +1,10 @@
 import Strategy from 'utils/Strategy'
-import { GQLT } from '@GQLT'
 import { Chat, ID, User } from '@types'
 import { ReactElement } from 'react'
 
 import Exploler from './Exploler'
 import { DropElem } from './Bar/BarDrop'
+import { useInviteChatMutation, useLeaveChatMutation, useRemoveChatMutation } from '@frontend'
 
 type Props = {
   chatid: ID
@@ -13,9 +13,9 @@ type Props = {
 const { EMPTY_AVATAR_CHAT } = process.env
 
 const ChatExploler = ({ chatid }: Props): ReactElement => {
-  const [inviteChat] = GQLT.Mutation.useInviteChat()
-  const [removeChat] = GQLT.Mutation.useRemoveChat()
-  const [leaveChat] = GQLT.Mutation.useLeaveChat()
+  const [inviteChat] = useInviteChatMutation()
+  const [removeChat] = useRemoveChatMutation()
+  const [leaveChat] = useLeaveChatMutation()
 
   const dropList = (chat: Chat, user: User): DropElem[] => {
     if (!chat) return
