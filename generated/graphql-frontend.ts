@@ -444,7 +444,6 @@ export type MessagesQuery = (
     { __typename?: 'Messages' }
     & { Chat: (
       { __typename?: 'Chat' }
-      & Pick<Chat, '_id'>
       & ChatMessagesFragment
       & LastMessageFragment
     ), InfoMore?: Maybe<(
@@ -1123,7 +1122,6 @@ export const MessagesDocument = gql`
     query messages($chatid: ID!, $messageid: ID, $limit: Int, $isIncoming: Boolean = false) {
   Messages(chatid: $chatid, messageid: $messageid, limit: $limit, isIncoming: $isIncoming) {
     Chat {
-      _id
       ...ChatMessages
       ...LastMessage
     }

@@ -1,9 +1,7 @@
 import Loader from 'components/Loader'
 import Search from 'components/Search'
 import BlockInfo from 'components/Search/BlockInfo'
-import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { ID } from '@types'
-import { Fragment } from 'apolloclient/fragment'
 import { ReactElement, useEffect, useState } from 'react'
 import { WhatDate } from 'components/common/WhatDate'
 import {
@@ -31,7 +29,8 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
     const stopFind = () => storage.IsSearch = false
 
     const { loading, data, subscribeToMore } = useChatsUserCurrentQuery()
-    const [getFind, { loading: loadFind, data: dataFind }] = useFindQueryChatLazyQuery({ fetchPolicy: 'no-cache' })
+    const [getFind, { loading: loadFind, data: dataFind }] =
+        useFindQueryChatLazyQuery({ fetchPolicy: 'no-cache' })
 
     //#region Subscription
     const addMore = () => subscribeToMore({
@@ -85,18 +84,18 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
         }, 400)
     }
 
-    const blockMes = (chat: Chat, mes: Message, key): ReactElement =>
+    const blockMes = (chat: Chat, mes: Message): ReactElement =>
         <BlockPanel title={chat?.title} text={mes?.text}
             image={chat?.image ?? EMPTY_AVATAR_CHAT}
             date={WhatDate(new Date(mes?.date))}
             onClick={() => onSelectChat(chat?._id)}
-            key={key} />
+            key={mes?._id} />
 
-    const block = (chat: Chat, key): ReactElement => blockMes(chat, chat?.lastMessage, key)
+    const block = (chat: Chat): ReactElement => blockMes(chat, chat?.lastMessage)
 
-    const dataChats: Chat[] = data?.Chats as any
-    const dataFindChats: Chat[] = dataFind?.FindChat as any
-    const dataFindMess: Chat[] = dataFind?.FindMessage as any
+    const dataChats = data?.Chats
+    const dataFindChats = dataFind?.FindChat
+    const dataFindMess = dataFind?.FindMessage
 
     const isChatsEmpty = dataChats?.length == 0
     const countFindChats = dataFindChats?.length
@@ -118,8 +117,8 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
                 {dataFindChats?.map(block)}
                 <BlockInfo what={`Found messages ${countFindMess ?? 0}`} />
                 {dataFindMess?.map(chat =>
-                    chat?.messages?.map((mes, key) =>
-                        blockMes(chat, mes, key)))}
+                    chat?.messages?.map(mes =>
+                        blockMes(chat as any, mes as any)))}
             </>}
     </div>
 }

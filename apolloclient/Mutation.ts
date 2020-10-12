@@ -1,5 +1,6 @@
 import { PubSub } from 'graphql-subscriptions'
-import { Chat, IMessangerAsync, Message } from '@types'
+import { IMessangerAsync } from '@types'
+import { Chat, Message } from '@backend'
 
 import { Sub } from './Subscription'
 

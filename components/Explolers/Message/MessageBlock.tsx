@@ -12,16 +12,16 @@ import style from './styles/messageBlock.module.sass'
 type Props = {
     chatid: ID
     message: Message
-    countExpand?: number
+    countCharForExpanded?: number
     switchMessageAction?: (mes: Message) => void
 }
 
-const MessageBlock = ({ chatid, message, countExpand = 300, switchMessageAction = () => { } }: Props) => {
+const MessageBlock = ({ chatid, message, countCharForExpanded = 300, switchMessageAction = () => { } }: Props) => {
     const { mes, mes_block, edit } = style
     const { mes_block_text, expend, mes_block_info, mes_block_info_date } = style
     const [isExpandMes, setIsExpandMes] = useState<boolean>(false)
 
-    const isExpand = message?.text?.length > countExpand
+    const isExpand = message?.text?.length > countCharForExpanded
 
     useEffect(() => {
         if (isExpand)
@@ -49,7 +49,7 @@ const MessageBlock = ({ chatid, message, countExpand = 300, switchMessageAction 
             <p className={mes_block_text}>
                 {isExpandMes && isExpand ?
                     <>
-                        {message?.text?.slice(0, countExpand)}...
+                        {message?.text?.slice(0, countCharForExpanded)}...
                             <br />
                         <button className={expend}
                             onClick={() => setIsExpandMes(false)}>

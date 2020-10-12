@@ -1,4 +1,5 @@
-import { ReactElement } from "react"
+import { ReactElement } from 'react'
+
 import style from './styles/blockinfo.module.sass'
 
 type Props = {
@@ -8,9 +9,7 @@ type Props = {
 const BlockInfo = ({ what }: Props): ReactElement => {
     const { info } = style
 
-    return <p className={info}>
-        {what}
-    </p>
+    return <p className={info}>{what}</p>
 }
 
 export default BlockInfo

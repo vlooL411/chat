@@ -15,7 +15,7 @@ type Props = {
     sideblock: SidebarBlock
 }
 
-const Block = ({ className, sideblock, }: Props, key): ReactElement => {
+const BlockSidebar = ({ className, sideblock, }: Props, key): ReactElement => {
     const { fa, text, href, onClick } = sideblock
 
     return <Link key={key} href={href ?? ''}>
@@ -26,4 +26,4 @@ const Block = ({ className, sideblock, }: Props, key): ReactElement => {
     </Link>
 }
 
-export default Block
+export default BlockSidebar

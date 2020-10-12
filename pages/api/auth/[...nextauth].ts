@@ -1,9 +1,8 @@
 import Providers from 'next-auth/providers'
 import NextAuth, { InitOptions } from 'next-auth'
-import { ID, User } from '@types'
+import { ID } from '@types'
 import { NextApiRequest, NextApiResponse } from 'next'
-
-import { API } from '..'
+import { QueryUserIdArgs, User } from '@frontend'
 
 const { DB_HOST } = process.env;
 const { GOOGLE_SECRET } = process.env;
@@ -33,7 +32,7 @@ const options: InitOptions = {
         method: "POST",
         body: JSON.stringify({
           query: getUserID,
-          variables: { name, email } as API.User.idBody,
+          variables: { name, email } as QueryUserIdArgs,
         }),
         headers: { "Content-Type": "application/json" },
       });

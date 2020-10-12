@@ -1,10 +1,11 @@
-import { User } from "@types"
-import BlockExploler from "./Block"
-import BarDrop, { DropElem } from "./BarDrop"
-import { ReactElement, useMemo, useState } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEllipsisV, faPalette } from "@fortawesome/free-solid-svg-icons"
+import { ReactElement, useMemo, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsisV, faPalette } from '@fortawesome/free-solid-svg-icons'
+import { User } from '@frontend'
+
+import BarBlock from './BarBlock'
 import style from './styles/bar.module.sass'
+import BarDrop, { DropElem } from './BarDrop'
 
 export type BarProps = {
     title: string
@@ -26,7 +27,7 @@ const BarExploler = ({ title, image, children, dropList }: BarProps): ReactEleme
         [isBarDrop])
 
     return <div className={bar} style={{ position: 'relative' }} onMouseLeave={onBarUnDrop}>
-        <BlockExploler title={title} image={image} children={children} />
+        <BarBlock title={title} image={image} children={children} />
         <div className={bar_tools}>
             <button>
                 <FontAwesomeIcon icon={faPalette} />

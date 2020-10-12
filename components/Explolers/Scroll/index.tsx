@@ -1,11 +1,12 @@
-import { ReactElement } from "react"
-import { first, last } from "utils/array"
-import MessageBlock from "../Message/MessageBlock"
-import { MessageActionMode } from "../Message/MessageAction"
-import ScrollLoadMore from "components/Scroll/ScrollLoadMore"
+import ScrollLoadMore from 'components/Scroll/ScrollLoadMore'
+import { ReactElement } from 'react'
+import { first, last } from 'utils/array'
+import { Chat, InfoMore, Message } from '@frontend'
+import { ID } from '@types'
+
+import MessageBlock from '../Message/MessageBlock'
 import style from './scroll.module.sass'
-import { Chat, InfoMore, Message } from "@frontend"
-import { ID } from "@types"
+import { MessageActionMode } from '../Message/MessageAction'
 
 type Props = {
     chat: Chat

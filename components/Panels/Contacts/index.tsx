@@ -1,7 +1,7 @@
 import Loader from 'components/Loader'
 import Search from 'components/Search'
 import BlockInfo from 'components/Search/BlockInfo'
-import { Contact, useContactsQuery, useFindContactLazyQuery } from '@frontend'
+import { Contact, ContactInfoFragment, useContactsQuery, useFindContactLazyQuery } from '@frontend'
 import { ReactElement, useState } from 'react'
 
 import style from '../styles/panel.module.sass'
@@ -48,9 +48,9 @@ const Contacts = ({ onSelectContact, onCreateContact }: Props): ReactElement => 
     const blockExistning = (contact: Contact, key): ReactElement =>
         <Block contact={contact} onSelectContact={() => onCreateContact(contact)} key={key} />
 
-    const dataContacts: Contact[] = data?.Contacts
-    const dataFindExist: Contact[] = dataFind?.FindContact?.Existing
-    const dataFindIncom: Contact[] = dataFind?.FindContact?.Incoming
+    const dataContacts: ContactInfoFragment[] = data?.Contacts
+    const dataFindExist: ContactInfoFragment[] = dataFind?.FindContact?.Existing as any
+    const dataFindIncom: ContactInfoFragment[] = dataFind?.FindContact?.Incoming as any
 
     const isContactsEmpty = dataContacts?.length == 0
     const countFindExist: number = dataFindExist?.length ?? 0

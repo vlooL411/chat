@@ -1,4 +1,4 @@
-import { Contact } from '@types'
+import { Contact } from '@frontend'
 import { ReactElement } from 'react'
 import { WhatDate } from 'components/common/WhatDate'
 
@@ -12,7 +12,8 @@ type Props = {
 const fiveMinute: number = 1000 * 60 * 5
 const { EMPTY_AVATAR_USER } = process.env
 const Block = ({ contact, onSelectContact }: Props): ReactElement => {
-    const { whoIsContact, User } = contact
+    const whoIsContact = contact?.whoIsContact
+    const User = contact?.User
 
     const isOnline = new Date(User?.dateLastOnline)?.getTime() + fiveMinute > new Date().getTime()
 

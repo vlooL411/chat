@@ -1,8 +1,9 @@
-import { ReactElement } from "react"
-import style from "./changeThemes.module.sass";
-import { ThemeContext, Themes } from "../../pages/_app";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun } from "@fortawesome/free-solid-svg-icons";
+import { ReactElement } from 'react'
+import { faSun } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ThemeContext, Themes } from 'pages/_app'
+
+import style from './changeThemes.module.sass'
 
 type Props = {
     className?: string

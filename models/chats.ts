@@ -1,6 +1,7 @@
-import { Chat } from "@types";
-import { model, Schema, models, Types } from "mongoose";
-import { Collection } from "./collections";
+import { Chat } from '@backend'
+import { model, models, Schema, Types } from 'mongoose'
+
+import { Collection } from './collections'
 
 const MessageSchema = {
   _id: { type: Types.ObjectId },

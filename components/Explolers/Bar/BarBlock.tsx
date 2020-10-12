@@ -1,4 +1,5 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react'
+
 import style from './styles/block.module.sass'
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
     children?: ReactElement
 }
 
-const BlockExploler = ({ title, image, children }: Props): ReactElement => {
+const BarBlock = ({ title, image, children }: Props): ReactElement => {
     const { block, block_title } = style
 
     return <div className={block}>
@@ -17,4 +18,4 @@ const BlockExploler = ({ title, image, children }: Props): ReactElement => {
     </div>
 }
 
-export default BlockExploler
+export default BarBlock

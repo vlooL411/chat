@@ -1,18 +1,14 @@
-import { ReactElement, CSSProperties } from "react"
-import styleLoader from './loader.module.sass'
+import { CSSProperties, ReactElement } from 'react'
 
-enum LoaderT {
-    default = 'default'
-}
+import styleLoader from './loader.module.sass'
 
 type Props = {
     loading: boolean
     className?: string
     style?: CSSProperties
-    type?: LoaderT
 }
 
-const Loader = ({ loading, style = null, className = '', type = LoaderT.default }: Props): ReactElement => {
+const Loader = ({ loading, style = null, className = '' }: Props): ReactElement => {
     const { circle } = styleLoader
     return loading ?
         <div className={`${circle} ${className}`} style={style}>

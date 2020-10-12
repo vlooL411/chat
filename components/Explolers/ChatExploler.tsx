@@ -1,10 +1,10 @@
 import Strategy from 'utils/Strategy'
-import { Chat, ID, User } from '@types'
+import { ID } from '@types'
 import { ReactElement } from 'react'
+import { Chat, useInviteChatMutation, useLeaveChatMutation, User, useRemoveChatMutation } from '@frontend'
 
 import Exploler from './Exploler'
 import { DropElem } from './Bar/BarDrop'
-import { useInviteChatMutation, useLeaveChatMutation, useRemoveChatMutation } from '@frontend'
 
 type Props = {
   chatid: ID

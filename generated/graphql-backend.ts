@@ -444,7 +444,6 @@ export type MessagesQuery = (
     { __typename?: 'Messages' }
     & { Chat: (
       { __typename?: 'Chat' }
-      & Pick<Chat, '_id'>
       & ChatMessagesFragment
       & LastMessageFragment
     ), InfoMore?: Maybe<(

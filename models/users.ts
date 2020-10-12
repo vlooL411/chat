@@ -1,6 +1,7 @@
-import { Contact, User } from "@types";
-import { Collection } from "./collections";
-import { model, Schema, models, Types } from "mongoose";
+import { Contact, User } from '@backend'
+import { model, models, Schema, Types } from 'mongoose'
+
+import { Collection } from './collections'
 
 const contact = new Schema<Contact>({
   _id: { type: Types.ObjectId, required: true },

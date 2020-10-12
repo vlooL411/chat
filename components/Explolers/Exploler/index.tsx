@@ -2,15 +2,9 @@ import Loader from 'components/Loader'
 import LocalStorage from 'utils/LocalSrorage'
 import { last } from 'utils/array'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
-import {
-  AddMessageDocument,
-  Chat,
-  DeleteMessageDocument,
-  Message,
-  useChatQuery,
-  useMessagesQuery,
-  useSwapMessageSubscription,
-} from '@frontend'
+import { Chat, Message, MessagesQuery } from '@frontend'
+import { AddMessageDocument, DeleteMessageDocument } from '@frontend'
+import { useChatQuery, useMessagesQuery, useSwapMessageSubscription } from '@frontend'
 import { ID } from '@types'
 
 import Scroll from '../Scroll'
@@ -30,7 +24,8 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
     const { exploler, scrollcontainer } = style
     const { down, loader, loader_up, loader_down } = style
 
-    const [mesActionMode, setMesActionMode] = useState<MessageActionMode>({ mes: null, mode: 'send' })
+    const [mesActionMode, setMesActionMode] =
+        useState<MessageActionMode>({ mes: null, mode: 'send' })
 
     const { loading, data } = useChatQuery({ variables: { chatid } })
     const { data: dataMess, loading: loadMess, refetch, subscribeToMore } = useMessagesQuery()
@@ -40,7 +35,7 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
 
     useEffect(() => {
         if (!chatid) return
-        const lastMessageID = LocalStorage.getString('ChatLastMes', chatid?.toString())
+        const lastMessageID: ID = LocalStorage.getString('ChatLastMes', chatid?.toString())
         Refetch(limit, lastMessageID, true)
     }, [chatid])
 
@@ -59,11 +54,21 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
             const lastElemID = last(mess)?._id
 
             if (lastElemID == prev?.Messages?.InfoMore?.isEndDown)
-                return { Messages: { Chat: { lastMessage }, InfoMore: { isEndDown: lastMessage?._id } } } as any
+                return {
+                    Messages: {
+                        Chat: { lastMessage },
+                        InfoMore: { isEndDown: lastMessage?._id }
+                    }
+                } as any
 
             variables.isIncoming = true
             const messages = mess ? [...mess, AddMessage] : [AddMessage]
-            return { Messages: { Chat: { lastMessage, messages }, InfoMore: { isEndDown: lastMessage?._id } } } as any
+            return {
+                Messages: {
+                    Chat: { lastMessage, messages },
+                    InfoMore: { isEndDown: lastMessage?._id }
+                }
+            }
         }
     })
 
@@ -75,7 +80,7 @@ const Exploler = ({ chatid, BarProps }: Props): ReactElement => {
 
             variables.isIncoming = true
             const messages = prev?.Messages?.Chat?.messages?.filter((el) => el._id != RemoveMessage._id)
-            return { Messages: { Chat: { messages } } } as any
+            return { Messages: { Chat: { messages } } }
         }
     })
 

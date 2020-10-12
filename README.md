@@ -4,8 +4,10 @@ This is a [Next.js](https://nextjs.org) project, within using:
 - MongoDB
 - Apollo Client (React)
 - Apollo Server
+- GraphQL Code Generator
 - SASS
 - NextAuth.js
+- Jest
 
 ## Getting Started
 
@@ -31,7 +33,7 @@ Second, run the development server:
 npm i
 npm run dev
 # or
-yarn i
+yarn add
 yarn dev
 ```
 

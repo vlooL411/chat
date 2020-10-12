@@ -5,12 +5,11 @@ import { User, useUserCurrentQuery } from '@frontend'
 
 import ChangeThemes from '../ChangeThemes'
 import style from './sidebar.module.sass'
-import Block, { SidebarBlock } from './Block'
+import BlockSidebar, { SidebarBlock } from './BlockSidebar'
 
 type Props = {
     faBlocks: SidebarBlock[]
-    extendBlocks?: any[]
-    extWidth?: string
+    extendBlocks?: SidebarBlock[]
 }
 
 const { EMPTY_AVATAR_USER } = process.env
@@ -33,12 +32,12 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 
     const blocks = useMemo<ReactElement[]>(() =>
         faBlocks?.map((sideblock, key) =>
-            Block({ className: sidebar_block, sideblock }, key)),
+            BlockSidebar({ className: sidebar_block, sideblock }, key)),
         [faBlocks])
 
     const blocksExtend = useMemo<ReactElement[]>(() =>
         extendBlocks?.map((sideblock, key) =>
-            Block({ className: extend_block, sideblock }, key)),
+            BlockSidebar({ className: extend_block, sideblock }, key)),
         [extendBlocks])
 
     return <>
@@ -52,11 +51,11 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
         </div>
         <div className={sidebar}>
             <div className={sidebar_default}>
-                <Block className={sidebar_block}
+                <BlockSidebar className={sidebar_block}
                     sideblock={{ fa: faAlignJustify, text: '', onClick: () => setIsExtend(true) }}
                     key={-2} />
                 {blocks}
-                <Block className={sidebar_block}
+                <BlockSidebar className={sidebar_block}
                     sideblock={{ fa: faDoorOpen, text: 'Exit', onClick: signOut }}
                     key={-1} />
             </div>

@@ -1,7 +1,8 @@
-import typeDefs from "./typeDefs";
-import { resolvers } from "./resolvers";
-import { makeExecutableSchema } from "graphql-tools";
-import MessangerMongoDB from "../base/MessangerMongoDB";
+import MessangerMongoDB from 'base/MessangerMongoDB'
+import { makeExecutableSchema } from 'graphql-tools'
+
+import typeDefs from './typeDefs'
+import { resolvers } from './resolvers'
 
 export default makeExecutableSchema({
   typeDefs,

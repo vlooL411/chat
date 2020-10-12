@@ -1,4 +1,5 @@
-import { Chat, Contact, Contacts, IMessangerAsync, Messages, User } from '@types'
+import { Chat, Contact, Contacts, Messages, User } from '@backend'
+import { IMessangerAsync } from '@types'
 
 export const Query = (iMessanger: IMessangerAsync) => ({
   UpdateOnlineUser: async (_, __, { req }) => iMessanger.UpdateOnlineUser(req),

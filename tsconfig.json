@@ -15,11 +15,11 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@types": ["apolloclient/types"],
+      "@types": ["apolloclient/types.ts"],
       "@backend": ["generated/graphql-backend.ts"],
       "@frontend": ["generated/graphql-frontend.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next", "out", "tests"]
 }

@@ -1,17 +1,39 @@
-import { API } from '@API'
 import { NextApiRequest } from 'next'
 import { IMessangerAsync } from '@types'
-import { Chat, Contact, Contacts, Messages, User } from '@frontend'
+import { Chat, Contact, Contacts, Messages, User } from '@backend'
+import {
+  QueryChatArgs,
+  QueryChatsArgs,
+  QueryFindChatArgs,
+  QueryFindContactArgs,
+  QueryFindMessageArgs,
+  QueryMessagesArgs,
+  QueryUserArgs,
+  QueryUserIdArgs,
+  QueryUsersArgs,
+} from '@backend'
+import {
+  MutationChangeMessageArgs,
+  MutationCreateChatArgs,
+  MutationInviteChatArgs,
+  MutationLeaveChatArgs,
+  MutationRemoveChatArgs,
+  MutationRemoveMessageArgs,
+  MutationSendMessageArgs,
+} from '@backend'
 
 const { HOST_API } = process.env;
 
+//resolvers use ./apolloclient/schema.ts
 export default class MessangerMongoDB implements IMessangerAsync {
+  constructor(public folder: string = "") {}
+
   async PostQuery<T>(
     relativeUrl: string,
     body,
     req: NextApiRequest
   ): Promise<T> {
-    const data = await fetch(`${HOST_API}/${relativeUrl}`, {
+    const data = await fetch(`${HOST_API}/${this.folder}${relativeUrl}`, {
       method: "POST",
       body: JSON.stringify(body),
       credentials: "include",
@@ -26,77 +48,77 @@ export default class MessangerMongoDB implements IMessangerAsync {
 
   //#region Query
   //#region User
-  User = (body: API.User.GetBody, req: NextApiRequest): Promise<User> =>
+  User = (body: QueryUserArgs, req: NextApiRequest): Promise<User> =>
     this.PostQuery("User", body, req);
   UserCurrent = (req: NextApiRequest): Promise<User> =>
     this.PostQuery("User/current", {}, req);
 
-  UserID = (body: API.User.idBody, req: NextApiRequest = null): Promise<User> =>
+  UserID = (body: QueryUserIdArgs, req: NextApiRequest = null): Promise<User> =>
     this.PostQuery("User/id", body, req);
 
-  Users = (body: API.User.GetsBody, req: NextApiRequest): Promise<User[]> =>
+  Users = (body: QueryUsersArgs, req: NextApiRequest): Promise<User[]> =>
     this.PostQuery("User/gets", body, req);
 
   Contacts = (req: NextApiRequest): Promise<Contact[]> =>
     this.PostQuery("Contact/gets", {}, req);
 
   FindContact = (
-    body: API.Contact.FindBody,
+    body: QueryFindContactArgs,
     req: NextApiRequest
   ): Promise<Contacts> => this.PostQuery("Contact/find", body, req);
   //#endregion
 
   //#region Chat
-  Chat = (body: API.Chat.GetBody, req: NextApiRequest): Promise<Chat> =>
+  Chat = (body: QueryChatArgs, req: NextApiRequest): Promise<Chat> =>
     this.PostQuery("Chat", body, req);
 
-  Chats = (body: API.Chat.GetsBody, req: NextApiRequest): Promise<Chat[]> =>
+  Chats = (body: QueryChatsArgs, req: NextApiRequest): Promise<Chat[]> =>
     this.PostQuery("Chat/gets", body, req);
 
-  FindChat = (body: API.Chat.FindBody, req: NextApiRequest): Promise<Chat[]> =>
+  FindChat = (body: QueryFindChatArgs, req: NextApiRequest): Promise<Chat[]> =>
     this.PostQuery("Chat/find", body, req);
 
   Messages = (
-    body: API.Message.GetsBody,
+    body: QueryMessagesArgs,
     req?: NextApiRequest
   ): Promise<Messages> => this.PostQuery("Message/gets", body, req);
 
   FindMessage = (
-    body: API.Message.FindBody,
+    body: QueryFindMessageArgs,
     req: NextApiRequest
   ): Promise<Chat[]> => this.PostQuery("Message/find", body, req);
   //#endregion
 
   //#region Mutation
   InviteChat = (
-    body: API.Chat.InviteBody,
+    body: MutationInviteChatArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Chat/invite", body, req);
   LeaveChat = (
-    body: API.Chat.LeaveBody,
+    body: MutationLeaveChatArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Chat/leave", body, req);
   CreateChat = (
-    body: API.Chat.CreateBody,
+    body: MutationCreateChatArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Chat/create", body, req);
   RemoveChat = (
-    body: API.Chat.RemoveBody,
+    body: MutationRemoveChatArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Chat/remove", body, req);
 
   SendMessage = (
-    body: API.Message.SendBody,
+    body: MutationSendMessageArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Message/send", body, req);
 
   ChangeMessage = (
-    body: API.Message.ChangeBody,
+    body: MutationChangeMessageArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Message/change", body, req);
 
   RemoveMessage = (
-    body: API.Message.RemoveBody,
+    body: MutationRemoveMessageArgs,
     req: NextApiRequest
   ): Promise<string> => this.PostQuery("Message/remove", body, req);
   //#endregion

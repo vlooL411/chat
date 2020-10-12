@@ -2,7 +2,7 @@ import { forwardRef, MutableRefObject, ReactElement, UIEvent } from 'react'
 
 type Props = {
     className?: string
-    children: ReactElement[]
+    children: ReactElement | ReactElement[]
     scrollUp?: number
     scrollDown?: number
     onScrollUp?: (e: EventTarget & HTMLDivElement) => void
