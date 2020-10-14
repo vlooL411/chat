@@ -5,33 +5,28 @@ import { ApolloProvider } from '@apollo/client'
 
 import { initializeApollo } from '../apolloclient/client'
 
-// import { ThemeProvider } from "my-ui-lib"
-// import { TranslationProvider } from "my-i18n-lib"
-// import defaultStrings from "i18n/en-x-default"
+export default class Render<T> {
+  mocks: MockedResponse<Record<string, T>>[]
+  wrapper: ReactElement
+  constructor(children: ReactElement | ReactElement) {
+    this.wrapper = children
+  }
 
-export const Apollo = (children: ReactElement) =>
-  <ApolloProvider client={initializeApollo()} >{children}</ApolloProvider>;
+  private Wrapper(wrapper: ReactElement): Render<T> {
+    this.wrapper = wrapper
+    return this
+  }
 
-export const ApolloRender = (children: ReactElement): RenderResult =>
-  render(Apollo(children))
+  Mock = (mocks: MockedResponse<Record<string, T>>[]) =>
+    this.Wrapper(<MockedProvider mocks={mocks}>{this.wrapper}</MockedProvider>)
 
-// return (
-//   <ThemeProvider theme="light">
-//     <TranslationProvider messages={defaultStrings}>
-//       {children}
-//     </TranslationProvider>
-//   </ThemeProvider>
-// )
+  Apollo = () =>
+    this.Wrapper(<ApolloProvider client={initializeApollo()} >{this.wrapper}</ApolloProvider>)
 
-export const Mocks = (mocks: MockedResponse<Record<string, any>>[], children: ReactElement): ReactElement =>
-  <MockedProvider mocks={mocks}>{children}</MockedProvider>;
-
-export const MocksRender = (mocks: MockedResponse<Record<string, any>>[], children: ReactElement): RenderResult =>
-  render(Mocks(mocks, children))
-export const ApolloMocksRender = (mocks: MockedResponse<Record<string, any>>[], children: ReactElement): RenderResult =>
-  render(Apollo(Mocks(mocks, children)))
+  build = (): RenderResult => render(this.wrapper)
+}
 
 // re-export everything
 export * from "@testing-library/react";
 
-export { render }
+export { render, RenderResult }

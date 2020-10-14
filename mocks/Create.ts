@@ -1,5 +1,8 @@
-import { ID } from '../../apolloclient/types'
-import { Access, Chat, Contact, Creater, InfoMore, Message, Messages, User } from '../../generated/graphql-frontend'
+import { GraphQLRequest } from '@apollo/client'
+import { DocumentNode } from 'graphql'
+
+import { ID } from '../apolloclient/types'
+import { Access, Chat, Contact, Creater, InfoMore, Message, Messages, User } from '../generated/graphql-frontend'
 
 export const numberRandom = (): string => (Math.random() * 100000).toString();
 export const numberRandomMod = (max: number = 10): number =>
@@ -8,8 +11,19 @@ export const numberRandomMod = (max: number = 10): number =>
 const crtArray = <T>(length: number, crt: (i: number) => T) =>
   Array.from({ length }, (_, i) => crt(i));
 
+const { EMPTY_AVATAR_USER } = process.env;
+const { EMPTY_AVATAR_CHAT } = process.env;
+
 export default class Create {
-  static user(_id: ID = numberRandom()): User {
+  static RequestResultQ = <T>(query: DocumentNode, data: T) =>
+    Create.RequestResult({ query }, data);
+
+  static RequestResult = <T>(request: GraphQLRequest, data: T) => ({
+    request,
+    result: { data },
+  });
+
+  static userWithoutContacts(_id: ID = numberRandom()): User {
     const User: User = {
       _id,
       email: "email@email.email",
@@ -17,11 +31,16 @@ export default class Create {
       password: "password",
       chats_id: Create._ids(),
       dateLastOnline: new Date(),
-      image: `image ${_id}`,
+      image: EMPTY_AVATAR_USER,
       isClosed: true,
       isOnlineMobile: true,
       status: `status ${_id}`,
     };
+    return User;
+  }
+
+  static user(_id: ID = numberRandom()): User {
+    const User: User = Create.userWithoutContacts(_id);
     User.contacts = Create.contacts(User);
     return User;
   }
@@ -48,7 +67,7 @@ export default class Create {
     creaters_id: Create._ids(),
     date: new Date(),
     title: `Title ${_id}`,
-    image: "src",
+    image: EMPTY_AVATAR_CHAT,
     users_id: Create._ids(),
     lastMessage: Create.message(),
     messages: Create.messages(length),
@@ -92,7 +111,7 @@ export default class Create {
     crtArray(length, () => Create.chat());
 
   static contacts = (
-    User: User,
+    User: User = Create.userWithoutContacts(),
     length: number = numberRandomMod()
   ): Contact[] => crtArray(length, () => Create.contact(numberRandom(), User));
 

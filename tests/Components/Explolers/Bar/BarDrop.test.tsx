@@ -1,11 +1,14 @@
 import BarDrop from '../../../../components/Explolers/Bar/BarDrop'
-import { BarDropMocks } from '../../../mocks/Components/Explolers/Bar/BarDrop.mock'
-import { MocksRender } from '../../../testUtils'
+import Render, { RenderResult } from '../../../testUtils'
+import { BarDropMocks } from '../../../../mocks/Components/Explolers/Bar/BarDrop.mock'
 
 describe("BarDrop Component", () => {
     it("should render without crashing", () => {
-        const component = MocksRender(BarDropMocks,
+        const component: RenderResult = new Render(
             <BarDrop visible={true} dropList={() => [{ text: 'text', onClick: () => { } }]} />)
+            .Mock(BarDropMocks)
+            .build()
+
         expect(component);
     });
 });

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faThermometerEmpty, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ReactElement } from 'react'
 
@@ -18,9 +18,9 @@ type Props = {
 const BlockSidebar = ({ className, sideblock, }: Props, key): ReactElement => {
     const { fa, text, href, onClick } = sideblock
 
-    return <Link key={key} href={href ?? ''}>
+    return <Link key={key} href={href ?? ''} prefetch={false}>
         <a className={className} onClick={onClick}>
-            <FontAwesomeIcon icon={fa} />
+            <FontAwesomeIcon icon={fa ?? faThermometerEmpty} />
             <p>{text}</p>
         </a>
     </Link>

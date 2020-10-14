@@ -1,9 +1,9 @@
 import Index from '../../pages'
-import { Apollo } from '../testUtils'
+import Render from '../testUtils'
 
-describe('Loader Component', () => {
+describe('Pages Index Component', () => {
     it('should render without crashing', () => {
-        const component = Apollo(<Index />);
+        const component = new Render(<Index />).Apollo().build();
 
         expect(component);
     });

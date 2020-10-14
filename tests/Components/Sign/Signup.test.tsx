@@ -1,9 +1,12 @@
 import Signup from '../../../components/Sign/Signup'
-import { Apollo } from '../../testUtils'
+import Render, { RenderResult } from '../../testUtils'
 
 describe('Signup Component', () => {
     it('should render without crashing', () => {
-        const component = Apollo(<Signup onSignIn={() => { }} onSignUp={() => { }} />)
+        const component: RenderResult =
+            new Render(<Signup onSignIn={() => { }} onSignUp={() => { }} />)
+                .Apollo()
+                .build()
 
         expect(component);
     });

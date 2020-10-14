@@ -2,6 +2,7 @@ import Loader from 'components/Loader'
 import { ChangeEvent, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+
 import style from './styles/search.module.sass'
 
 type Props = {

@@ -6,7 +6,7 @@ type Props = {
     what: string
 }
 
-const BlockInfo = ({ what }: Props): ReactElement => {
+const BlockInfo = ({ what = 'what' }: Props): ReactElement => {
     const { info } = style
 
     return <p className={info}>{what}</p>

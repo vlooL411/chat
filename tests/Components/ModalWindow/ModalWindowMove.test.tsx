@@ -1,9 +1,9 @@
 import ModalWindowMove from '../../../components/ModalWindow/ModalWindowMove'
-import { render } from '../../testUtils'
+import { render, RenderResult } from '../../testUtils'
 
 describe('ModalWindowMove Component', () => {
     it('should render without crashing', () => {
-        const component = render(
+        const component: RenderResult = render(
             <ModalWindowMove className='RandomText' style={{}}
                 visible={true} children={<></>} />);
 

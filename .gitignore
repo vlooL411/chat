@@ -12,6 +12,7 @@
 /.next/
 /out/
 /.server/
+/storybook-static/
 # production
 /build
 

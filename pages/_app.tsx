@@ -25,7 +25,7 @@ const App = ({ Component, pageProps }): ReactElement => {
   return <>
     <ApolloProvider client={initializeApollo()} >
       <ThemeContext.Provider value={{ theme, toggleThemes: setTheme }}>
-        <Provider session={pageProps.session}>
+        <Provider session={pageProps.session ?? null}>
           <div className={theme}>
             <Signin />
             <Component {...pageProps} />

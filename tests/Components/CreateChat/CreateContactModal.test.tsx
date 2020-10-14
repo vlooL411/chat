@@ -1,9 +1,12 @@
 import CreateContactModal from '../../../components/CreateChat/CreateContactModal'
-import { Apollo } from '../../testUtils'
+import Render, { RenderResult } from '../../testUtils'
 
 describe('CreateContactModal Component', () => {
     it('should render without crashing', () => {
-        const component = Apollo(<CreateContactModal onOpen={() => true} onClose={() => { }} />)
+        const component: RenderResult = new Render(
+            <CreateContactModal onOpen={() => true} onClose={() => { }} />)
+            .Apollo()
+            .build()
 
         expect(component);
     });

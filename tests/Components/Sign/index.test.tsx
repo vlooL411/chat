@@ -1,9 +1,12 @@
 import Sign from '../../../components/Sign'
-import { Apollo } from '../../testUtils'
+import Render, { RenderResult } from '../../testUtils'
 
 describe('Sign Component', () => {
     it('should render without crashing', () => {
-        const component = Apollo(<Sign />)
+        const component: RenderResult =
+            new Render(<Sign />)
+                .Apollo()
+                .build()
 
         expect(component);
     });

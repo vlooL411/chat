@@ -1,23 +1,18 @@
-import fetch from "cross-fetch";
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-  split,
-} from "@apollo/client";
-import { useMemo } from "react";
-import { w3cwebsocket } from "websocket";
-import { NextApiRequest, NextApiResponse } from "next";
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { SchemaLink } from "@apollo/client/link/schema";
-import { getMainDefinition } from "@apollo/client/utilities";
+import fetch from 'cross-fetch'
+import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject, split } from '@apollo/client'
+import { useMemo } from 'react'
+import { w3cwebsocket } from 'websocket'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { SchemaLink } from '@apollo/client/link/schema'
+import { getMainDefinition } from '@apollo/client/utilities'
 
-import schema from "./schema";
-import { CacheConfig } from "./CacheConfig";
+import schema from './schema'
+import { CacheConfig } from './CacheConfig'
 
 //TODO solve the problem of new WebSocketLink Cannot read property 'protocol' of undefined
-const isTest = process.env.NODE_ENV == "test";
+const { NODE_ENV } = process.env;
+const isTest = ["test", "storybook"].includes(NODE_ENV);
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 const isBrowser = process.browser;
@@ -39,7 +34,7 @@ const httpLink = new HttpLink({
 });
 
 const wsLink = isTest
-  ? null
+  ? { request: { length: 0 } }
   : new WebSocketLink({
       uri: HOST_GRAPHGQLSUB,
       reconnect: true,

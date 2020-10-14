@@ -1,9 +1,10 @@
 import ChangeThemes from '../../components/ChangeThemes'
-import { render } from '../testUtils'
+import { render, RenderResult } from '../testUtils'
 
 describe('ChangeThemes Component', () => {
     it('should render without crashing', () => {
-        const component = render(<ChangeThemes className='RandomText' />);
+        const component: RenderResult =
+            render(<ChangeThemes className='RandomText' />);
 
         expect(component);
     });

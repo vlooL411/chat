@@ -1,9 +1,9 @@
 import BlockInfo from '../../../components/Search/BlockInfo'
-import { render } from '../../testUtils'
+import { render, RenderResult } from '../../testUtils'
 
 describe('BlockInfo Component', () => {
     it('should render without crashing', () => {
-        const component = render(<BlockInfo what='RandomText' />)
+        const component: RenderResult = render(<BlockInfo what='RandomText' />)
 
         expect(component);
     });

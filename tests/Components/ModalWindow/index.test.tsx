@@ -1,9 +1,9 @@
 import ModalWindow from '../../../components/ModalWindow'
-import { render } from '../../testUtils'
+import { render, RenderResult } from '../../testUtils'
 
 describe('ModalWindow Component', () => {
     it('should render without crashing', () => {
-        const component = render(
+        const component: RenderResult = render(
             <ModalWindow className='RandomText' style={{}}
                 onOpen={() => true} onClose={() => { }} children={<></>} />);
 

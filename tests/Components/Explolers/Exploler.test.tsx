@@ -1,13 +1,13 @@
 import { ObservableQuery } from '@apollo/client'
 
 import Exploler from '../../../components/Explolers/Exploler'
-import { ExplolerMocks } from '../../mocks/Components/Explolers/Exploler.mock'
-import { MocksRender } from '../../testUtils'
+import Render, { RenderResult } from '../../testUtils'
+import { ExplolerMocks } from '../../../mocks/Components/Explolers/Exploler.mock'
 
 ObservableQuery.prototype.refetch = jest.fn()
 describe('Exploler Component', () => {
     it('should render without crashing', () => {
-        const component = MocksRender(ExplolerMocks,
+        const component: RenderResult = new Render(
             <Exploler chatid='randomText'
                 BarProps={() => ({
                     image: 'src',
@@ -15,6 +15,8 @@ describe('Exploler Component', () => {
                     children: <></>,
                     dropList: () => [{ text: 'text', onClick: () => { } }]
                 })} />)
+            .Mock(ExplolerMocks)
+            .build()
 
         expect(component);
     });
