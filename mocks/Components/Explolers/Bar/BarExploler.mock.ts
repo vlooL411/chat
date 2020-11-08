@@ -1,8 +1,9 @@
 import { MockedResponse } from '@apollo/client/testing'
 
-import { User } from '../../../../generated/graphql-frontend'
-import { BarDropMocks } from './BarDrop.mock'
+import { BarDropMocks, MockBarDrop } from './BarDrop.mock'
 
-export const BarExplolerMocks: MockedResponse<Record<string, User>>[] = [
+export type MockBarExploler = MockBarDrop;
+
+export const BarExplolerMocks: MockedResponse<MockBarExploler>[] = [
   ...BarDropMocks,
 ];

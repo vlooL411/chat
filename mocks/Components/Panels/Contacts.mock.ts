@@ -1,14 +1,23 @@
+import Create from 'mocks/Create'
 import { MockedResponse } from '@apollo/client/testing'
+import { ContactsQuery, FindContactQuery } from '@generated/frontend'
+import { ContactsDocument, FindContactDocument } from '@generated/frontend'
 
-import Create from './../../Create'
-import { Contact, ContactsDocument, FindContactDocument } from '../../../generated/graphql-frontend'
+type Mock = ContactsQuery | FindContactQuery;
 
-export const ContactsMocks: MockedResponse<
-  Record<string, Contact[] | Contact>
->[] = [
-  Create.RequestResultQ(ContactsDocument, { Contacts: Create.contacts() }),
-  Create.RequestResult(
+const user = Create.user();
+
+export const ContactsMocks: MockedResponse<Mock>[] = [
+  Create.QueryResultQ<ContactsQuery>(ContactsDocument, {
+    Contacts: Create.contacts(user),
+  }),
+  Create.RequestResult<FindContactQuery>(
     { query: FindContactDocument, variables: { text: "text" } },
-    { Existing: Create.contact(), Incoming: Create.contact() }
+    {
+      FindContact: {
+        Existing: Create.contacts(user),
+        Incoming: Create.contactsRandomUser(),
+      },
+    }
   ),
 ];

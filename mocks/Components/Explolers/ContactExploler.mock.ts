@@ -1,16 +1,26 @@
+import Create from 'mocks/Create'
 import { MockedResponse } from '@apollo/client/testing'
+import { InviteChatDocument, LeaveChatDocument, RemoveChatDocument } from '@generated/frontend'
+import { InviteChatMutation, LeaveChatMutation, RemoveChatMutation } from '@generated/frontend'
 
-import Create from '../../Create'
-import { InviteChatDocument, LeaveChatDocument, RemoveChatDocument } from '../../../generated/graphql-frontend'
-import { Chat, Messages, User } from '../../../generated/graphql-frontend'
-import { ExplolerMocks } from './Exploler.mock'
+import { ExplolerMocks, MockExploler } from './Exploler.mock'
 
-//TODO Same ChatExploler.mock
-export const ContactExplolerMocks: MockedResponse<
-  Record<string, User | Messages | Chat | Chat[]>
->[] = [
+type MockContactExploler =
+  | MockExploler
+  | InviteChatMutation
+  | RemoveChatMutation
+  | LeaveChatMutation;
+
+//TODO Same as ChatExploler.mock
+export const ContactExplolerMocks: MockedResponse<MockContactExploler>[] = [
   ...ExplolerMocks,
-  Create.RequestResultQ(InviteChatDocument, { InviteChat: Create.chat() }),
-  Create.RequestResultQ(RemoveChatDocument, { RemoveChat: Create.chat() }),
-  Create.RequestResultQ(LeaveChatDocument, { LeaveChat: Create.chat() }),
+  Create.QueryResultQ<InviteChatMutation>(InviteChatDocument, {
+    InviteChat: "invite chat",
+  }),
+  Create.QueryResultQ<RemoveChatMutation>(RemoveChatDocument, {
+    RemoveChat: "remove chat",
+  }),
+  Create.QueryResultQ<LeaveChatMutation>(LeaveChatDocument, {
+    LeaveChat: "leave chat",
+  }),
 ];

@@ -1,13 +1,22 @@
+OS: Windows 10
+IDE: Visual Studio Code
+NODE: 15.0.1
+NPM: 7.0.3
+YARN: 1.22.5
+
 This is a [Next.js](https://nextjs.org) project, within using:
 
 - TypeScript
-- MongoDB
+- NextAuth.js
 - Apollo Client (React)
 - Apollo Server
 - GraphQL Code Generator
-- SASS
-- NextAuth.js
+- MongoDB
 - Jest
+- Yarn workspaces
+- Storybook
+- SASS
+- CSS modules
 
 ## Getting Started
 
@@ -21,6 +30,7 @@ For autentification using google account, also
 
 4. GOOGLE_ID - more details [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow)
 5. GOOGLE_SECRET - point 4
+6. JWTSECRET - your random secret
 
 also:
 
@@ -29,20 +39,23 @@ also:
 
 Second, run the development server:
 
-```bash
-npm i
-npm run dev
+```
+npm run prevbuild
+npm run frontend:dev
+npm run backend:dev
 # or
-yarn add
-yarn dev
+yarn prevbuild
+yarn frontend:dev
+yarn backend:dev
 ```
 
 Open
 
 - [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 - [http://localhost:4000/graphql](http://localhost:4000/graphql), is opening playground apollo graphql (on the address work subscriprions)
+- [http://localhost:4001](http://localhost:4001) next-auth
 
-You can start editing the page by modifying `pages/index.ts`. The page auto-updates as you edit the file.
+  You can start editing the page by modifying `pages/index.ts`. The page auto-updates as you edit the file.
 
 ## Learn More
 

@@ -1,4 +1,5 @@
 {
+  "setupFiles": ["<rootDir>/tests/setup.ts"],
   "roots": ["<rootDir>", "<rootDir>/tests/", "<rootDir>/mocks/"],
   "moduleFileExtensions": ["js", "ts", "tsx", "json"],
   "testPathIgnorePatterns": ["<rootDir>[/\\\\](node_modules|.next|out)[/\\\\]"],

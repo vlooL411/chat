@@ -1,0 +1,17 @@
+{
+  "name": "@chat/apolloserver",
+  "main": "dist/index.js",
+  "version": "0.1.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -w",
+    "build:dist": "tsc"
+  },
+  "dependencies": {
+    "graphql-subscriptions": "^1.1.0"
+  },
+  "devDependencies": {
+    "@chat/apollocommon": "^0.1.1",
+    "typescript": "file:../../typescript"
+  }
+}

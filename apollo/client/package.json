@@ -1,0 +1,21 @@
+{
+  "name": "@chat/apolloclient",
+  "main": "dist/index.js",
+  "version": "0.1.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -w",
+    "build:dist": "tsc"
+  },
+  "dependencies": {
+    "@apollo/client": "file:../../@apollo/client",
+    "cross-fetch": "^3.0.6",
+    "websocket": "^1.0.32"
+  },
+  "devDependencies": {
+    "typescript": "file:../../typescript",
+    "@types/websocket": "^1.0.1",
+    "@chat/apollocommon": "^0.1.1",
+    "@chat/apolloserver": "^0.1.1"
+  }
+}

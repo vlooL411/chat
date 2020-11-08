@@ -1,23 +1,53 @@
+import Create from 'mocks/Create'
 import { MockedResponse } from '@apollo/client/testing'
-
-import Create from '../../Create'
 import {
   AddMessageDocument,
   ChatDocument,
   DeleteMessageDocument,
   MessagesDocument,
   SwapMessageDocument,
-} from '../../../generated/graphql-frontend'
-import { Chat, Messages, User } from '../../../generated/graphql-frontend'
-import { BarExplolerMocks } from './Bar/BarExploler.mock'
+} from '@generated/frontend'
+import { ChatQuery, MessagesQuery } from '@generated/frontend'
+import { QueryChatArgs, QueryMessagesArgs } from '@generated/frontend'
+import { AddMessageSubscription, DeleteMessageSubscription, SwapMessageSubscription } from '@generated/frontend'
 
-export const ExplolerMocks: MockedResponse<
-  Record<string, User | Messages | Chat>
->[] = [
+import { BarExplolerMocks, MockBarExploler } from './Bar/BarExploler.mock'
+
+export type MockExploler =
+  | MockBarExploler
+  | ChatQuery
+  | MessagesQuery
+  | SwapMessageSubscription
+  | AddMessageSubscription
+  | SwapMessageSubscription
+  | DeleteMessageSubscription;
+
+const Chat = Create.chat();
+export const ExplolerMocks: MockedResponse<MockExploler>[] = [
   ...BarExplolerMocks,
-  Create.RequestResultQ(ChatDocument, { Chat: Create.chat() }),
-  Create.RequestResultQ(MessagesDocument, { Messages: Create.Messages() }),
-  Create.RequestResultQ(SwapMessageDocument, { SwapMessage: Create.chat() }),
-  Create.RequestResultQ(AddMessageDocument, { AddMessage: Create.chat() }),
-  Create.RequestResultQ(DeleteMessageDocument, { DeleteMessage: Create.chat() }),
+  Create.RequestResultF<ChatQuery>(
+    { query: ChatDocument, variables: { chatid: Chat._id } as QueryChatArgs },
+    { Chat }
+  ),
+  Create.RequestResultF<MessagesQuery>(
+    {
+      query: MessagesDocument,
+      variables: {
+        chatid: Chat._id,
+        limit: 100,
+        messageid: null,
+        isIncoming: true,
+      } as QueryMessagesArgs,
+    },
+    { Messages: Create.Messages() }
+  ),
+  Create.QueryResultQ<SwapMessageSubscription>(SwapMessageDocument, {
+    SwapMessage: Create.message(),
+  }),
+  Create.QueryResultQ<AddMessageSubscription>(AddMessageDocument, {
+    AddMessage: Create.message(),
+  }),
+  Create.QueryResultQ<DeleteMessageSubscription>(DeleteMessageDocument, {
+    DeleteMessage: Create.message(),
+  }),
 ];

@@ -1,8 +1,12 @@
+import Create from 'mocks/Create'
 import { MockedResponse } from '@apollo/client/testing'
+import { UserCurrentDocument } from '@generated/frontend'
+import { UserCurrentQuery } from '@generated/frontend'
 
-import Create from '../../../Create'
-import { User, UserCurrentDocument } from '../../../../generated/graphql-frontend'
+export type MockBarDrop = UserCurrentQuery;
 
-export const BarDropMocks: MockedResponse<Record<string, User>>[] = [
-  Create.RequestResultQ(UserCurrentDocument, { UserCurrent: Create.user() }),
+export const BarDropMocks: MockedResponse<MockBarDrop>[] = [
+  Create.QueryResultQ<UserCurrentQuery>(UserCurrentDocument, {
+    UserCurrent: Create.user(),
+  }),
 ];

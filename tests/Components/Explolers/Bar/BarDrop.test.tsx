@@ -5,9 +5,9 @@ import { BarDropMocks } from '../../../../mocks/Components/Explolers/Bar/BarDrop
 describe("BarDrop Component", () => {
     it("should render without crashing", () => {
         const component: RenderResult = new Render(
-            <BarDrop visible={true} dropList={() => [{ text: 'text', onClick: () => { } }]} />)
-            .Mock(BarDropMocks)
-            .build()
+            <BarDrop visible={true} dropList={() => [{ text: 'text' }]} />)
+            .Mock(BarDropMocks).
+            build();
 
         expect(component);
     });

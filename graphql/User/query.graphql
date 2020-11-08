@@ -10,3 +10,7 @@ query userCurrent {
     chats_id
   }
 }
+
+query updateOnlineUser {
+  UpdateOnlineUser
+}

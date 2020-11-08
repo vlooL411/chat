@@ -1,0 +1,17 @@
+overwrite: true
+schema: "http://localhost:4000/api/graphql"
+documents: "../graphql/**/*.graphql"
+generates:
+  backend/src/index.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-resolvers"
+    config:
+      useIndexSignature: true
+      withHooks: true
+  frontend/src/index.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

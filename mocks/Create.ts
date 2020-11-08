@@ -1,26 +1,33 @@
 import { GraphQLRequest } from '@apollo/client'
 import { DocumentNode } from 'graphql'
-
-import { ID } from '../apolloclient/types'
-import { Access, Chat, Contact, Creater, InfoMore, Message, Messages, User } from '../generated/graphql-frontend'
+import { Access, Chat, Contact, Creater, InfoMore, Message, Messages, User } from 'generated/graphql-frontend'
+import { ID } from 'apollographql/types'
 
 export const numberRandom = (): string => (Math.random() * 100000).toString();
 export const numberRandomMod = (max: number = 10): number =>
   Math.floor(Math.random() * max);
 
-const crtArray = <T>(length: number, crt: (i: number) => T) =>
+export const crtArray = <T>(length: number, crt: (i: number) => T) =>
   Array.from({ length }, (_, i) => crt(i));
 
 const { EMPTY_AVATAR_USER } = process.env;
 const { EMPTY_AVATAR_CHAT } = process.env;
 
 export default class Create {
-  static RequestResultQ = <T>(query: DocumentNode, data: T) =>
+  static QueryResultQ = <T>(query: DocumentNode, data: T) =>
     Create.RequestResult({ query }, data);
 
   static RequestResult = <T>(request: GraphQLRequest, data: T) => ({
     request,
     result: { data },
+  });
+
+  static QueryResultQF = <T>(query: DocumentNode, data: T) =>
+    Create.RequestResultF({ query }, data);
+
+  static RequestResultF = <T>(request: GraphQLRequest, data: T) => ({
+    request,
+    result: () => ({ data }),
   });
 
   static userWithoutContacts(_id: ID = numberRandom()): User {
@@ -110,10 +117,18 @@ export default class Create {
   static chats = (length: number = numberRandomMod()): Chat[] =>
     crtArray(length, () => Create.chat());
 
+  static messagesInTheChat = (length: number = numberRandomMod()): Chat[] =>
+    crtArray(length, () => Create.chat(numberRandom(), 1));
+
   static contacts = (
     User: User = Create.userWithoutContacts(),
     length: number = numberRandomMod()
   ): Contact[] => crtArray(length, () => Create.contact(numberRandom(), User));
+
+  static contactsRandomUser = (length: number = numberRandomMod()): Contact[] =>
+    crtArray(length, () =>
+      Create.contact(numberRandom(), Create.userWithoutContacts())
+    );
 
   static _ids = (length: number = numberRandomMod()): ID[] =>
     crtArray(length, () => numberRandom());

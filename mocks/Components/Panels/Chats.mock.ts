@@ -1,27 +1,45 @@
+import Create from 'mocks/Create'
 import { MockedResponse } from '@apollo/client/testing'
-
-import Create from '../../Create'
-import { Chat, User } from '../../../generated/graphql-frontend'
+import {
+  AddChatSubscription,
+  Chat,
+  ChatsUserCurrentQuery,
+  DeleteChatSubscription,
+  FindQueryChatQuery,
+  SwapMessageSubscription,
+  User,
+} from '@generated/frontend'
 import {
   AddChatDocument,
   ChatsUserCurrentDocument,
   DeleteChatDocument,
   FindQueryChatDocument,
   SwapMessageDocument,
-} from '../../../generated/graphql-frontend'
+} from '@generated/frontend'
 
-export const ChatsMocks: MockedResponse<
-  Record<string, Chat[] | User | Chat>
->[] = [
-  Create.RequestResultQ(ChatsUserCurrentDocument, {
+type Mock =
+  | ChatsUserCurrentQuery
+  | FindQueryChatQuery
+  | AddChatSubscription
+  | DeleteChatSubscription
+  | SwapMessageSubscription;
+
+export const ChatsMocks: MockedResponse<Mock>[] = [
+  Create.QueryResultQ<ChatsUserCurrentQuery>(ChatsUserCurrentDocument, {
     Chats: Create.chats(),
     UserCurrent: Create.user(),
   }),
-  Create.RequestResult(
+  Create.RequestResult<FindQueryChatQuery>(
     { query: FindQueryChatDocument, variables: { text: "text" } },
-    { Chats: Create.chats(), UserCurrent: Create.user() }
+    { FindChat: Create.chats(), FindMessage: Create.messagesInTheChat() }
   ),
-  Create.RequestResultQ(AddChatDocument, { AddChat: Create.chat() }),
-  Create.RequestResultQ(DeleteChatDocument, { DeleteChat: Create.chat() }),
-  Create.RequestResultQ(SwapMessageDocument, { SwapMessage: Create.chat() }),
+  Create.QueryResultQ<AddChatSubscription>(AddChatDocument, {
+    AddChat: Create.chat(),
+  }),
+  Create.QueryResultQ<DeleteChatSubscription>(DeleteChatDocument, {
+    DeleteChat: Create.chat(),
+  }),
+  Create.QueryResultQ<SwapMessageSubscription>(SwapMessageDocument, {
+    SwapMessage: Create.message(),
+  }),
 ];
