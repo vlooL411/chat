@@ -1,0 +1,39 @@
+enum Provider {
+	auth #default
+	google
+	facebook
+}
+
+interface IUserAuth {
+	auth: Authentication
+	google: GoogleNetwork
+	facebook: FacebookNetwork
+}
+
+interface IUser implements IUserAuth {
+	_id: ID!
+	name: String!
+	email: String!
+
+	avatar: String
+	status: String
+
+	provider: Provider
+	auth: Authentication #auth/types
+	google: GoogleNetwork #auth/social
+	facebook: FacebookNetwork #auth/social
+	#
+	chats_id: [ID!]
+	contacts: [Contact!] #contact
+	#
+	createdAt: Date!
+	dateLastOnline: Date
+
+	isOnline: Boolean
+	isOnlineMobile: Boolean
+	isClosed: Boolean
+	isVerified: Boolean
+	isActivated: Boolean
+	isLocked: Boolean
+	isActive: Boolean
+}

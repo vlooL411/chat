@@ -1,15 +1,15 @@
-import { ReactElement } from 'react'
+import { ReactElement } from 'react';
 
-import style from './styles/blockinfo.module.sass'
+import style from './styles/blockinfo.module.sass';
 
 type Props = {
-    what?: string
-}
+	what?: string;
+};
 
 const BlockInfo = ({ what = 'what' }: Props): ReactElement => {
-    const { info } = style
+	const { info } = style;
 
-    return <p className={info}>{what}</p>
-}
+	return <p className={info}>{what}</p>;
+};
 
-export default BlockInfo
+export default BlockInfo;

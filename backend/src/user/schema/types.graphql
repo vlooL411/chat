@@ -1,0 +1,67 @@
+type UserSafe implements IUser {
+	_id: ID!
+	name: String!
+	email: String!
+
+	avatar: String
+	status: String
+
+	provider: Provider
+	auth: Authentication
+	google: GoogleNetwork
+	facebook: FacebookNetwork
+
+	chats_id: [ID!]
+	contacts: [Contact!]
+
+	createdAt: Date!
+	dateLastOnline: Date
+
+	isOnline: Boolean
+	isOnlineMobile: Boolean
+	isClosed: Boolean
+	isVerified: Boolean
+	isActivated: Boolean
+	isLocked: Boolean
+	isActive: Boolean
+}
+
+#TODO if necessary
+type User implements IUser {
+	#backend only or client input
+	password: Password
+	#end unsafe
+
+	_id: ID!
+	name: String!
+	email: String!
+
+	avatar: String
+	status: String
+
+	provider: Provider
+	auth: Authentication
+	google: GoogleNetwork
+	facebook: FacebookNetwork
+
+	chats_id: [ID!]
+	contacts: [Contact!]
+
+	createdAt: Date!
+	dateLastOnline: Date
+
+	isOnline: Boolean
+	isOnlineMobile: Boolean
+	isClosed: Boolean
+	isVerified: Boolean
+	isActivated: Boolean
+	isLocked: Boolean
+	isActive: Boolean
+}
+
+type Query {
+	User(id: ID!): UserSafe
+	UserCurrent: UserSafe
+	UserID(name: String, email: String): UserSafe
+	UserUpdateOnline: String
+}

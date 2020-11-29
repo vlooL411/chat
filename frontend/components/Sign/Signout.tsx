@@ -1,10 +1,8 @@
-import { ReactElement } from "react"
-import style from "./sign.module.sass";
+import { ReactElement } from 'react';
+import style from './sign.module.sass';
 
 const Signout = (): ReactElement => {
-    return <>
+	return <></>;
+};
 
-    </>
-}
-
-export default Signout
+export default Signout;

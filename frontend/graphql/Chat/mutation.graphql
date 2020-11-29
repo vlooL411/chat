@@ -1,0 +1,12 @@
+mutation inviteChat($chatid: ID!) {
+	InviteChat(chatid: $chatid)
+}
+mutation leaveChat($chatid: ID!) {
+	LeaveChat(chatid: $chatid)
+}
+mutation removeChat($chatid: ID!) {
+	RemoveChat(chatid: $chatid)
+}
+mutation createChat($title: String!) {
+	CreateChat(title: $title)
+}

@@ -1,38 +1,34 @@
 {
-  "name": "@chat/frontend",
-  "version": "0.1.1",
-  "license": "MIT",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "peerOptionalDependencies": {
-    "mongodb": "^3.6.3"
-  },
-  "dependencies": {
-    "next": "file:../next",
-    "next-auth": "file:../next-auth",
-    "react": "file:../react",
-    "react-dom": "file:../react-dom",
-    "@apollo/client": "file:../@apolloclient",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "^0.1.12",
-    "@zeit/next-sass": "^1.0.1",
-    "sass": "^1.29.0",
-    "@chat/apolloserver": "^0.1.1",
-    "@chat/apollocommon": "^0.1.1",
-    "@common/utils": "^0.1.1"
-  },
-  "devDependencies": {
-    "@types/websocket": "^1.0.1",
-    "@types/mongoose": "^5.7.37",
-    "@generated/frontend": "^0.1.1",
-    "typescript": "file:../typescript",
-    "@types/node": "file:../@types/node",
-    "@types/next-auth": "file:../@types/next-auth",
-    "@types/react": "file:../@types/react",
-    "@types/react-dom": "file:../@types/react-dom"
-  }
+	"name": "@chat/frontend",
+	"version": "0.1.1",
+	"license": "MIT",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start"
+	},
+	"peerOptionalDependencies": {
+		"mongodb": "^3.6.3"
+	},
+	"dependencies": {
+		"@apollo/client": "file:../@apollo/client",
+		"next": "^10.0.3",
+		"react": "^17.0.1",
+		"react-dom": "^17.0.1",
+		"@fortawesome/fontawesome-svg-core": "^1.2.32",
+		"@fortawesome/free-solid-svg-icons": "^5.15.1",
+		"@fortawesome/react-fontawesome": "^0.1.13",
+		"@zeit/next-sass": "^1.0.1",
+		"sass": "^1.29.0",
+		"websocket": "^1.0.32",
+		"@common/utils": "^0.1.1"
+	},
+	"devDependencies": {
+		"@types/websocket": "^1.0.1",
+		"@types/mongoose": "^5.10.1",
+		"@types/react": "^17.0.0",
+		"@types/react-dom": "^17.0.0",
+		"typescript": "file:../typescript",
+		"@types/node": "file:../@types/node"
+	}
 }

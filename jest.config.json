@@ -1,20 +1,22 @@
 {
-  "setupFiles": ["<rootDir>/tests/setup.ts"],
-  "roots": ["<rootDir>", "<rootDir>/tests/", "<rootDir>/mocks/"],
-  "moduleFileExtensions": ["js", "ts", "tsx", "json"],
-  "testPathIgnorePatterns": ["<rootDir>[/\\\\](node_modules|.next|out)[/\\\\]"],
-  "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
-  "transform": { "^.+\\.(ts|tsx)$": "babel-jest" },
-  "watchPlugins": [
-    "jest-watch-typeahead/filename",
-    "jest-watch-typeahead/testname"
-  ],
-  "moduleNameMapper": {
-    "\\.(css|less|sass|scss)$": "<rootDir>/mocks/css.ts",
-    "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/mocks/fileMock.js",
-    "@types": "<rootDir>/apolloclient/types.ts",
-    "@backend": "<rootDir>/generated/graphql-backend.ts",
-    "@frontend": "<rootDir>/generated/graphql-frontend.ts"
-  },
-  "moduleDirectories": ["<rootDir>", "node_modules"]
+	"setupFiles": ["<rootDir>/tests/setup.ts"],
+	"roots": ["<rootDir>", "<rootDir>/tests/", "<rootDir>/mocks/"],
+	"moduleFileExtensions": ["js", "ts", "tsx", "json"],
+	"testPathIgnorePatterns": [
+		"<rootDir>[/\\\\](node_modules|.next|out)[/\\\\]"
+	],
+	"transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
+	"transform": { "^.+\\.(ts|tsx)$": "babel-jest" },
+	"watchPlugins": [
+		"jest-watch-typeahead/filename",
+		"jest-watch-typeahead/testname"
+	],
+	"moduleNameMapper": {
+		"\\.(css|less|sass|scss)$": "<rootDir>/mocks/css.ts",
+		"\\.(gif|ttf|eot|svg|png)$": "<rootDir>/mocks/fileMock.js",
+		"@types": "<rootDir>/apolloclient/types.ts",
+		"@backend": "<rootDir>/generated/graphql-backend.ts",
+		"@frontend": "<rootDir>/generated/graphql-frontend.ts"
+	},
+	"moduleDirectories": ["<rootDir>", "node_modules"]
 }

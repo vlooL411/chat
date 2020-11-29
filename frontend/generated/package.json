@@ -1,0 +1,20 @@
+{
+	"name": "@frontend/types",
+	"version": "0.1.1",
+	"license": "MIT",
+	"scripts": {
+		"generate": "graphql-codegen",
+		"generate:watch": "graphql-codegen -w"
+	},
+	"dependencies": {
+		"@apollo/client": "file:../../@apollo/client"
+	},
+	"devDependencies": {
+		"@graphql-codegen/cli": "^1.19.3",
+		"@graphql-codegen/typescript": "^1.18.1",
+		"@graphql-codegen/typescript-operations": "^1.17.12",
+		"@graphql-codegen/typescript-react-apollo": "^2.2.1",
+		"@graphql-codegen/typescript-resolvers": "^1.17.12",
+		"typescript": "file:../../typescript"
+	}
+}

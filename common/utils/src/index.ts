@@ -1,3 +1,3 @@
-export * from './LocalSrorage'
-export * from './Strategy'
-export * from './array'
+export * from './LocalSrorage';
+export * from './Strategy';
+export * from './array';

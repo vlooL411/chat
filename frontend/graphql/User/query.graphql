@@ -1,0 +1,12 @@
+query user($id: ID!) {
+	User(id: $id) {
+		...UserInfo
+	}
+}
+
+query userCurrent {
+	UserCurrent {
+		...UserInfo
+		chats_id
+	}
+}

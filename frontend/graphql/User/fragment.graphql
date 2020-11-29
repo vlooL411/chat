@@ -1,0 +1,9 @@
+fragment UserInfo on UserSafe {
+	_id
+	name
+	avatar
+	status
+	isClosed
+	isOnlineMobile
+	dateLastOnline
+}

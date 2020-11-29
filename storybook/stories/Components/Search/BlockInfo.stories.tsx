@@ -1,5 +1,5 @@
-import BlockInfo from '../../../components/Search/BlockInfo'
+import BlockInfo from '../../../components/Search/BlockInfo';
 
-export default { title: 'Components/Search/BlockInfo' }
+export default { title: 'Components/Search/BlockInfo' };
 
-export const Default = () => <BlockInfo what='Founds chats 0' />
+export const Default = () => <BlockInfo what='Founds chats 0' />;

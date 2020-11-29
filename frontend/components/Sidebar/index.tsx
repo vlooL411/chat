@@ -1,70 +1,97 @@
-import { signOut } from 'next-auth/client'
-import { ReactElement, useMemo, useState } from 'react'
-import { faAlignJustify, faDoorOpen } from '@fortawesome/free-solid-svg-icons'
-import { User, useUserCurrentQuery } from '@generated/frontend'
+import ChangeThemes from 'components/ChangeThemes';
+import { ReactElement, useMemo, useState } from 'react';
+import { faAlignJustify, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { UserSafe, useUserCurrentQuery } from '@frontend/types';
 
-import ChangeThemes from 'components/ChangeThemes'
-import style from './sidebar.module.sass'
-import BlockSidebar, { SidebarBlock } from './BlockSidebar'
+import style from './sidebar.module.sass';
+import BlockSidebar, { SidebarBlock } from './BlockSidebar';
 
 type Props = {
-    faBlocks: SidebarBlock[]
-    extendBlocks?: SidebarBlock[]
-}
+	faBlocks: SidebarBlock[];
+	extendBlocks?: SidebarBlock[];
+};
 
-const { EMPTY_AVATAR_USER } = process.env
+const { EMPTY_AVATAR_USER } = process.env;
 const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
-    const { sidebar, sidebar_default, sidebar_block } = style
-    const { extend, extend_on, extend_off, extend_block, total } = style
+	const { sidebar, sidebar_default, sidebar_block } = style;
+	const { extend, extend_on, extend_off, extend_block, total } = style;
 
-    const [isExtend, setIsExtend] = useState<boolean>(false)
-    const { data } = useUserCurrentQuery()
+	const [isExtend, setIsExtend] = useState<boolean>(false);
+	const { data } = useUserCurrentQuery();
 
-    const BlockUser = useMemo<ReactElement>(() => {
-        const user = data?.UserCurrent as User
-        const { blockuser, login, email } = style
+	const BlockUser = useMemo<ReactElement>(() => {
+		const user = data?.UserCurrent as UserSafe;
+		const { blockuser, login, email } = style;
 
-        return <div className={blockuser}>
-            <img src={user?.image ?? EMPTY_AVATAR_USER} />
-            <p className={login}>{user?.name}</p>
-            <p className={email}>{user?.email}</p>
-        </div>
-    }, [data])
+		return (
+			<div className={blockuser}>
+				<img src={user?.avatar ?? EMPTY_AVATAR_USER} />
+				<p className={login}>{user?.name}</p>
+				<p className={email}>{user?.email}</p>
+			</div>
+		);
+	}, [data]);
 
-    const blocks = useMemo<ReactElement[]>(() =>
-        faBlocks?.map((sideblock, key) =>
-            BlockSidebar({ className: sidebar_block, sideblock }, key)),
-        [faBlocks])
+	const blocks = useMemo<ReactElement[]>(
+		() =>
+			faBlocks?.map((sideblock, key) =>
+				BlockSidebar({ className: sidebar_block, sideblock }, key),
+			),
+		[faBlocks],
+	);
 
-    const blocksExtend = useMemo<ReactElement[]>(() =>
-        extendBlocks?.map((sideblock, key) =>
-            BlockSidebar({ className: extend_block, sideblock }, key)),
-        [extendBlocks])
+	const blocksExtend = useMemo<ReactElement[]>(
+		() =>
+			extendBlocks?.map((sideblock, key) =>
+				BlockSidebar({ className: extend_block, sideblock }, key),
+			),
+		[extendBlocks],
+	);
 
-    const onExtend = () => setIsExtend(true)
-    const onUnextend = () => setIsExtend(false)
+	const onExtend = () => setIsExtend(true);
+	const onUnextend = () => setIsExtend(false);
 
-    return <>
-        <div className={isExtend ? `total ${total}` : ''}>
-            <div className={`${extend} ${isExtend ? extend_on : extend_off}`}>
-                {BlockUser}
-                {blocksExtend}
-                <ChangeThemes className={sidebar_block} />
-            </div>
-            <div className={isExtend ? 'total' : ''} onMouseDown={onUnextend}></div>
-        </div>
-        <div className={sidebar}>
-            <div className={sidebar_default}>
-                <BlockSidebar className={sidebar_block}
-                    sideblock={{ fa: faAlignJustify, text: '', onClick: onExtend }}
-                    key={-2} />
-                {blocks}
-                <BlockSidebar className={sidebar_block}
-                    sideblock={{ fa: faDoorOpen, text: 'Exit', onClick: signOut }}
-                    key={-1} />
-            </div>
-        </div>
-    </>
-}
+	return (
+		<>
+			<div className={isExtend ? `total ${total}` : ''}>
+				<div
+					className={`${extend} ${
+						isExtend ? extend_on : extend_off
+					}`}>
+					{BlockUser}
+					{blocksExtend}
+					<ChangeThemes className={sidebar_block} />
+				</div>
+				<div
+					className={isExtend ? 'total' : ''}
+					onMouseDown={onUnextend}></div>
+			</div>
+			<div className={sidebar}>
+				<div className={sidebar_default}>
+					<BlockSidebar
+						className={sidebar_block}
+						sideblock={{
+							fa: faAlignJustify,
+							text: '',
+							onClick: onExtend,
+						}}
+						key={-2}
+					/>
+					{blocks}
+					{/* //TODO signOut  */}
+					<BlockSidebar
+						className={sidebar_block}
+						sideblock={{
+							fa: faDoorOpen,
+							text: 'Exit',
+							onClick: () => null,
+						}}
+						key={-1}
+					/>
+				</div>
+			</div>
+		</>
+	);
+};
 
-export default Sidebar
+export default Sidebar;

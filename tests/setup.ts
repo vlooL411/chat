@@ -1,3 +1,3 @@
-import { ObservableQuery } from '@apollo/client'
+import { ObservableQuery } from '@apollo/client';
 
 ObservableQuery.prototype.refetch = jest.fn();

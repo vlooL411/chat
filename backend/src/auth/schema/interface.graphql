@@ -1,0 +1,10 @@
+interface SocialNetwork implements Authentication {
+	_id: ID!
+	accessToken: Token!
+	refreshToken: Token!
+
+	givenName: String!
+	familyName: String!
+	middleName: String!
+	email: String!
+}

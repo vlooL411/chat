@@ -1,0 +1,29 @@
+query chatsUserCurrent($chatid: ID, $limit: Int, $isIncoming: Boolean) {
+	Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+		...ChatInfo
+		...LastMessage
+	}
+	UserCurrent {
+		_id
+		chats_id
+	}
+}
+
+query findQueryChat($text: String!) {
+	FindMessage(text: $text) {
+		...chatFindFragment
+	}
+	FindChat(title: $text) {
+		...chatFindFragment
+	}
+}
+
+fragment chatFindFragment on Chat {
+	...ChatInfo
+	messages {
+		_id
+		text
+		date
+	}
+	...LastMessage
+}

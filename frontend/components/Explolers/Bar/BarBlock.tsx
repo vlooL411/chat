@@ -1,21 +1,23 @@
-import { ReactElement } from 'react'
+import { ReactElement } from 'react';
 
-import style from './styles/block.module.sass'
+import style from './styles/block.module.sass';
 
 type Props = {
-    title: string
-    image: string
-    children?: ReactElement
-}
+	title: string;
+	image: string;
+	children?: ReactElement;
+};
 
 const BarBlock = ({ title, image, children }: Props): ReactElement => {
-    const { block, block_title } = style
+	const { block, block_title } = style;
 
-    return <div className={block}>
-        <img src={image} />
-        <p className={block_title}>{title}</p>
-        {children}
-    </div>
-}
+	return (
+		<div className={block}>
+			<img src={image} />
+			<p className={block_title}>{title}</p>
+			{children}
+		</div>
+	);
+};
 
-export default BarBlock
+export default BarBlock;

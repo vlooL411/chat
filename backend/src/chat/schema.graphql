@@ -1,0 +1,44 @@
+enum Creater {
+	Contact
+	Chat
+}
+
+enum Access {
+	Public
+	Private
+	Squad
+	Duo
+	Own
+}
+
+type Chat {
+	_id: ID!
+	title: String!
+	image: String
+	date: Date!
+	creaters_id: [ID]!
+	creater: Creater!
+	access: Access!
+	lastMessage: Message
+	users_id: [ID]
+	messages: [Message]
+}
+
+type Query {
+	Chat(chatid: ID!): Chat
+	Chats(chatid: ID, limit: Int, isIncoming: Boolean): [Chat]
+
+	FindChat(title: String!): [Chat]
+}
+
+type Mutation {
+	CreateChat(title: String!): String
+	InviteChat(chatid: ID!): String
+	LeaveChat(chatid: ID!): String
+	RemoveChat(chatid: ID!): String
+}
+
+type Subscription {
+	AddChat: Chat
+	DeleteChat: Chat
+}

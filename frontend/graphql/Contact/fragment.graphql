@@ -1,0 +1,9 @@
+fragment ContactInfo on Contact {
+	_id
+	userid
+	date
+	whoIsContact
+	User {
+		...UserInfo
+	}
+}

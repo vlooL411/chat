@@ -1,22 +1,32 @@
-import { forwardRef, MutableRefObject, useState } from 'react'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { forwardRef, MutableRefObject, useState } from 'react';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import style from './sign.module.sass'
+import style from './sign.module.sass';
 
 const Password = (_, ref: MutableRefObject<HTMLInputElement>) => {
-    const { sign_password } = style
-    const [visPass, setVisPass] = useState<boolean>(false)
+	const { sign_password } = style;
+	const [visPass, setVisPass] = useState<boolean>(false);
 
-    return <div className={sign_password}>
-        <input ref={ref} type="password" pattern='[\wа-яА-Я]{8,32}'
-            maxLength={32} placeholder='Password' />
-        <FontAwesomeIcon icon={visPass ? faEye : faEyeSlash} onClick={() => {
-            if (ref?.current)
-                ref.current.type = !visPass ? 'text' : 'password'
-            setVisPass(!visPass)
-        }} />
-    </div>
-}
+	return (
+		<div className={sign_password}>
+			<input
+				ref={ref}
+				type='password'
+				pattern='[\wа-яА-Я]{8,32}'
+				maxLength={32}
+				placeholder='Password'
+			/>
+			<FontAwesomeIcon
+				icon={visPass ? faEye : faEyeSlash}
+				onClick={() => {
+					if (ref?.current)
+						ref.current.type = !visPass ? 'text' : 'password';
+					setVisPass(!visPass);
+				}}
+			/>
+		</div>
+	);
+};
 
-export default forwardRef(Password)
+export default forwardRef(Password);

@@ -1,0 +1,7 @@
+type InfoMore {
+	_id: ID
+	isEndUp: ID
+	isEndDown: ID
+	lastIndex: ID
+	size: Int
+}

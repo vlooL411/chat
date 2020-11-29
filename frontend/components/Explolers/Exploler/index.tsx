@@ -1,125 +1,172 @@
-import Loader from 'components/Loader'
-import { LocalStorage, last } from '@common/utils'
-import { ReactElement, useEffect, useMemo, useState } from 'react'
-import { Chat, Message } from '@generated/frontend'
-import { AddMessageDocument, DeleteMessageDocument } from '@generated/frontend'
-import { useChatQuery, useMessagesQuery, useSwapMessageSubscription } from '@generated/frontend'
-import { ID } from '@chat/apollocommon'
+import Loader from 'components/Loader';
+import { last, LocalStorage } from '@common/utils';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { Chat, MessagesQuery } from '@frontend/types';
+import {
+	AddMessageDocument,
+	AddMessageSubscription,
+	DeleteMessageDocument,
+	DeleteMessageSubscription,
+} from '@frontend/types';
+import {
+	useChatQuery,
+	useMessagesQuery,
+	useSwapMessageSubscription,
+} from '@frontend/types';
 
-import Scroll from '../Scroll'
-import style from './exploler.module.sass'
-import BarExploler, { BarProps } from '../Bar/BarExploler'
-import MessageAction, { MessageActionMode } from '../Message/MessageAction'
+import Scroll from '../Scroll';
+import style from './exploler.module.sass';
+import BarExploler, { BarProps } from '../Bar/BarExploler';
+import MessageAction, { MessageActionMode } from '../Message/MessageAction';
 
 type Props = {
-    chatid: ID
-    BarProps: (chat: Chat) => BarProps
-    limit?: number
-    scrollLoad?: number
-}
+	chatid: string;
+	BarProps: (chat: Chat) => BarProps;
+	limit?: number;
+	scrollLoad?: number;
+};
 
-const Exploler = ({ chatid, BarProps, limit = 100, scrollLoad = 100 }: Props): ReactElement => {
-    const { exploler, scrollcontainer } = style
-    const { down, loader, loader_up, loader_down } = style
+const Exploler = ({
+	chatid,
+	BarProps,
+	limit = 100,
+	scrollLoad = 100,
+}: Props): ReactElement => {
+	const { exploler, scrollcontainer } = style;
+	const { down, loader, loader_up, loader_down } = style;
 
-    const [mesActionMode, setMesActionMode] =
-        useState<MessageActionMode>({ mes: null, mode: 'send' })
+	const [mesActionMode, setMesActionMode] = useState<MessageActionMode>({
+		mes: null,
+		mode: 'send',
+	});
 
-    const { loading, data } = useChatQuery({ variables: { chatid } })
-    const { data: dataMess, loading: loadMess, refetch, subscribeToMore } = useMessagesQuery()
+	const { loading, data } = useChatQuery({ variables: { chatid } });
+	const {
+		data: dataMess,
+		loading: loadMess,
+		refetch,
+		subscribeToMore,
+	} = useMessagesQuery({ variables: { chatid } });
 
-    const Refetch = (limit: number, messageid: ID, isIncoming: boolean = false) =>
-        refetch({ chatid, limit, messageid, isIncoming })
+	const Refetch = (limit: number, messageid: string, isIncoming = false) =>
+		refetch({ chatid, limit, messageid, isIncoming });
 
-    useEffect(() => {
-        if (!chatid) return
-        const lastMessageID: ID = LocalStorage.getString('ChatLastMes', chatid?.toString())
-        Refetch(limit, lastMessageID, true)
-    }, [chatid])
+	useEffect(() => {
+		if (!chatid) return;
+		const lastMessageID = LocalStorage.getString(
+			'ChatLastMes',
+			chatid?.toString(),
+		);
+		Refetch(limit, lastMessageID, true);
+	}, [chatid]);
 
-    //#region Subscribtion
-    useSwapMessageSubscription();
+	//#region Subscribtion
+	useSwapMessageSubscription();
 
-    const addMore = () => subscribeToMore({
-        document: AddMessageDocument,
-        updateQuery: (prev, { subscriptionData, variables }) => {
-            const AddMessage = (subscriptionData?.data as any)?.AddMessage as Chat
-            if (!AddMessage) return null;
+	const addMore = () =>
+		subscribeToMore({
+			document: AddMessageDocument,
+			updateQuery: (prev, { subscriptionData, variables }) => {
+				const AddMessage = ((subscriptionData?.data as unknown) as AddMessageSubscription)
+					?.AddMessage;
 
-            const lastMessage = AddMessage
-            const mess = prev?.Messages?.Chat?.messages
-            const lastElemID = last(mess)?._id
+				if (!AddMessage) return null;
 
-            if (lastElemID == prev?.Messages?.InfoMore?.isEndDown)
-                return {
-                    Messages: {
-                        Chat: { lastMessage },
-                        InfoMore: { isEndDown: lastMessage?._id }
-                    }
-                } as any
+				const lastMessage = AddMessage;
+				const mess = prev?.Messages?.Chat?.messages;
+				const lastElemID = last(mess)?._id;
 
-            variables.isIncoming = true
-            const messages = mess ? [...mess, AddMessage] : [AddMessage]
-            return {
-                Messages: {
-                    Chat: { lastMessage, messages },
-                    InfoMore: { isEndDown: lastMessage?._id }
-                }
-            }
-        }
-    })
+				if (lastElemID == prev?.Messages?.InfoMore?.isEndDown)
+					return {
+						Messages: {
+							Chat: { lastMessage },
+							InfoMore: { isEndDown: lastMessage?._id },
+						},
+					} as MessagesQuery;
 
-    const remMore = () => subscribeToMore({
-        document: DeleteMessageDocument,
-        updateQuery: (prev, { subscriptionData, variables }) => {
-            const RemoveMessage = (subscriptionData?.data as any)?.RemoveMessage as Message
-            if (!RemoveMessage) return null;
+				variables.isIncoming = true;
+				const messages = mess ? [...mess, AddMessage] : [AddMessage];
+				return {
+					Messages: {
+						Chat: { lastMessage, messages },
+						InfoMore: { isEndDown: lastMessage?._id },
+					},
+				};
+			},
+		});
 
-            variables.isIncoming = true
-            const messages = prev?.Messages?.Chat?.messages?.filter((el) => el._id != RemoveMessage._id)
-            return { Messages: { Chat: { messages } } }
-        }
-    })
+	const remMore = () =>
+		subscribeToMore({
+			document: DeleteMessageDocument,
+			updateQuery: (prev, { subscriptionData, variables }) => {
+				const DeleteMessage = ((subscriptionData?.data as unknown) as DeleteMessageSubscription)
+					?.DeleteMessage;
 
-    useEffect(() => {
-        if (!subscribeToMore) return
-        addMore()
-        remMore()
-    }, [])
-    //#endregion
+				if (!DeleteMessage) return null;
 
-    const chat = data?.Chat
-    const infoMore = dataMess?.Messages?.InfoMore
-    const chatMess = dataMess?.Messages?.Chat
+				variables.isIncoming = true;
+				const messages = prev?.Messages?.Chat?.messages?.filter(
+					el => el._id != DeleteMessage._id,
+				);
+				return { Messages: { Chat: { messages } } };
+			},
+		});
 
-    const scroll = useMemo(() =>
-        <Scroll chat={chatMess as Chat}
-            infoMore={infoMore}
-            loadMess={loadMess}
-            limit={limit}
-            scrollLoad={scrollLoad}
-            changeModeMessage={setMesActionMode}
-            refetch={Refetch} />,
-        [infoMore, chatMess])
+	useEffect(() => {
+		if (!subscribeToMore) return;
+		addMore();
+		remMore();
+	}, []);
+	//#endregion
 
-    const bar = useMemo<ReactElement>(() =>
-        <BarExploler {...BarProps(chat as Chat)} />,
-        [chatid, chat])
-    const messageAction = useMemo<ReactElement>(() =>
-        <MessageAction chatid={chatid} action={mesActionMode} />,
-        [chatid, mesActionMode])
+	const chat = data?.Chat;
+	const infoMore = dataMess?.Messages?.InfoMore;
+	const chatMess = dataMess?.Messages?.Chat;
 
-    return <div className={exploler}>
-        {bar}
-        <div className={scrollcontainer}>
-            <Loader loading={loadMess} className={`${loader} ${loader_up}`} />
-            {scroll}
-            {/* {loadMess || loading ? */}
-            <Loader loading={loadMess || loading} className={`${loader} ${loader_down}`} /> {/* : */}
-            {/* <FontAwesomeIcon icon={faChevronCircleDown} className={`${down} ${loader} ${loader_down}`} />} */}
-        </div>
-        {messageAction}
-    </div >
-}
+	const scroll = useMemo(
+		() => (
+			<Scroll
+				chat={chatMess as Chat}
+				infoMore={infoMore}
+				loadMess={loadMess}
+				limit={limit}
+				scrollLoad={scrollLoad}
+				changeModeMessage={setMesActionMode}
+				refetch={Refetch}
+			/>
+		),
+		[infoMore, chatMess],
+	);
 
-export default Exploler
+	const bar = useMemo<ReactElement>(
+		() => <BarExploler {...BarProps(chat as Chat)} />,
+		[chatid, chat],
+	);
+	const messageAction = useMemo<ReactElement>(
+		() => <MessageAction chatid={chatid} action={mesActionMode} />,
+		[chatid, mesActionMode],
+	);
+
+	return (
+		<div className={exploler}>
+			{bar}
+			<div className={scrollcontainer}>
+				<Loader
+					loading={loadMess}
+					className={`${loader} ${loader_up}`}
+				/>
+				{scroll}
+				{/* {loadMess || loading ? */}
+				<Loader
+					loading={loadMess || loading}
+					className={`${loader} ${loader_down}`}
+				/>{' '}
+				{/* : */}
+				{/* <FontAwesomeIcon icon={faChevronCircleDown} className={`${down} ${loader} ${loader_down}`} />} */}
+			</div>
+			{messageAction}
+		</div>
+	);
+};
+
+export default Exploler;

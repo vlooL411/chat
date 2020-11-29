@@ -1,31 +1,26 @@
-import 'styles/globals.sass'
-import 'styles/classes.sass'
+import 'styles/globals.sass';
 
-import Signin from 'components/Sign'
-import { Provider } from 'next-auth/client'
-import { ApolloProvider } from '@apollo/client'
-import { ReactElement } from 'react'
-import { initializeApollo } from '@chat/apolloclient'
-import { ThemeProvider } from 'components/Theme'
+import Signin from 'components/Sign';
+import useAuthentication from 'hooks/useAuthentication';
+import { ApolloProvider } from '@apollo/client';
+import { ReactElement } from 'react';
+import { initializeApollo } from 'apolloclient';
+import { ThemeProvider } from 'components/Theme';
+import { AppProps } from 'next/app';
 
-export enum Themes {
-  light = 'light',
-  dark = 'dark'
-}
+const { NEXTAUTH_URL_AUTH } = process.env;
 
-const { NEXTAUTH_URL } = process.env
-const { NEXTAUTH_URL_SESSION } = process.env
+const App = ({ Component, pageProps, router }: AppProps): ReactElement => {
+	useAuthentication(router, NEXTAUTH_URL_AUTH);
 
-const App = ({ Component, pageProps }): ReactElement =>
-  <ApolloProvider client={initializeApollo()}>
-    <ThemeProvider>
-      <Provider
-        session={pageProps?.session ?? null}
-        options={{ basePath: NEXTAUTH_URL_SESSION, baseUrl: NEXTAUTH_URL }}>
-        <Signin />
-        <Component {...pageProps} />
-      </Provider>
-    </ThemeProvider>
-  </ApolloProvider >
+	return (
+		<ApolloProvider client={initializeApollo()}>
+			<ThemeProvider>
+				<Signin />
+				<Component {...pageProps} />
+			</ThemeProvider>
+		</ApolloProvider>
+	);
+};
 
-export default App
+export default App;

@@ -1,0 +1,17 @@
+enum TokenType {
+	authentication
+}
+
+type Authentication {
+	accessToken: Token!
+	refreshToken: Token!
+}
+
+type Query {
+	Login(input: LoginInput): Authentication!
+	Refresh(refreshToken: Token!): Authentication!
+}
+
+type Mutation {
+	Register(input: RegisterInput!): UserSafe
+}

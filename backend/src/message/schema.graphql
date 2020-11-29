@@ -1,0 +1,39 @@
+type Message {
+	_id: ID!
+	userid: ID!
+	date: Date!
+	text: String
+	attachments: [String]
+	isSend: Boolean
+	isRead: Boolean
+	isChange: Boolean
+	isFavorite: Boolean
+}
+
+type Messages {
+	Chat: Chat!
+	InfoMore: InfoMore
+}
+
+type Query {
+	Messages(
+		chatid: ID!
+		messageid: ID
+		limit: Int
+		isIncoming: Boolean
+	): Messages
+
+	FindMessage(text: String!): [Chat]
+}
+
+type Mutation {
+	SendMessage(chatid: ID!, text: String!): String
+	ChangeMessage(chatid: ID!, messageid: ID!, text: String!): String
+	RemoveMessage(chatid: ID!, messageid: ID!): String
+}
+
+type Subscription {
+	AddMessage: Message!
+	SwapMessage: Message!
+	DeleteMessage: Message!
+}

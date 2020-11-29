@@ -1,14 +1,15 @@
-import BarDrop from '../../../../components/Explolers/Bar/BarDrop'
-import Render, { RenderResult } from '../../../testUtils'
-import { BarDropMocks } from '../../../../mocks/Components/Explolers/Bar/BarDrop.mock'
+import BarDrop from '../../../../components/Explolers/Bar/BarDrop';
+import Render, { RenderResult } from '../../../testUtils';
+import { BarDropMocks } from '../../../../mocks/Components/Explolers/Bar/BarDrop.mock';
 
-describe("BarDrop Component", () => {
-    it("should render without crashing", () => {
-        const component: RenderResult = new Render(
-            <BarDrop visible={true} dropList={() => [{ text: 'text' }]} />)
-            .Mock(BarDropMocks).
-            build();
+describe('BarDrop Component', () => {
+	it('should render without crashing', () => {
+		const component: RenderResult = new Render(
+			<BarDrop visible={true} dropList={() => [{ text: 'text' }]} />,
+		)
+			.Mock(BarDropMocks)
+			.build();
 
-        expect(component);
-    });
+		expect(component);
+	});
 });

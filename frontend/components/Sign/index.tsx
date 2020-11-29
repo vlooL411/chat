@@ -1,41 +1,51 @@
-import { ReactElement, useMemo, useRef, useState } from 'react'
-import { useSession } from 'next-auth/client'
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { TokenType } from '@frontend/types';
 
-import Password from './Password'
-import style from './sign.module.sass'
-import FormGenerate, { FormGenerateProps } from './FormGenerate'
+import Password from './Password';
+import style from './sign.module.sass';
+import FormGenerate, { FormGenerateProps } from './FormGenerate';
 
-const { ICON_GOOGLE } = process.env
+const { ICON_GOOGLE } = process.env;
 
 const Signin = (): ReactElement => {
-    const { sign, sign_title, signin, sign_notife, signin_forms } = style
+	const { sign, sign_title, signin, sign_notife, signin_forms } = style;
 
-    const [session, loading] = useSession()
-    const [notifeText, setNotifeText] = useState<string>(null!)
-    const refLogin = useRef<HTMLInputElement>(null!)
-    const refPassword = useRef<HTMLInputElement>(null!)
+	const [isAuth, setIsAuth] = useState<boolean>();
+	const [notifeText] = useState<string>(null!);
+	const loginRef = useRef<HTMLInputElement>(null!);
+	const passwordRef = useRef<HTMLInputElement>(null!);
 
-    const forms = useMemo<ReactElement[]>(() => {
-        const formsGenerate: FormGenerateProps[] =
-            [{ provider: 'google', src: ICON_GOOGLE }]
-        return formsGenerate.map((form, key) => <FormGenerate {...form} key={key} />)
-    }, [])
+	useEffect(() => {
+		const isAuth = localStorage.getItem(TokenType.Authentication);
+		setIsAuth(isAuth != null && isAuth != '');
+	});
 
-    return session ? null :
-        <div className='total total_area' >
-            <div className={sign}>
-                <p className={sign_title}>Sign in</p>
-                <div className={signin}>
-                    <input ref={refLogin} maxLength={20} placeholder='Login' /><br />
-                    <Password ref={refPassword} /><br />
-                    <p className={sign_notife}>{notifeText}</p><br />
-                    <button>Sign in</button>
-                    <div className={signin_forms}>
-                        {forms}
-                    </div>
-                </div>
-            </div>
-        </div >
-}
+	const forms = useMemo<ReactElement[]>(() => {
+		const formsGenerate: FormGenerateProps[] = [
+			{ provider: 'google', src: ICON_GOOGLE },
+		];
+		return formsGenerate.map((form, key) => (
+			<FormGenerate {...form} key={key} />
+		));
+	}, []);
 
-export default Signin
+	return isAuth ? null : (
+		<div className='total total_area'>
+			<div className={sign}>
+				<p className={sign_title}>Sign in</p>
+				<div className={signin}>
+					<input ref={loginRef} maxLength={20} placeholder='Login' />
+					<br />
+					<Password ref={passwordRef} />
+					<br />
+					<p className={sign_notife}>{notifeText}</p>
+					<br />
+					<button>Sign in</button>
+					<div className={signin_forms}>{forms}</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default Signin;

@@ -1,28 +1,35 @@
-import { Contact } from '@generated/frontend'
-import { ReactElement } from 'react'
-import { WhatDate } from 'components/common/WhatDate'
+import { Contact } from '@frontend/types';
+import { ReactElement } from 'react';
+import { WhatDate } from 'components/common/WhatDate';
 
-import BlockPanel from '../BlockPanel'
+import BlockPanel from '../BlockPanel';
 
 type Props = {
-    contact: Contact
-    onSelectContact: () => void
-}
+	contact: Contact;
+	onSelectContact: () => void;
+};
 
-const fiveMinute: number = 1000 * 60 * 5
-const { EMPTY_AVATAR_USER } = process.env
+const fiveMinute: number = 1000 * 60 * 5;
+const { EMPTY_AVATAR_USER } = process.env;
 const Block = ({ contact, onSelectContact }: Props): ReactElement => {
-    const whoIsContact = contact?.whoIsContact
-    const User = contact?.User
+	const whoIsContact = contact?.whoIsContact;
+	const User = contact?.User;
 
-    const isOnline = new Date(User?.dateLastOnline)?.getTime() + fiveMinute > new Date().getTime()
+	const isOnline =
+		new Date(User?.dateLastOnline)?.getTime() + fiveMinute >
+		new Date().getTime();
 
-    return <BlockPanel
-        text={User?.status}
-        title={whoIsContact ? whoIsContact : User?.name}
-        image={User?.image ?? EMPTY_AVATAR_USER}
-        date={isOnline ? 'Online' : WhatDate(new Date(User?.dateLastOnline))}
-        onClick={onSelectContact} />
-}
+	return (
+		<BlockPanel
+			text={User?.status}
+			title={whoIsContact ? whoIsContact : User?.name}
+			image={User?.image ?? EMPTY_AVATAR_USER}
+			date={
+				isOnline ? 'Online' : WhatDate(new Date(User?.dateLastOnline))
+			}
+			onClick={onSelectContact}
+		/>
+	);
+};
 
-export default Block
+export default Block;

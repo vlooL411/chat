@@ -1,0 +1,17 @@
+type Contact {
+	_id: ID!
+	userid: ID!
+	date: Date!
+	whoIsContact: String
+	User: UserSafe
+}
+
+type Contacts {
+	Existing: [Contact]
+	Incoming: [Contact]
+}
+
+type Query {
+	Contacts: [Contact]
+	FindContacts(text: String!): Contacts
+}

@@ -1,0 +1,10 @@
+enum TypeResponse {
+	error
+	warn
+	success
+}
+
+type Response {
+	message: String!
+	type: TypeResponse!
+}

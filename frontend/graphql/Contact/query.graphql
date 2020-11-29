@@ -1,0 +1,15 @@
+query contacts {
+	Contacts {
+		...ContactInfo
+	}
+}
+query findContact($text: String!) {
+	FindContacts(text: $text) {
+		Existing {
+			...ContactInfo
+		}
+		Incoming {
+			...ContactInfo
+		}
+	}
+}

@@ -1,0 +1,23 @@
+type GoogleNetwork implements SocialNetwork {
+	_id: ID!
+
+	givenName: String!
+	familyName: String!
+	middleName: String!
+	email: String!
+
+	accessToken: Token!
+	refreshToken: Token!
+}
+
+type FacebookNetwork implements SocialNetwork {
+	_id: ID!
+
+	givenName: String!
+	familyName: String!
+	middleName: String!
+	email: String!
+
+	accessToken: Token!
+	refreshToken: Token!
+}
