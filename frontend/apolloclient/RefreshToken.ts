@@ -5,7 +5,7 @@ import {
 	Observable,
 	Operation,
 } from '@apollo/client';
-import { Authorization, TokenType } from '@frontend/types';
+import { Authentication, TokenType } from '@frontend/types';
 import { initializeApollo } from 'apolloclient';
 
 const QueryRefreshToken = gql`
@@ -23,23 +23,22 @@ const query = (refreshToken: string) =>
 			query: QueryRefreshToken,
 			variables: { refreshToken },
 		})
-		.then(({ data }) => data.Refresh)
-		.catch(() => localStorage.clear());
+		.then(({ data }) => data.Refresh);
 
 const RefreshToken = (
 	refreshToken: string,
 	operation: Operation,
 	forward: NextLink,
 ): Observable<unknown> =>
-	fromPromise<Authorization>(query(refreshToken)).flatMap(data => {
+	fromPromise<Authentication>(query(refreshToken)).flatMap(data => {
 		if (!data) return new Observable(() => null);
 
 		const oldHeaders = operation.getContext()?.headers;
 
 		const headers = { ...oldHeaders };
-		headers[TokenType.Authorization] = data?.accessToken;
+		headers[TokenType.Authentication] = data?.accessToken;
 
-		localStorage.setItem(TokenType.Authorization, JSON.stringify(data));
+		localStorage.setItem(TokenType.Authentication, JSON.stringify(data));
 
 		operation.setContext({ headers });
 

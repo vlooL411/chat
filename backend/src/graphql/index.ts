@@ -116,7 +116,6 @@ export interface IQuery {
     FindMessage(text: string): Chat[] | Promise<Chat[]>;
     User(id: string): UserSafe | Promise<UserSafe>;
     UserCurrent(): UserSafe | Promise<UserSafe>;
-    UserID(name?: string, email?: string): UserSafe | Promise<UserSafe>;
     UserUpdateOnline(): string | Promise<string>;
 }
 
@@ -125,7 +124,7 @@ export interface IMutation {
     CreateChat(title: string): string | Promise<string>;
     InviteChat(chatid: string): string | Promise<string>;
     LeaveChat(chatid: string): string | Promise<string>;
-    RemoveChat(chatid: string): string | Promise<string>;
+    RemoveChat(chatid: string): Chat | Promise<Chat>;
     SendMessage(chatid: string, text: string): string | Promise<string>;
     ChangeMessage(chatid: string, messageid: string, text: string): string | Promise<string>;
     RemoveMessage(chatid: string, messageid: string): string | Promise<string>;

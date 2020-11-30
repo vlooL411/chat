@@ -1,5 +1,5 @@
 import Loader from 'components/Loader';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, ReactElement, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -19,7 +19,7 @@ const Search = ({
 	onChange = () => null,
 	onClear = () => null,
 	loading = false,
-}: Props) => {
+}: Props): ReactElement => {
 	const {
 		search,
 		search_char,

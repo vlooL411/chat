@@ -35,7 +35,7 @@ type Mutation {
 	CreateChat(title: String!): String
 	InviteChat(chatid: ID!): String
 	LeaveChat(chatid: ID!): String
-	RemoveChat(chatid: ID!): String
+	RemoveChat(chatid: ID!): Chat
 }
 
 type Subscription {

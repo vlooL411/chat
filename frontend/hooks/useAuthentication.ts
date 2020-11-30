@@ -31,7 +31,6 @@ const useAuthentication = (router: Router, urlAuth: string): boolean => {
 					if (!req.ok) return;
 
 					const answer = await req.text();
-					console.log(answer);
 					localStorage.setItem(TokenType.Authentication, answer);
 
 					setAuth(JSON.parse(answer));

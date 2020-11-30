@@ -1,12 +1,10 @@
 import Loader from 'components/Loader';
-import { LocalStorage } from '@common/utils';
 import { ReactElement, useEffect, useState } from 'react';
 import { getHHMMSSPA } from 'components/common/WhatDate';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	Message,
-	User,
 	useRemoveMessageMutation,
 	useUserQuery,
 } from '@frontend/types';
@@ -52,18 +50,17 @@ const MessageBlock = ({
 
 	const onMouseEnter = () => {
 		if (chatid)
-			LocalStorage.setString(
-				'ChatLastMes',
-				chatid.toString(),
+			localStorage.setItem(
+				`ChatLastMes${chatid.toString()}`,
 				message?._id.toString(),
 			);
 	};
 
-	const user = data?.User as User;
+	const user = data?.User;
 	const { EMPTY_AVATAR_USER } = process.env;
 	return (
 		<div className={mes} onMouseEnter={onMouseEnter}>
-			<img src={user?.image ?? EMPTY_AVATAR_USER} />
+			<img src={user?.avatar ?? EMPTY_AVATAR_USER} />
 			<div
 				className={mes_block}
 				onClick={e => {

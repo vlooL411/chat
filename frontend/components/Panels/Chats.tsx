@@ -1,14 +1,16 @@
 import Loader from 'components/Loader';
 import Search from 'components/Search';
 import BlockInfo from 'components/Search/BlockInfo';
-import { ID } from '@chat/apollocommon';
 import { ReactElement, useEffect, useState } from 'react';
 import { WhatDate } from 'components/common/WhatDate';
 import {
 	AddChatDocument,
+	AddChatSubscription,
 	Chat,
+	ChatFindFragmentFragment,
 	DeleteChatDocument,
 	Message,
+	RemoveChatMutation,
 	useChatsUserCurrentQuery,
 	useFindQueryChatLazyQuery,
 } from '@frontend/types';
@@ -17,14 +19,14 @@ import BlockPanel from './BlockPanel';
 import style from './styles/panel.module.sass';
 
 type Props = {
-	onSelectChat: (id: ID) => void;
+	onSelectChat: (id: string) => void;
 };
 
 const { EMPTY_AVATAR_CHAT } = process.env;
 const Chats = ({ onSelectChat }: Props): ReactElement => {
 	const { panel } = style;
 
-	const [storage, _] = useState<{ IsSearch: boolean; Date?: Date }>({
+	const [storage] = useState<{ IsSearch: boolean; Date?: Date }>({
 		IsSearch: false,
 	});
 	const runFind = () => (storage.IsSearch = true);
@@ -41,15 +43,20 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 		subscribeToMore({
 			document: AddChatDocument,
 			updateQuery: (_, { subscriptionData, variables }) => {
-				const AddChat = (subscriptionData?.data as any)
+				const data = subscriptionData?.data;
+
+				const AddChat = ((data as unknown) as AddChatSubscription)
 					?.AddChat as Chat;
 				if (!AddChat) return null;
 
 				variables.isIncoming = true;
 				return {
 					Chats: [AddChat],
-					UserCurrent: { chats_id: [AddChat?._id] },
-				} as any;
+					UserCurrent: {
+						_id: data?.UserCurrent?._id,
+						chats_id: [AddChat?._id],
+					},
+				};
 			},
 		});
 
@@ -57,21 +64,27 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 		subscribeToMore({
 			document: DeleteChatDocument,
 			updateQuery: (prev, { subscriptionData, variables }) => {
-				const RemoveChat = (subscriptionData?.data as any)
-					?.RemoveChat as Chat;
+				const { data } = subscriptionData;
+
+				const RemoveChat = ((data as unknown) as RemoveChatMutation)
+					?.RemoveChat;
 				if (!RemoveChat) return null;
+
 				const chats = prev?.Chats?.filter(
 					chat => chat._id != RemoveChat._id,
 				);
-				const chats_id = (prev as any)?.UserCurrent?.chats_id.filter(
+				const chats_id = prev?.UserCurrent?.chats_id.filter(
 					id => id != RemoveChat._id,
-				) as ID[];
+				);
 
 				variables.isIncoming = true;
 				return {
 					Chats: chats,
-					UserCurrent: { chats_id: chats_id },
-				} as any;
+					UserCurrent: {
+						_id: data?.UserCurrent?._id,
+						chats_id: chats_id,
+					},
+				};
 			},
 		});
 
@@ -99,7 +112,10 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 		}, 400);
 	};
 
-	const blockMes = (chat: Chat, mes: Message): ReactElement => (
+	const blockMes = (
+		chat: ChatFindFragmentFragment,
+		mes: Partial<Message>,
+	): ReactElement => (
 		<BlockPanel
 			title={chat?.title}
 			text={mes?.text}
@@ -145,9 +161,7 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 					{dataFindChats?.map(block)}
 					<BlockInfo what={`Found messages ${countFindMess ?? 0}`} />
 					{dataFindMess?.map(chat =>
-						chat?.messages?.map(mes =>
-							blockMes(chat as any, mes as any),
-						),
+						chat?.messages?.map(mes => blockMes(chat, mes)),
 					)}
 				</>
 			)}

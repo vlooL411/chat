@@ -37,10 +37,10 @@ export default class ChatService {
 	}
 
 	async chats(userid: string): Promise<Chat[]> {
-		const { chats_id } = await this.userModel.findOne(
-			{ _id: userid },
-			'chats_id',
-		);
+		const user = await this.userModel.findOne({ _id: userid }, 'chats_id');
+		const chats_id = user?.chats_id;
+
+		if (!chats_id) return [];
 
 		return await this.chatModel
 			.aggregate()
@@ -79,7 +79,7 @@ export default class ChatService {
 
 	async create(userid: string, title: string): Promise<Chat | null> {
 		const chat: Chat = {
-			_id: new Types.ObjectId() as any,
+			_id: new Types.ObjectId().toHexString(),
 			title,
 			date: new Date(),
 			creaters_id: [userid],

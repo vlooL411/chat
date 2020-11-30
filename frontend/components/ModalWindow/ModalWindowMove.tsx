@@ -1,10 +1,11 @@
 import {
-	ReactElement,
 	CSSProperties,
-	useState,
-	useRef,
 	MouseEvent,
+	ReactElement,
+	useRef,
+	useState,
 } from 'react';
+
 import styleModal from './modalwindow.module.sass';
 
 type Props = {
@@ -29,11 +30,7 @@ const ModalWindowMove = ({
 		if (e.buttons != 1 || !keep) return;
 		const { clientX, clientY } = e;
 		const { current } = modalRef;
-		const {
-			clientHeight: heightTotal,
-			clientWidth: widthTotal,
-		} = totalRef.current;
-		const { clientHeight, clientWidth } = current;
+		const { clientWidth } = current;
 		current.style.top = `${clientY}px`;
 		current.style.left = `calc(${clientX}px - ${clientWidth}px / 2)`;
 	};

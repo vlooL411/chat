@@ -1,5 +1,4 @@
 import Loader from 'components/Loader';
-import { ID } from '@chat/apollocommon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	KeyboardEvent,
@@ -29,11 +28,14 @@ export type MessageActionMode = { mes?: Message; mode: 'send' | 'change' };
 const sendInit = (): MessageActionMode => ({ mes: null, mode: 'send' });
 
 type Props = {
-	chatid: ID;
+	chatid: string;
 	action?: MessageActionMode;
 };
 
-const MessageAction = ({ chatid, action = sendInit() }: Props) => {
+const MessageAction = ({
+	chatid,
+	action = sendInit(),
+}: Props): ReactElement => {
 	const { message, message_send, message_change } = style;
 
 	const textBlockRef = useRef<HTMLTextAreaElement>(null!);

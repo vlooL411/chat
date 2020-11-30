@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { TokenType } from '@frontend/types';
+import { Provider, TokenType } from '@frontend/types';
 
 import Password from './Password';
 import style from './sign.module.sass';
@@ -22,7 +22,7 @@ const Signin = (): ReactElement => {
 
 	const forms = useMemo<ReactElement[]>(() => {
 		const formsGenerate: FormGenerateProps[] = [
-			{ provider: 'google', src: ICON_GOOGLE },
+			{ provider: Provider.Google, src: ICON_GOOGLE },
 		];
 		return formsGenerate.map((form, key) => (
 			<FormGenerate {...form} key={key} />

@@ -62,6 +62,5 @@ type User implements IUser {
 type Query {
 	User(id: ID!): UserSafe
 	UserCurrent: UserSafe
-	UserID(name: String, email: String): UserSafe
 	UserUpdateOnline: String
 }

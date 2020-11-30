@@ -1,14 +1,14 @@
 import { InMemoryCacheConfig } from '@apollo/client';
-import { ID } from '@chat/apollocommon';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //Existing Incoming
 type EI = {
-	__ref: ID; //__types:_id
+	__ref: string; //string => __types:_id
 };
 
-const MergeDefault = { merge: (_: EI[], incoming: EI[]) => incoming };
+const MergeDefault = { merge: (_: EI[], incoming: EI[]): EI[] => incoming };
 const MergeAdding = {
-	merge: (existing: EI[], incoming: EI[], { variables }) => {
+	merge: (existing: EI[], incoming: EI[], { variables }): EI[] => {
 		const isIncoming = variables?.isIncoming;
 		if (!isIncoming && (!incoming || incoming?.length < 1)) return existing;
 		if (isIncoming || !existing || existing?.length < 1) return incoming;

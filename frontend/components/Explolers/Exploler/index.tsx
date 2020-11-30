@@ -1,5 +1,5 @@
 import Loader from 'components/Loader';
-import { last, LocalStorage } from '@common/utils';
+import { last } from '@common/utils';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Chat, MessagesQuery } from '@frontend/types';
 import {
@@ -33,7 +33,7 @@ const Exploler = ({
 	scrollLoad = 100,
 }: Props): ReactElement => {
 	const { exploler, scrollcontainer } = style;
-	const { down, loader, loader_up, loader_down } = style;
+	const { loader, loader_up, loader_down } = style;
 
 	const [mesActionMode, setMesActionMode] = useState<MessageActionMode>({
 		mes: null,
@@ -53,9 +53,8 @@ const Exploler = ({
 
 	useEffect(() => {
 		if (!chatid) return;
-		const lastMessageID = LocalStorage.getString(
-			'ChatLastMes',
-			chatid?.toString(),
+		const lastMessageID = localStorage.getItem(
+			`ChatLastMes${chatid?.toString()}`,
 		);
 		Refetch(limit, lastMessageID, true);
 	}, [chatid]);

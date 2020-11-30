@@ -1,4 +1,3 @@
-import { LocalStorage } from '@common/utils';
 import { createContext, ReactElement, useEffect, useState } from 'react';
 
 //название css стилей .light
@@ -28,15 +27,12 @@ export const ThemeProvider = ({
 	const [theme, setTheme] = useState<Themes>(defaultTheme);
 
 	useEffect(() => {
-		const themeLocal = LocalStorage.getString(
-			'Theme',
-			'',
-			defaultTheme,
-		) as Themes;
+		const themeLocal =
+			(localStorage.getItem(`Theme`) as Themes) ?? defaultTheme;
 		setTheme(themeLocal);
 	}, []);
 
-	useEffect(() => LocalStorage.setString('Theme', '', theme), [theme]);
+	useEffect(() => localStorage.setItem('Theme', theme), [theme]);
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleThemes: setTheme }}>

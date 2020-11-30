@@ -23,7 +23,7 @@ const Block = ({ contact, onSelectContact }: Props): ReactElement => {
 		<BlockPanel
 			text={User?.status}
 			title={whoIsContact ? whoIsContact : User?.name}
-			image={User?.image ?? EMPTY_AVATAR_USER}
+			image={User?.avatar ?? EMPTY_AVATAR_USER}
 			date={
 				isOnline ? 'Online' : WhatDate(new Date(User?.dateLastOnline))
 			}

@@ -5,8 +5,7 @@ import ContactExploler from 'components/Explolers/ContactExploler';
 import Chats from 'components/Panels/Chats';
 import Contacts from 'components/Panels/Contacts';
 import Sidebar from 'components/Sidebar';
-import { LocalStorage } from '@common/utils';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import {
 	faComment,
 	faQuoteRight,
@@ -28,16 +27,24 @@ enum CreateChat {
 	Contact,
 }
 
-const lastPanel = +LocalStorage.getString('Panel', '', Panels.Chats.toString());
-
 const Index = (): ReactElement => {
-	const [panelCurrent, setPanelCurrent] = useState<Panels>(lastPanel);
+	const [panelCurrent, setPanelCurrent] = useState<Panels>(Panels.Chats);
 	const [chatIDCurrent, setIDCurrent] = useState<string | Contact>(null!);
 
 	const [createChat, setCreateChat] = useState<CreateChat>(null);
 
+	useEffect(() => {
+		const lastPanel: number =
+			+localStorage.getItem('Panel') ?? Panels.Chats;
+
+		setPanelCurrent(lastPanel);
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('Panel', panelCurrent.toString());
+	}, [panelCurrent]);
+
 	const switchPanel = useMemo<ReactElement>(() => {
-		LocalStorage.setString('Panel', '', panelCurrent.toString());
 		switch (panelCurrent) {
 			case Panels.Chats:
 				return <Chats onSelectChat={setIDCurrent} />;

@@ -25,7 +25,7 @@ const Contacts = ({
 }: Props): ReactElement => {
 	const { panel } = style;
 
-	const [storage, _] = useState<{ Date?: Date; IsSearch: boolean }>({
+	const [storage] = useState<{ Date?: Date; IsSearch: boolean }>({
 		IsSearch: false,
 	});
 
@@ -74,10 +74,10 @@ const Contacts = ({
 	);
 
 	const dataContacts: ContactInfoFragment[] = data?.Contacts;
-	const dataFindExist: ContactInfoFragment[] = dataFind?.FindContact
-		?.Existing as any;
-	const dataFindIncom: ContactInfoFragment[] = dataFind?.FindContact
-		?.Incoming as any;
+	const dataFindExist: ContactInfoFragment[] =
+		dataFind?.FindContacts?.Existing;
+	const dataFindIncom: ContactInfoFragment[] =
+		dataFind?.FindContacts?.Incoming;
 
 	const isContactsEmpty = dataContacts?.length == 0;
 	const countFindExist: number = dataFindExist?.length ?? 0;

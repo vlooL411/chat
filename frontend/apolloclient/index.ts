@@ -80,7 +80,6 @@ const authLink = setContext((_, req: NextApiRequest) => {
 	const headers = { ...req?.headers };
 
 	const authentication = getAuthorization();
-	console.log(authentication);
 	headers[TokenType.Authentication] = authentication?.accessToken;
 
 	return { headers };
@@ -94,7 +93,11 @@ const linkError = onError(({ graphQLErrors, operation, forward }) => {
 			const authentication = getAuthorization();
 			const refreshToken = authentication?.refreshToken;
 
-			if (!refreshToken) return;
+			if (!refreshToken) {
+				localStorage.clear();
+				return;
+			}
+
 			return RefreshToken(refreshToken, operation, forward);
 		}
 });

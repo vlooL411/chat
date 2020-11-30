@@ -1,4 +1,3 @@
-import { TokenType } from 'src/graphql';
 import {
 	Authentication,
 	LoginInput,
@@ -6,11 +5,9 @@ import {
 	Token,
 	UserSafe,
 } from 'src/graphql';
-import { Req } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import AuthService from './service';
-import { GoogleGuard } from './guards';
 
 @Resolver('Auth')
 export default class AuthResolver {

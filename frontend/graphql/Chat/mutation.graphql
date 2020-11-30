@@ -5,7 +5,9 @@ mutation leaveChat($chatid: ID!) {
 	LeaveChat(chatid: $chatid)
 }
 mutation removeChat($chatid: ID!) {
-	RemoveChat(chatid: $chatid)
+	RemoveChat(chatid: $chatid) {
+		_id
+	}
 }
 mutation createChat($title: String!) {
 	CreateChat(title: $title)

@@ -12,7 +12,8 @@
 		"build:full": "yarn build:dist && yarn build",
 		"prettier": "npx prettier --ignore-path .gitignore --write .",
 		"prettier:check": "prettier --ignore-path .gitignore --check .",
-		"lint": "eslint --ignore-path .gitignore **/*.{js,ts,tsx} --quiet --fix"
+		"lint": "eslint --ignore-path .gitignore **/*.{js,ts,tsx} --fix",
+		"lint:quiet": "eslint --ignore-path .gitignore **/*.{js,ts,tsx} --quiet --fix"
 	},
 	"devDependencies": {
 		"lerna": "^3.22.1",

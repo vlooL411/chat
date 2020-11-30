@@ -1,7 +1,7 @@
 import { ReactElement, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPalette } from '@fortawesome/free-solid-svg-icons';
-import { User } from '@frontend/types';
+import { UserSafe } from '@frontend/types';
 
 import BarBlock from './BarBlock';
 import style from './styles/bar.module.sass';
@@ -11,7 +11,7 @@ export type BarProps = {
 	title: string;
 	image: string;
 	children?: ReactElement;
-	dropList: (user: User) => DropElem[];
+	dropList: (user: UserSafe) => DropElem[];
 };
 
 const BarExploler = ({

@@ -1,4 +1,5 @@
 import ChangeThemes from 'components/ChangeThemes';
+import useSignOut from 'hooks/useSignOut';
 import { ReactElement, useMemo, useState } from 'react';
 import { faAlignJustify, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { UserSafe, useUserCurrentQuery } from '@frontend/types';
@@ -18,6 +19,7 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 
 	const [isExtend, setIsExtend] = useState<boolean>(false);
 	const { data } = useUserCurrentQuery();
+	const onSignOut = useSignOut();
 
 	const BlockUser = useMemo<ReactElement>(() => {
 		const user = data?.UserCurrent as UserSafe;
@@ -78,13 +80,12 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 						key={-2}
 					/>
 					{blocks}
-					{/* //TODO signOut  */}
 					<BlockSidebar
 						className={sidebar_block}
 						sideblock={{
 							fa: faDoorOpen,
 							text: 'Exit',
-							onClick: () => null,
+							onClick: onSignOut,
 						}}
 						key={-1}
 					/>

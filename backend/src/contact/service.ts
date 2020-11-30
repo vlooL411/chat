@@ -14,21 +14,21 @@ export default class ContactService {
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 	) {}
 
-	contact = async (userid: string): Promise<Contact[]> =>
-		(
-			await AggregateLookUp(userid, this.userModel)
-				.replaceRoot('$contacts')
-				.unwind('$User')
-				.project(ContactProject)
-		)?.pop();
+	contact = async (userid: string): Promise<Contact> =>
+		await AggregateLookUp(userid, this.userModel)
+			.replaceRoot('$contacts')
+			.unwind('$User')
+			.project(ContactProject)
+			.then(contacts => contacts.pop() as Contact);
 
 	contacts = async (userid: string): Promise<Contact[]> =>
 		await AggregateLookUp(userid, this.userModel)
 			.replaceRoot('$contacts')
 			.unwind('$User')
-			.project(ContactProject);
+			.project(ContactProject)
+			.then(contacts => contacts.map((contact: Contact) => contact));
 
-	async findContacts(text: string, userid: string): Promise<Contacts> {
+	async findContacts(userid: string, text: string): Promise<Contacts> {
 		const Existing: Contact[] = await AggregateLookUp(
 			userid,
 			this.userModel,
@@ -46,15 +46,19 @@ export default class ContactService {
 			})
 			.replaceRoot('$contacts')
 			.unwind('$User')
-			.project(ContactProject);
+			.project(ContactProject)
+			.then(contacts => contacts.map((contact: Contact) => contact));
 
-		const contactUserID: string[] = (
-			await AggregateFilter(userid, this.userModel).group({
+		const contactUserID: string[] = await AggregateFilter(
+			userid,
+			this.userModel,
+		)
+			.group({
 				_id: '$contacts.userid',
 			})
-		).map((user: User) => user._id);
+			.then(contacts => contacts.map((contact: Contact) => contact._id));
 
-		contactUserID.push(new Types.ObjectId(userid) as any);
+		contactUserID.push(new Types.ObjectId(userid).toHexString());
 		const Incoming: Contact[] = await this.userModel
 			.aggregate()
 			.match({
@@ -84,7 +88,7 @@ export default class ContactService {
 		title: string,
 	): Promise<Contact | null> {
 		const chat: Chat = {
-			_id: new Types.ObjectId() as any,
+			_id: new Types.ObjectId().toHexString(),
 			title,
 			date: new Date(),
 			creaters_id: [userid, contactid],
@@ -99,7 +103,7 @@ export default class ContactService {
 			whoIsContact: title,
 		};
 
-		const chat_s: Chat[] = await this.chatModel.insertMany([chat]);
+		await this.chatModel.insertMany([chat]);
 
 		const { ok } = await this.userModel.updateOne(
 			{ _id: { $or: [userid, contactid] } },

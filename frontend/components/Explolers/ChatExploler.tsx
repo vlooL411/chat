@@ -1,6 +1,6 @@
 import { Strategy } from '@common/utils';
 import { ReactElement } from 'react';
-import { Chat, User } from '@frontend/types';
+import { Chat, UserSafe } from '@frontend/types';
 import {
 	useInviteChatMutation,
 	useLeaveChatMutation,
@@ -19,7 +19,7 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
 	const [removeChat] = useRemoveChatMutation();
 	const [leaveChat] = useLeaveChatMutation();
 
-	const dropList = (chat: Chat, user: User): DropElem[] => {
+	const dropList = (chat: Chat, user: UserSafe): DropElem[] => {
 		if (!chat) return;
 
 		const chatid = { variables: { chatid: chat?._id } };

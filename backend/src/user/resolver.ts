@@ -1,5 +1,7 @@
+import AuthGuard from 'src/auth/guards';
 import { Args, ID, Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/graphql';
+import { UserSafe } from 'src/graphql';
+import { CurrentUser } from 'src/auth/decorators';
 
 import UserService from './service';
 
@@ -8,25 +10,19 @@ export default class UserResolver {
 	constructor(private userService: UserService) {}
 
 	@Query()
-	async User(@Args('id', ID) id: string): Promise<User> {
+	async User(@Args('id', ID) id: string): Promise<UserSafe> {
 		return await this.userService.user(id);
 	}
 
+	@AuthGuard()
 	@Query()
-	async UserID(
-		@Args('name') name: string,
-		@Args('email') email: string,
-	): Promise<User> {
-		return await this.userService.id(name, email);
+	async UserCurrent(@CurrentUser() { _id }: UserSafe): Promise<UserSafe> {
+		return await this.userService.current(_id);
 	}
 
+	@AuthGuard()
 	@Query()
-	async UserCurrent(): Promise<User> {
-		return await this.userService.current('userid');
-	}
-
-	@Query()
-	async UserUpdateOnline(): Promise<string> {
-		return await this.userService.userUpdateOnline('userid');
+	async UserUpdateOnline(@CurrentUser() { _id }: UserSafe): Promise<string> {
+		return await this.userService.userUpdateOnline(_id);
 	}
 }

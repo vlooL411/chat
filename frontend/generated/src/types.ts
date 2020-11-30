@@ -1,800 +1,738 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+	[K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+	{ [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+	{ [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  /** Date custom scalar type */
-  Date: any;
-  /** Token custom scalar string */
-  Token: any;
-  /** Password custom scalar type */
-  Password: any;
+	ID: string;
+	String: string;
+	Boolean: boolean;
+	Int: number;
+	Float: number;
+	/** Date custom scalar type */
+	Date: any;
+	/** Token custom scalar string */
+	Token: any;
+	/** Password custom scalar type */
+	Password: any;
 };
 
 export type LoginInput = {
-  name: Scalars['String'];
-  password: Scalars['Password'];
+	name: Scalars['String'];
+	password: Scalars['Password'];
 };
 
 export type RegisterInput = {
-  name: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['Password'];
+	name: Scalars['String'];
+	email: Scalars['String'];
+	password: Scalars['Password'];
 };
 
 export type SocialNetwork = {
-  _id: Scalars['ID'];
-  accessToken: Scalars['Token'];
-  refreshToken: Scalars['Token'];
-  givenName: Scalars['String'];
-  familyName: Scalars['String'];
-  middleName: Scalars['String'];
-  email: Scalars['String'];
+	_id: Scalars['ID'];
+	accessToken: Scalars['Token'];
+	refreshToken: Scalars['Token'];
+	givenName: Scalars['String'];
+	familyName: Scalars['String'];
+	middleName: Scalars['String'];
+	email: Scalars['String'];
 };
 
 export type GoogleNetwork = SocialNetwork & {
-  __typename?: 'GoogleNetwork';
-  _id: Scalars['ID'];
-  givenName: Scalars['String'];
-  familyName: Scalars['String'];
-  middleName: Scalars['String'];
-  email: Scalars['String'];
-  accessToken: Scalars['Token'];
-  refreshToken: Scalars['Token'];
+	__typename?: 'GoogleNetwork';
+	_id: Scalars['ID'];
+	givenName: Scalars['String'];
+	familyName: Scalars['String'];
+	middleName: Scalars['String'];
+	email: Scalars['String'];
+	accessToken: Scalars['Token'];
+	refreshToken: Scalars['Token'];
 };
 
 export type FacebookNetwork = SocialNetwork & {
-  __typename?: 'FacebookNetwork';
-  _id: Scalars['ID'];
-  givenName: Scalars['String'];
-  familyName: Scalars['String'];
-  middleName: Scalars['String'];
-  email: Scalars['String'];
-  accessToken: Scalars['Token'];
-  refreshToken: Scalars['Token'];
+	__typename?: 'FacebookNetwork';
+	_id: Scalars['ID'];
+	givenName: Scalars['String'];
+	familyName: Scalars['String'];
+	middleName: Scalars['String'];
+	email: Scalars['String'];
+	accessToken: Scalars['Token'];
+	refreshToken: Scalars['Token'];
 };
 
 export enum TokenType {
-  Authentication = 'authentication'
+	Authentication = 'authentication',
 }
 
 export type Authentication = {
-  __typename?: 'Authentication';
-  accessToken: Scalars['Token'];
-  refreshToken: Scalars['Token'];
+	__typename?: 'Authentication';
+	accessToken: Scalars['Token'];
+	refreshToken: Scalars['Token'];
 };
 
 export type Query = {
-  __typename?: 'Query';
-  Login: Authentication;
-  Refresh: Authentication;
-  Chat?: Maybe<Chat>;
-  Chats?: Maybe<Array<Maybe<Chat>>>;
-  FindChat?: Maybe<Array<Maybe<Chat>>>;
-  Contacts?: Maybe<Array<Maybe<Contact>>>;
-  FindContacts?: Maybe<Contacts>;
-  Messages?: Maybe<Messages>;
-  FindMessage?: Maybe<Array<Maybe<Chat>>>;
-  User?: Maybe<UserSafe>;
-  UserCurrent?: Maybe<UserSafe>;
-  UserID?: Maybe<UserSafe>;
-  UserUpdateOnline?: Maybe<Scalars['String']>;
+	__typename?: 'Query';
+	Login: Authentication;
+	Refresh: Authentication;
+	Chat?: Maybe<Chat>;
+	Chats?: Maybe<Array<Maybe<Chat>>>;
+	FindChat?: Maybe<Array<Maybe<Chat>>>;
+	Contacts?: Maybe<Array<Maybe<Contact>>>;
+	FindContacts?: Maybe<Contacts>;
+	Messages?: Maybe<Messages>;
+	FindMessage?: Maybe<Array<Maybe<Chat>>>;
+	User?: Maybe<UserSafe>;
+	UserCurrent?: Maybe<UserSafe>;
+	UserUpdateOnline?: Maybe<Scalars['String']>;
 };
-
 
 export type QueryLoginArgs = {
-  input?: Maybe<LoginInput>;
+	input?: Maybe<LoginInput>;
 };
-
 
 export type QueryRefreshArgs = {
-  refreshToken: Scalars['Token'];
+	refreshToken: Scalars['Token'];
 };
-
 
 export type QueryChatArgs = {
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 };
-
 
 export type QueryChatsArgs = {
-  chatid?: Maybe<Scalars['ID']>;
-  limit?: Maybe<Scalars['Int']>;
-  isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid?: Maybe<Scalars['ID']>;
+	limit?: Maybe<Scalars['Int']>;
+	isIncoming?: Maybe<Scalars['Boolean']>;
 };
-
 
 export type QueryFindChatArgs = {
-  title: Scalars['String'];
+	title: Scalars['String'];
 };
-
 
 export type QueryFindContactsArgs = {
-  text: Scalars['String'];
+	text: Scalars['String'];
 };
-
 
 export type QueryMessagesArgs = {
-  chatid: Scalars['ID'];
-  messageid?: Maybe<Scalars['ID']>;
-  limit?: Maybe<Scalars['Int']>;
-  isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid: Scalars['ID'];
+	messageid?: Maybe<Scalars['ID']>;
+	limit?: Maybe<Scalars['Int']>;
+	isIncoming?: Maybe<Scalars['Boolean']>;
 };
-
 
 export type QueryFindMessageArgs = {
-  text: Scalars['String'];
+	text: Scalars['String'];
 };
-
 
 export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUserIdArgs = {
-  name?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+	id: Scalars['ID'];
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
-  Register?: Maybe<UserSafe>;
-  CreateChat?: Maybe<Scalars['String']>;
-  InviteChat?: Maybe<Scalars['String']>;
-  LeaveChat?: Maybe<Scalars['String']>;
-  RemoveChat?: Maybe<Scalars['String']>;
-  SendMessage?: Maybe<Scalars['String']>;
-  ChangeMessage?: Maybe<Scalars['String']>;
-  RemoveMessage?: Maybe<Scalars['String']>;
+	__typename?: 'Mutation';
+	Register?: Maybe<UserSafe>;
+	CreateChat?: Maybe<Scalars['String']>;
+	InviteChat?: Maybe<Scalars['String']>;
+	LeaveChat?: Maybe<Scalars['String']>;
+	RemoveChat?: Maybe<Chat>;
+	SendMessage?: Maybe<Scalars['String']>;
+	ChangeMessage?: Maybe<Scalars['String']>;
+	RemoveMessage?: Maybe<Scalars['String']>;
 };
-
 
 export type MutationRegisterArgs = {
-  input: RegisterInput;
+	input: RegisterInput;
 };
-
 
 export type MutationCreateChatArgs = {
-  title: Scalars['String'];
+	title: Scalars['String'];
 };
-
 
 export type MutationInviteChatArgs = {
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 };
-
 
 export type MutationLeaveChatArgs = {
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 };
-
 
 export type MutationRemoveChatArgs = {
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 };
-
 
 export type MutationSendMessageArgs = {
-  chatid: Scalars['ID'];
-  text: Scalars['String'];
+	chatid: Scalars['ID'];
+	text: Scalars['String'];
 };
-
 
 export type MutationChangeMessageArgs = {
-  chatid: Scalars['ID'];
-  messageid: Scalars['ID'];
-  text: Scalars['String'];
+	chatid: Scalars['ID'];
+	messageid: Scalars['ID'];
+	text: Scalars['String'];
 };
 
-
 export type MutationRemoveMessageArgs = {
-  chatid: Scalars['ID'];
-  messageid: Scalars['ID'];
+	chatid: Scalars['ID'];
+	messageid: Scalars['ID'];
 };
 
 export enum Creater {
-  Contact = 'Contact',
-  Chat = 'Chat'
+	Contact = 'Contact',
+	Chat = 'Chat',
 }
 
 export enum Access {
-  Public = 'Public',
-  Private = 'Private',
-  Squad = 'Squad',
-  Duo = 'Duo',
-  Own = 'Own'
+	Public = 'Public',
+	Private = 'Private',
+	Squad = 'Squad',
+	Duo = 'Duo',
+	Own = 'Own',
 }
 
 export type Chat = {
-  __typename?: 'Chat';
-  _id: Scalars['ID'];
-  title: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  date: Scalars['Date'];
-  creaters_id: Array<Maybe<Scalars['ID']>>;
-  creater: Creater;
-  access: Access;
-  lastMessage?: Maybe<Message>;
-  users_id?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  messages?: Maybe<Array<Maybe<Message>>>;
+	__typename?: 'Chat';
+	_id: Scalars['ID'];
+	title: Scalars['String'];
+	image?: Maybe<Scalars['String']>;
+	date: Scalars['Date'];
+	creaters_id: Array<Maybe<Scalars['ID']>>;
+	creater: Creater;
+	access: Access;
+	lastMessage?: Maybe<Message>;
+	users_id?: Maybe<Array<Maybe<Scalars['ID']>>>;
+	messages?: Maybe<Array<Maybe<Message>>>;
 };
 
 export type Subscription = {
-  __typename?: 'Subscription';
-  AddChat?: Maybe<Chat>;
-  DeleteChat?: Maybe<Chat>;
-  AddMessage: Message;
-  SwapMessage: Message;
-  DeleteMessage: Message;
+	__typename?: 'Subscription';
+	AddChat?: Maybe<Chat>;
+	DeleteChat?: Maybe<Chat>;
+	AddMessage: Message;
+	SwapMessage: Message;
+	DeleteMessage: Message;
 };
 
 export type Contact = {
-  __typename?: 'Contact';
-  _id: Scalars['ID'];
-  userid: Scalars['ID'];
-  date: Scalars['Date'];
-  whoIsContact?: Maybe<Scalars['String']>;
-  User?: Maybe<UserSafe>;
+	__typename?: 'Contact';
+	_id: Scalars['ID'];
+	userid: Scalars['ID'];
+	date: Scalars['Date'];
+	whoIsContact?: Maybe<Scalars['String']>;
+	User?: Maybe<UserSafe>;
 };
 
 export type Contacts = {
-  __typename?: 'Contacts';
-  Existing?: Maybe<Array<Maybe<Contact>>>;
-  Incoming?: Maybe<Array<Maybe<Contact>>>;
+	__typename?: 'Contacts';
+	Existing?: Maybe<Array<Maybe<Contact>>>;
+	Incoming?: Maybe<Array<Maybe<Contact>>>;
 };
 
 export type InfoMore = {
-  __typename?: 'InfoMore';
-  _id?: Maybe<Scalars['ID']>;
-  isEndUp?: Maybe<Scalars['ID']>;
-  isEndDown?: Maybe<Scalars['ID']>;
-  lastIndex?: Maybe<Scalars['ID']>;
-  size?: Maybe<Scalars['Int']>;
+	__typename?: 'InfoMore';
+	_id?: Maybe<Scalars['ID']>;
+	isEndUp?: Maybe<Scalars['ID']>;
+	isEndDown?: Maybe<Scalars['ID']>;
+	lastIndex?: Maybe<Scalars['ID']>;
+	size?: Maybe<Scalars['Int']>;
 };
 
 export enum TypeResponse {
-  Error = 'error',
-  Warn = 'warn',
-  Success = 'success'
+	Error = 'error',
+	Warn = 'warn',
+	Success = 'success',
 }
 
 export type Response = {
-  __typename?: 'Response';
-  message: Scalars['String'];
-  type: TypeResponse;
+	__typename?: 'Response';
+	message: Scalars['String'];
+	type: TypeResponse;
 };
 
-
-
-
 export type Message = {
-  __typename?: 'Message';
-  _id: Scalars['ID'];
-  userid: Scalars['ID'];
-  date: Scalars['Date'];
-  text?: Maybe<Scalars['String']>;
-  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  isSend?: Maybe<Scalars['Boolean']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  isChange?: Maybe<Scalars['Boolean']>;
-  isFavorite?: Maybe<Scalars['Boolean']>;
+	__typename?: 'Message';
+	_id: Scalars['ID'];
+	userid: Scalars['ID'];
+	date: Scalars['Date'];
+	text?: Maybe<Scalars['String']>;
+	attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+	isSend?: Maybe<Scalars['Boolean']>;
+	isRead?: Maybe<Scalars['Boolean']>;
+	isChange?: Maybe<Scalars['Boolean']>;
+	isFavorite?: Maybe<Scalars['Boolean']>;
 };
 
 export type Messages = {
-  __typename?: 'Messages';
-  Chat: Chat;
-  InfoMore?: Maybe<InfoMore>;
+	__typename?: 'Messages';
+	Chat: Chat;
+	InfoMore?: Maybe<InfoMore>;
 };
 
 export enum Provider {
-  Auth = 'auth',
-  Google = 'google',
-  Facebook = 'facebook'
+	Auth = 'auth',
+	Google = 'google',
+	Facebook = 'facebook',
 }
 
 export type IUser = {
-  _id: Scalars['ID'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-  avatar?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  provider?: Maybe<Provider>;
-  auth?: Maybe<Authentication>;
-  google?: Maybe<GoogleNetwork>;
-  facebook?: Maybe<FacebookNetwork>;
-  chats_id?: Maybe<Array<Scalars['ID']>>;
-  contacts?: Maybe<Array<Contact>>;
-  createdAt: Scalars['Date'];
-  dateLastOnline?: Maybe<Scalars['Date']>;
-  isOnline?: Maybe<Scalars['Boolean']>;
-  isOnlineMobile?: Maybe<Scalars['Boolean']>;
-  isClosed?: Maybe<Scalars['Boolean']>;
-  isVerified?: Maybe<Scalars['Boolean']>;
-  isActivated?: Maybe<Scalars['Boolean']>;
-  isLocked?: Maybe<Scalars['Boolean']>;
-  isActive?: Maybe<Scalars['Boolean']>;
+	_id: Scalars['ID'];
+	name: Scalars['String'];
+	email: Scalars['String'];
+	avatar?: Maybe<Scalars['String']>;
+	status?: Maybe<Scalars['String']>;
+	provider?: Maybe<Provider>;
+	auth?: Maybe<Authentication>;
+	google?: Maybe<GoogleNetwork>;
+	facebook?: Maybe<FacebookNetwork>;
+	chats_id?: Maybe<Array<Scalars['ID']>>;
+	contacts?: Maybe<Array<Contact>>;
+	createdAt: Scalars['Date'];
+	dateLastOnline?: Maybe<Scalars['Date']>;
+	isOnline?: Maybe<Scalars['Boolean']>;
+	isOnlineMobile?: Maybe<Scalars['Boolean']>;
+	isClosed?: Maybe<Scalars['Boolean']>;
+	isVerified?: Maybe<Scalars['Boolean']>;
+	isActivated?: Maybe<Scalars['Boolean']>;
+	isLocked?: Maybe<Scalars['Boolean']>;
+	isActive?: Maybe<Scalars['Boolean']>;
 };
 
 export type UserSafe = IUser & {
-  __typename?: 'UserSafe';
-  _id: Scalars['ID'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-  avatar?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  provider?: Maybe<Provider>;
-  auth?: Maybe<Authentication>;
-  google?: Maybe<GoogleNetwork>;
-  facebook?: Maybe<FacebookNetwork>;
-  chats_id?: Maybe<Array<Scalars['ID']>>;
-  contacts?: Maybe<Array<Contact>>;
-  createdAt: Scalars['Date'];
-  dateLastOnline?: Maybe<Scalars['Date']>;
-  isOnline?: Maybe<Scalars['Boolean']>;
-  isOnlineMobile?: Maybe<Scalars['Boolean']>;
-  isClosed?: Maybe<Scalars['Boolean']>;
-  isVerified?: Maybe<Scalars['Boolean']>;
-  isActivated?: Maybe<Scalars['Boolean']>;
-  isLocked?: Maybe<Scalars['Boolean']>;
-  isActive?: Maybe<Scalars['Boolean']>;
+	__typename?: 'UserSafe';
+	_id: Scalars['ID'];
+	name: Scalars['String'];
+	email: Scalars['String'];
+	avatar?: Maybe<Scalars['String']>;
+	status?: Maybe<Scalars['String']>;
+	provider?: Maybe<Provider>;
+	auth?: Maybe<Authentication>;
+	google?: Maybe<GoogleNetwork>;
+	facebook?: Maybe<FacebookNetwork>;
+	chats_id?: Maybe<Array<Scalars['ID']>>;
+	contacts?: Maybe<Array<Contact>>;
+	createdAt: Scalars['Date'];
+	dateLastOnline?: Maybe<Scalars['Date']>;
+	isOnline?: Maybe<Scalars['Boolean']>;
+	isOnlineMobile?: Maybe<Scalars['Boolean']>;
+	isClosed?: Maybe<Scalars['Boolean']>;
+	isVerified?: Maybe<Scalars['Boolean']>;
+	isActivated?: Maybe<Scalars['Boolean']>;
+	isLocked?: Maybe<Scalars['Boolean']>;
+	isActive?: Maybe<Scalars['Boolean']>;
 };
 
 export type User = IUser & {
-  __typename?: 'User';
-  password?: Maybe<Scalars['Password']>;
-  _id: Scalars['ID'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-  avatar?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  provider?: Maybe<Provider>;
-  auth?: Maybe<Authentication>;
-  google?: Maybe<GoogleNetwork>;
-  facebook?: Maybe<FacebookNetwork>;
-  chats_id?: Maybe<Array<Scalars['ID']>>;
-  contacts?: Maybe<Array<Contact>>;
-  createdAt: Scalars['Date'];
-  dateLastOnline?: Maybe<Scalars['Date']>;
-  isOnline?: Maybe<Scalars['Boolean']>;
-  isOnlineMobile?: Maybe<Scalars['Boolean']>;
-  isClosed?: Maybe<Scalars['Boolean']>;
-  isVerified?: Maybe<Scalars['Boolean']>;
-  isActivated?: Maybe<Scalars['Boolean']>;
-  isLocked?: Maybe<Scalars['Boolean']>;
-  isActive?: Maybe<Scalars['Boolean']>;
+	__typename?: 'User';
+	password?: Maybe<Scalars['Password']>;
+	_id: Scalars['ID'];
+	name: Scalars['String'];
+	email: Scalars['String'];
+	avatar?: Maybe<Scalars['String']>;
+	status?: Maybe<Scalars['String']>;
+	provider?: Maybe<Provider>;
+	auth?: Maybe<Authentication>;
+	google?: Maybe<GoogleNetwork>;
+	facebook?: Maybe<FacebookNetwork>;
+	chats_id?: Maybe<Array<Scalars['ID']>>;
+	contacts?: Maybe<Array<Contact>>;
+	createdAt: Scalars['Date'];
+	dateLastOnline?: Maybe<Scalars['Date']>;
+	isOnline?: Maybe<Scalars['Boolean']>;
+	isOnlineMobile?: Maybe<Scalars['Boolean']>;
+	isClosed?: Maybe<Scalars['Boolean']>;
+	isVerified?: Maybe<Scalars['Boolean']>;
+	isActivated?: Maybe<Scalars['Boolean']>;
+	isLocked?: Maybe<Scalars['Boolean']>;
+	isActive?: Maybe<Scalars['Boolean']>;
 };
 
 export type LoginQueryVariables = Exact<{
-  name: Scalars['String'];
-  password: Scalars['Password'];
+	name: Scalars['String'];
+	password: Scalars['Password'];
 }>;
 
-
-export type LoginQuery = (
-  { __typename?: 'Query' }
-  & { Login: (
-    { __typename?: 'Authentication' }
-    & Pick<Authentication, 'accessToken' | 'refreshToken'>
-  ) }
-);
+export type LoginQuery = { __typename?: 'Query' } & {
+	Login: { __typename?: 'Authentication' } & Pick<
+		Authentication,
+		'accessToken' | 'refreshToken'
+	>;
+};
 
 export type InviteChatMutationVariables = Exact<{
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 }>;
 
-
-export type InviteChatMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'InviteChat'>
-);
+export type InviteChatMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'InviteChat'
+>;
 
 export type LeaveChatMutationVariables = Exact<{
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 }>;
 
-
-export type LeaveChatMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'LeaveChat'>
-);
+export type LeaveChatMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'LeaveChat'
+>;
 
 export type RemoveChatMutationVariables = Exact<{
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 }>;
 
-
-export type RemoveChatMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'RemoveChat'>
-);
+export type RemoveChatMutation = { __typename?: 'Mutation' } & {
+	RemoveChat?: Maybe<{ __typename?: 'Chat' } & Pick<Chat, '_id'>>;
+};
 
 export type CreateChatMutationVariables = Exact<{
-  title: Scalars['String'];
+	title: Scalars['String'];
 }>;
 
-
-export type CreateChatMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'CreateChat'>
-);
+export type CreateChatMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'CreateChat'
+>;
 
 export type ChatQueryVariables = Exact<{
-  chatid: Scalars['ID'];
+	chatid: Scalars['ID'];
 }>;
 
-
-export type ChatQuery = (
-  { __typename?: 'Query' }
-  & { Chat?: Maybe<(
-    { __typename?: 'Chat' }
-    & ChatInfoFragment
-    & LastMessageFragment
-  )> }
-);
+export type ChatQuery = { __typename?: 'Query' } & {
+	Chat?: Maybe<
+		{ __typename?: 'Chat' } & ChatInfoFragment & LastMessageFragment
+	>;
+};
 
 export type ChatsQueryVariables = Exact<{
-  chatid?: Maybe<Scalars['ID']>;
-  limit?: Maybe<Scalars['Int']>;
-  isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid?: Maybe<Scalars['ID']>;
+	limit?: Maybe<Scalars['Int']>;
+	isIncoming?: Maybe<Scalars['Boolean']>;
 }>;
 
+export type ChatsQuery = { __typename?: 'Query' } & {
+	Chats?: Maybe<
+		Array<
+			Maybe<
+				{ __typename?: 'Chat' } & ChatInfoFragment & LastMessageFragment
+			>
+		>
+	>;
+};
 
-export type ChatsQuery = (
-  { __typename?: 'Query' }
-  & { Chats?: Maybe<Array<Maybe<(
-    { __typename?: 'Chat' }
-    & ChatInfoFragment
-    & LastMessageFragment
-  )>>> }
-);
+export type AddChatSubscriptionVariables = Exact<{ [key: string]: never }>;
 
-export type AddChatSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type AddChatSubscription = { __typename?: 'Subscription' } & {
+	AddChat?: Maybe<
+		{ __typename?: 'Chat' } & {
+			lastMessage?: Maybe<
+				{ __typename?: 'Message' } & Pick<Message, '_id' | 'text'>
+			>;
+		} & ChatInfoFragment
+	>;
+};
 
+export type DeleteChatSubscriptionVariables = Exact<{ [key: string]: never }>;
 
-export type AddChatSubscription = (
-  { __typename?: 'Subscription' }
-  & { AddChat?: Maybe<(
-    { __typename?: 'Chat' }
-    & { lastMessage?: Maybe<(
-      { __typename?: 'Message' }
-      & Pick<Message, '_id' | 'text'>
-    )> }
-    & ChatInfoFragment
-  )> }
-);
-
-export type DeleteChatSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type DeleteChatSubscription = (
-  { __typename?: 'Subscription' }
-  & { DeleteChat?: Maybe<(
-    { __typename?: 'Chat' }
-    & Pick<Chat, '_id'>
-  )> }
-);
+export type DeleteChatSubscription = { __typename?: 'Subscription' } & {
+	DeleteChat?: Maybe<{ __typename?: 'Chat' } & Pick<Chat, '_id'>>;
+};
 
 export type ChatsUserCurrentQueryVariables = Exact<{
-  chatid?: Maybe<Scalars['ID']>;
-  limit?: Maybe<Scalars['Int']>;
-  isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid?: Maybe<Scalars['ID']>;
+	limit?: Maybe<Scalars['Int']>;
+	isIncoming?: Maybe<Scalars['Boolean']>;
 }>;
 
-
-export type ChatsUserCurrentQuery = (
-  { __typename?: 'Query' }
-  & { Chats?: Maybe<Array<Maybe<(
-    { __typename?: 'Chat' }
-    & ChatInfoFragment
-    & LastMessageFragment
-  )>>>, UserCurrent?: Maybe<(
-    { __typename?: 'UserSafe' }
-    & Pick<UserSafe, '_id' | 'chats_id'>
-  )> }
-);
+export type ChatsUserCurrentQuery = { __typename?: 'Query' } & {
+	Chats?: Maybe<
+		Array<
+			Maybe<
+				{ __typename?: 'Chat' } & ChatInfoFragment & LastMessageFragment
+			>
+		>
+	>;
+	UserCurrent?: Maybe<
+		{ __typename?: 'UserSafe' } & Pick<UserSafe, '_id' | 'chats_id'>
+	>;
+};
 
 export type FindQueryChatQueryVariables = Exact<{
-  text: Scalars['String'];
+	text: Scalars['String'];
 }>;
 
+export type FindQueryChatQuery = { __typename?: 'Query' } & {
+	FindMessage?: Maybe<
+		Array<Maybe<{ __typename?: 'Chat' } & ChatFindFragmentFragment>>
+	>;
+	FindChat?: Maybe<
+		Array<Maybe<{ __typename?: 'Chat' } & ChatFindFragmentFragment>>
+	>;
+};
 
-export type FindQueryChatQuery = (
-  { __typename?: 'Query' }
-  & { FindMessage?: Maybe<Array<Maybe<(
-    { __typename?: 'Chat' }
-    & ChatFindFragmentFragment
-  )>>>, FindChat?: Maybe<Array<Maybe<(
-    { __typename?: 'Chat' }
-    & ChatFindFragmentFragment
-  )>>> }
-);
+export type ChatFindFragmentFragment = { __typename?: 'Chat' } & {
+	messages?: Maybe<
+		Array<
+			Maybe<
+				{ __typename?: 'Message' } & Pick<
+					Message,
+					'_id' | 'text' | 'date'
+				>
+			>
+		>
+	>;
+} & ChatInfoFragment &
+	LastMessageFragment;
 
-export type ChatFindFragmentFragment = (
-  { __typename?: 'Chat' }
-  & { messages?: Maybe<Array<Maybe<(
-    { __typename?: 'Message' }
-    & Pick<Message, '_id' | 'text' | 'date'>
-  )>>> }
-  & ChatInfoFragment
-  & LastMessageFragment
-);
+export type ContactInfoFragment = { __typename?: 'Contact' } & Pick<
+	Contact,
+	'_id' | 'userid' | 'date' | 'whoIsContact'
+> & { User?: Maybe<{ __typename?: 'UserSafe' } & UserInfoFragment> };
 
-export type ContactInfoFragment = (
-  { __typename?: 'Contact' }
-  & Pick<Contact, '_id' | 'userid' | 'date' | 'whoIsContact'>
-  & { User?: Maybe<(
-    { __typename?: 'UserSafe' }
-    & UserInfoFragment
-  )> }
-);
+export type ContactsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ContactsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ContactsQuery = (
-  { __typename?: 'Query' }
-  & { Contacts?: Maybe<Array<Maybe<(
-    { __typename?: 'Contact' }
-    & ContactInfoFragment
-  )>>> }
-);
+export type ContactsQuery = { __typename?: 'Query' } & {
+	Contacts?: Maybe<
+		Array<Maybe<{ __typename?: 'Contact' } & ContactInfoFragment>>
+	>;
+};
 
 export type FindContactQueryVariables = Exact<{
-  text: Scalars['String'];
+	text: Scalars['String'];
 }>;
 
-
-export type FindContactQuery = (
-  { __typename?: 'Query' }
-  & { FindContacts?: Maybe<(
-    { __typename?: 'Contacts' }
-    & { Existing?: Maybe<Array<Maybe<(
-      { __typename?: 'Contact' }
-      & ContactInfoFragment
-    )>>>, Incoming?: Maybe<Array<Maybe<(
-      { __typename?: 'Contact' }
-      & ContactInfoFragment
-    )>>> }
-  )> }
-);
+export type FindContactQuery = { __typename?: 'Query' } & {
+	FindContacts?: Maybe<
+		{ __typename?: 'Contacts' } & {
+			Existing?: Maybe<
+				Array<Maybe<{ __typename?: 'Contact' } & ContactInfoFragment>>
+			>;
+			Incoming?: Maybe<
+				Array<Maybe<{ __typename?: 'Contact' } & ContactInfoFragment>>
+			>;
+		}
+	>;
+};
 
 export type SendMessageMutationVariables = Exact<{
-  chatid: Scalars['ID'];
-  text: Scalars['String'];
+	chatid: Scalars['ID'];
+	text: Scalars['String'];
 }>;
 
-
-export type SendMessageMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'SendMessage'>
-);
+export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'SendMessage'
+>;
 
 export type ChangeMessageMutationVariables = Exact<{
-  chatid: Scalars['ID'];
-  messageid: Scalars['ID'];
-  text: Scalars['String'];
+	chatid: Scalars['ID'];
+	messageid: Scalars['ID'];
+	text: Scalars['String'];
 }>;
 
-
-export type ChangeMessageMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'ChangeMessage'>
-);
+export type ChangeMessageMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'ChangeMessage'
+>;
 
 export type RemoveMessageMutationVariables = Exact<{
-  chatid: Scalars['ID'];
-  messageid: Scalars['ID'];
+	chatid: Scalars['ID'];
+	messageid: Scalars['ID'];
 }>;
 
-
-export type RemoveMessageMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'RemoveMessage'>
-);
+export type RemoveMessageMutation = { __typename?: 'Mutation' } & Pick<
+	Mutation,
+	'RemoveMessage'
+>;
 
 export type MessagesQueryVariables = Exact<{
-  chatid: Scalars['ID'];
-  messageid?: Maybe<Scalars['ID']>;
-  limit?: Maybe<Scalars['Int']>;
-  isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid: Scalars['ID'];
+	messageid?: Maybe<Scalars['ID']>;
+	limit?: Maybe<Scalars['Int']>;
+	isIncoming?: Maybe<Scalars['Boolean']>;
 }>;
 
+export type MessagesQuery = { __typename?: 'Query' } & {
+	Messages?: Maybe<
+		{ __typename?: 'Messages' } & {
+			Chat: { __typename?: 'Chat' } & ChatMessagesFragment &
+				LastMessageFragment;
+			InfoMore?: Maybe<{ __typename?: 'InfoMore' } & InfoMoreFragment>;
+		}
+	>;
+};
 
-export type MessagesQuery = (
-  { __typename?: 'Query' }
-  & { Messages?: Maybe<(
-    { __typename?: 'Messages' }
-    & { Chat: (
-      { __typename?: 'Chat' }
-      & ChatMessagesFragment
-      & LastMessageFragment
-    ), InfoMore?: Maybe<(
-      { __typename?: 'InfoMore' }
-      & InfoMoreFragment
-    )> }
-  )> }
-);
+export type AddMessageSubscriptionVariables = Exact<{ [key: string]: never }>;
 
-export type AddMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type AddMessageSubscription = { __typename?: 'Subscription' } & {
+	AddMessage: { __typename?: 'Message' } & Pick<
+		Message,
+		'_id' | 'userid' | 'text' | 'date' | 'isChange'
+	>;
+};
 
+export type SwapMessageSubscriptionVariables = Exact<{ [key: string]: never }>;
 
-export type AddMessageSubscription = (
-  { __typename?: 'Subscription' }
-  & { AddMessage: (
-    { __typename?: 'Message' }
-    & Pick<Message, '_id' | 'userid' | 'text' | 'date' | 'isChange'>
-  ) }
-);
+export type SwapMessageSubscription = { __typename?: 'Subscription' } & {
+	SwapMessage: { __typename?: 'Message' } & Pick<
+		Message,
+		'_id' | 'text' | 'isChange'
+	>;
+};
 
-export type SwapMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type DeleteMessageSubscriptionVariables = Exact<{
+	[key: string]: never;
+}>;
 
+export type DeleteMessageSubscription = { __typename?: 'Subscription' } & {
+	DeleteMessage: { __typename?: 'Message' } & Pick<Message, '_id'>;
+};
 
-export type SwapMessageSubscription = (
-  { __typename?: 'Subscription' }
-  & { SwapMessage: (
-    { __typename?: 'Message' }
-    & Pick<Message, '_id' | 'text' | 'isChange'>
-  ) }
-);
-
-export type DeleteMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type DeleteMessageSubscription = (
-  { __typename?: 'Subscription' }
-  & { DeleteMessage: (
-    { __typename?: 'Message' }
-    & Pick<Message, '_id'>
-  ) }
-);
-
-export type UserInfoFragment = (
-  { __typename?: 'UserSafe' }
-  & Pick<UserSafe, '_id' | 'name' | 'avatar' | 'status' | 'isClosed' | 'isOnlineMobile' | 'dateLastOnline'>
-);
+export type UserInfoFragment = { __typename?: 'UserSafe' } & Pick<
+	UserSafe,
+	| '_id'
+	| 'name'
+	| 'avatar'
+	| 'status'
+	| 'isClosed'
+	| 'isOnlineMobile'
+	| 'dateLastOnline'
+>;
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['ID'];
+	id: Scalars['ID'];
 }>;
 
+export type UserQuery = { __typename?: 'Query' } & {
+	User?: Maybe<{ __typename?: 'UserSafe' } & UserInfoFragment>;
+};
 
-export type UserQuery = (
-  { __typename?: 'Query' }
-  & { User?: Maybe<(
-    { __typename?: 'UserSafe' }
-    & UserInfoFragment
-  )> }
-);
+export type UserCurrentQueryVariables = Exact<{ [key: string]: never }>;
 
-export type UserCurrentQueryVariables = Exact<{ [key: string]: never; }>;
+export type UserCurrentQuery = { __typename?: 'Query' } & {
+	UserCurrent?: Maybe<
+		{ __typename?: 'UserSafe' } & Pick<UserSafe, 'chats_id'> &
+			UserInfoFragment
+	>;
+};
 
+export type InfoMoreFragment = { __typename?: 'InfoMore' } & Pick<
+	InfoMore,
+	'_id' | 'size' | 'isEndUp' | 'isEndDown' | 'lastIndex'
+>;
 
-export type UserCurrentQuery = (
-  { __typename?: 'Query' }
-  & { UserCurrent?: Maybe<(
-    { __typename?: 'UserSafe' }
-    & Pick<UserSafe, 'chats_id'>
-    & UserInfoFragment
-  )> }
-);
+export type ChatMessagesFragment = { __typename?: 'Chat' } & {
+	messages?: Maybe<
+		Array<
+			Maybe<
+				{ __typename?: 'Message' } & Pick<
+					Message,
+					'_id' | 'userid' | 'text' | 'date' | 'isChange'
+				>
+			>
+		>
+	>;
+};
 
-export type InfoMoreFragment = (
-  { __typename?: 'InfoMore' }
-  & Pick<InfoMore, '_id' | 'size' | 'isEndUp' | 'isEndDown' | 'lastIndex'>
-);
+export type ChatInfoFragment = { __typename?: 'Chat' } & Pick<
+	Chat,
+	'_id' | 'title' | 'image' | 'date' | 'creater' | 'creaters_id' | 'access'
+>;
 
-export type ChatMessagesFragment = (
-  { __typename?: 'Chat' }
-  & { messages?: Maybe<Array<Maybe<(
-    { __typename?: 'Message' }
-    & Pick<Message, '_id' | 'userid' | 'text' | 'date' | 'isChange'>
-  )>>> }
-);
-
-export type ChatInfoFragment = (
-  { __typename?: 'Chat' }
-  & Pick<Chat, '_id' | 'title' | 'image' | 'date' | 'creater' | 'creaters_id' | 'access'>
-);
-
-export type LastMessageFragment = (
-  { __typename?: 'Chat' }
-  & { lastMessage?: Maybe<(
-    { __typename?: 'Message' }
-    & Pick<Message, '_id' | 'text' | 'date'>
-  )> }
-);
+export type LastMessageFragment = { __typename?: 'Chat' } & {
+	lastMessage?: Maybe<
+		{ __typename?: 'Message' } & Pick<Message, '_id' | 'text' | 'date'>
+	>;
+};
 
 export const ChatInfoFragmentDoc = gql`
-    fragment ChatInfo on Chat {
-  _id
-  title
-  image
-  date
-  creater
-  creaters_id
-  access
-}
-    `;
+	fragment ChatInfo on Chat {
+		_id
+		title
+		image
+		date
+		creater
+		creaters_id
+		access
+	}
+`;
 export const LastMessageFragmentDoc = gql`
-    fragment LastMessage on Chat {
-  lastMessage {
-    _id
-    text
-    date
-  }
-}
-    `;
+	fragment LastMessage on Chat {
+		lastMessage {
+			_id
+			text
+			date
+		}
+	}
+`;
 export const ChatFindFragmentFragmentDoc = gql`
-    fragment chatFindFragment on Chat {
-  ...ChatInfo
-  messages {
-    _id
-    text
-    date
-  }
-  ...LastMessage
-}
-    ${ChatInfoFragmentDoc}
-${LastMessageFragmentDoc}`;
+	fragment chatFindFragment on Chat {
+		...ChatInfo
+		messages {
+			_id
+			text
+			date
+		}
+		...LastMessage
+	}
+	${ChatInfoFragmentDoc}
+	${LastMessageFragmentDoc}
+`;
 export const UserInfoFragmentDoc = gql`
-    fragment UserInfo on UserSafe {
-  _id
-  name
-  avatar
-  status
-  isClosed
-  isOnlineMobile
-  dateLastOnline
-}
-    `;
+	fragment UserInfo on UserSafe {
+		_id
+		name
+		avatar
+		status
+		isClosed
+		isOnlineMobile
+		dateLastOnline
+	}
+`;
 export const ContactInfoFragmentDoc = gql`
-    fragment ContactInfo on Contact {
-  _id
-  userid
-  date
-  whoIsContact
-  User {
-    ...UserInfo
-  }
-}
-    ${UserInfoFragmentDoc}`;
+	fragment ContactInfo on Contact {
+		_id
+		userid
+		date
+		whoIsContact
+		User {
+			...UserInfo
+		}
+	}
+	${UserInfoFragmentDoc}
+`;
 export const InfoMoreFragmentDoc = gql`
-    fragment InfoMore on InfoMore {
-  _id
-  size
-  isEndUp
-  isEndDown
-  lastIndex
-}
-    `;
+	fragment InfoMore on InfoMore {
+		_id
+		size
+		isEndUp
+		isEndDown
+		lastIndex
+	}
+`;
 export const ChatMessagesFragmentDoc = gql`
-    fragment ChatMessages on Chat {
-  messages {
-    _id
-    userid
-    text
-    date
-    isChange
-  }
-}
-    `;
+	fragment ChatMessages on Chat {
+		messages {
+			_id
+			userid
+			text
+			date
+			isChange
+		}
+	}
+`;
 export const LoginDocument = gql`
-    query Login($name: String!, $password: Password!) {
-  Login(input: {name: $name, password: $password}) {
-    accessToken
-    refreshToken
-  }
-}
-    `;
+	query Login($name: String!, $password: Password!) {
+		Login(input: { name: $name, password: $password }) {
+			accessToken
+			refreshToken
+		}
+	}
+`;
 
 /**
  * __useLoginQuery__
@@ -813,21 +751,37 @@ export const LoginDocument = gql`
  *   },
  * });
  */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
-        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, baseOptions);
-      }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, baseOptions);
-        }
+export function useLoginQuery(
+	baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>,
+) {
+	return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+		LoginDocument,
+		baseOptions,
+	);
+}
+export function useLoginLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>,
+) {
+	return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
+		LoginDocument,
+		baseOptions,
+	);
+}
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+export type LoginQueryResult = Apollo.QueryResult<
+	LoginQuery,
+	LoginQueryVariables
+>;
 export const InviteChatDocument = gql`
-    mutation inviteChat($chatid: ID!) {
-  InviteChat(chatid: $chatid)
-}
-    `;
-export type InviteChatMutationFn = Apollo.MutationFunction<InviteChatMutation, InviteChatMutationVariables>;
+	mutation inviteChat($chatid: ID!) {
+		InviteChat(chatid: $chatid)
+	}
+`;
+export type InviteChatMutationFn = Apollo.MutationFunction<
+	InviteChatMutation,
+	InviteChatMutationVariables
+>;
 
 /**
  * __useInviteChatMutation__
@@ -846,18 +800,34 @@ export type InviteChatMutationFn = Apollo.MutationFunction<InviteChatMutation, I
  *   },
  * });
  */
-export function useInviteChatMutation(baseOptions?: Apollo.MutationHookOptions<InviteChatMutation, InviteChatMutationVariables>) {
-        return Apollo.useMutation<InviteChatMutation, InviteChatMutationVariables>(InviteChatDocument, baseOptions);
-      }
-export type InviteChatMutationHookResult = ReturnType<typeof useInviteChatMutation>;
-export type InviteChatMutationResult = Apollo.MutationResult<InviteChatMutation>;
-export type InviteChatMutationOptions = Apollo.BaseMutationOptions<InviteChatMutation, InviteChatMutationVariables>;
-export const LeaveChatDocument = gql`
-    mutation leaveChat($chatid: ID!) {
-  LeaveChat(chatid: $chatid)
+export function useInviteChatMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		InviteChatMutation,
+		InviteChatMutationVariables
+	>,
+) {
+	return Apollo.useMutation<InviteChatMutation, InviteChatMutationVariables>(
+		InviteChatDocument,
+		baseOptions,
+	);
 }
-    `;
-export type LeaveChatMutationFn = Apollo.MutationFunction<LeaveChatMutation, LeaveChatMutationVariables>;
+export type InviteChatMutationHookResult = ReturnType<
+	typeof useInviteChatMutation
+>;
+export type InviteChatMutationResult = Apollo.MutationResult<InviteChatMutation>;
+export type InviteChatMutationOptions = Apollo.BaseMutationOptions<
+	InviteChatMutation,
+	InviteChatMutationVariables
+>;
+export const LeaveChatDocument = gql`
+	mutation leaveChat($chatid: ID!) {
+		LeaveChat(chatid: $chatid)
+	}
+`;
+export type LeaveChatMutationFn = Apollo.MutationFunction<
+	LeaveChatMutation,
+	LeaveChatMutationVariables
+>;
 
 /**
  * __useLeaveChatMutation__
@@ -876,18 +846,36 @@ export type LeaveChatMutationFn = Apollo.MutationFunction<LeaveChatMutation, Lea
  *   },
  * });
  */
-export function useLeaveChatMutation(baseOptions?: Apollo.MutationHookOptions<LeaveChatMutation, LeaveChatMutationVariables>) {
-        return Apollo.useMutation<LeaveChatMutation, LeaveChatMutationVariables>(LeaveChatDocument, baseOptions);
-      }
-export type LeaveChatMutationHookResult = ReturnType<typeof useLeaveChatMutation>;
-export type LeaveChatMutationResult = Apollo.MutationResult<LeaveChatMutation>;
-export type LeaveChatMutationOptions = Apollo.BaseMutationOptions<LeaveChatMutation, LeaveChatMutationVariables>;
-export const RemoveChatDocument = gql`
-    mutation removeChat($chatid: ID!) {
-  RemoveChat(chatid: $chatid)
+export function useLeaveChatMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		LeaveChatMutation,
+		LeaveChatMutationVariables
+	>,
+) {
+	return Apollo.useMutation<LeaveChatMutation, LeaveChatMutationVariables>(
+		LeaveChatDocument,
+		baseOptions,
+	);
 }
-    `;
-export type RemoveChatMutationFn = Apollo.MutationFunction<RemoveChatMutation, RemoveChatMutationVariables>;
+export type LeaveChatMutationHookResult = ReturnType<
+	typeof useLeaveChatMutation
+>;
+export type LeaveChatMutationResult = Apollo.MutationResult<LeaveChatMutation>;
+export type LeaveChatMutationOptions = Apollo.BaseMutationOptions<
+	LeaveChatMutation,
+	LeaveChatMutationVariables
+>;
+export const RemoveChatDocument = gql`
+	mutation removeChat($chatid: ID!) {
+		RemoveChat(chatid: $chatid) {
+			_id
+		}
+	}
+`;
+export type RemoveChatMutationFn = Apollo.MutationFunction<
+	RemoveChatMutation,
+	RemoveChatMutationVariables
+>;
 
 /**
  * __useRemoveChatMutation__
@@ -906,18 +894,34 @@ export type RemoveChatMutationFn = Apollo.MutationFunction<RemoveChatMutation, R
  *   },
  * });
  */
-export function useRemoveChatMutation(baseOptions?: Apollo.MutationHookOptions<RemoveChatMutation, RemoveChatMutationVariables>) {
-        return Apollo.useMutation<RemoveChatMutation, RemoveChatMutationVariables>(RemoveChatDocument, baseOptions);
-      }
-export type RemoveChatMutationHookResult = ReturnType<typeof useRemoveChatMutation>;
-export type RemoveChatMutationResult = Apollo.MutationResult<RemoveChatMutation>;
-export type RemoveChatMutationOptions = Apollo.BaseMutationOptions<RemoveChatMutation, RemoveChatMutationVariables>;
-export const CreateChatDocument = gql`
-    mutation createChat($title: String!) {
-  CreateChat(title: $title)
+export function useRemoveChatMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		RemoveChatMutation,
+		RemoveChatMutationVariables
+	>,
+) {
+	return Apollo.useMutation<RemoveChatMutation, RemoveChatMutationVariables>(
+		RemoveChatDocument,
+		baseOptions,
+	);
 }
-    `;
-export type CreateChatMutationFn = Apollo.MutationFunction<CreateChatMutation, CreateChatMutationVariables>;
+export type RemoveChatMutationHookResult = ReturnType<
+	typeof useRemoveChatMutation
+>;
+export type RemoveChatMutationResult = Apollo.MutationResult<RemoveChatMutation>;
+export type RemoveChatMutationOptions = Apollo.BaseMutationOptions<
+	RemoveChatMutation,
+	RemoveChatMutationVariables
+>;
+export const CreateChatDocument = gql`
+	mutation createChat($title: String!) {
+		CreateChat(title: $title)
+	}
+`;
+export type CreateChatMutationFn = Apollo.MutationFunction<
+	CreateChatMutation,
+	CreateChatMutationVariables
+>;
 
 /**
  * __useCreateChatMutation__
@@ -936,21 +940,35 @@ export type CreateChatMutationFn = Apollo.MutationFunction<CreateChatMutation, C
  *   },
  * });
  */
-export function useCreateChatMutation(baseOptions?: Apollo.MutationHookOptions<CreateChatMutation, CreateChatMutationVariables>) {
-        return Apollo.useMutation<CreateChatMutation, CreateChatMutationVariables>(CreateChatDocument, baseOptions);
-      }
-export type CreateChatMutationHookResult = ReturnType<typeof useCreateChatMutation>;
-export type CreateChatMutationResult = Apollo.MutationResult<CreateChatMutation>;
-export type CreateChatMutationOptions = Apollo.BaseMutationOptions<CreateChatMutation, CreateChatMutationVariables>;
-export const ChatDocument = gql`
-    query chat($chatid: ID!) {
-  Chat(chatid: $chatid) {
-    ...ChatInfo
-    ...LastMessage
-  }
+export function useCreateChatMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		CreateChatMutation,
+		CreateChatMutationVariables
+	>,
+) {
+	return Apollo.useMutation<CreateChatMutation, CreateChatMutationVariables>(
+		CreateChatDocument,
+		baseOptions,
+	);
 }
-    ${ChatInfoFragmentDoc}
-${LastMessageFragmentDoc}`;
+export type CreateChatMutationHookResult = ReturnType<
+	typeof useCreateChatMutation
+>;
+export type CreateChatMutationResult = Apollo.MutationResult<CreateChatMutation>;
+export type CreateChatMutationOptions = Apollo.BaseMutationOptions<
+	CreateChatMutation,
+	CreateChatMutationVariables
+>;
+export const ChatDocument = gql`
+	query chat($chatid: ID!) {
+		Chat(chatid: $chatid) {
+			...ChatInfo
+			...LastMessage
+		}
+	}
+	${ChatInfoFragmentDoc}
+	${LastMessageFragmentDoc}
+`;
 
 /**
  * __useChatQuery__
@@ -968,24 +986,35 @@ ${LastMessageFragmentDoc}`;
  *   },
  * });
  */
-export function useChatQuery(baseOptions: Apollo.QueryHookOptions<ChatQuery, ChatQueryVariables>) {
-        return Apollo.useQuery<ChatQuery, ChatQueryVariables>(ChatDocument, baseOptions);
-      }
-export function useChatLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChatQuery, ChatQueryVariables>) {
-          return Apollo.useLazyQuery<ChatQuery, ChatQueryVariables>(ChatDocument, baseOptions);
-        }
+export function useChatQuery(
+	baseOptions: Apollo.QueryHookOptions<ChatQuery, ChatQueryVariables>,
+) {
+	return Apollo.useQuery<ChatQuery, ChatQueryVariables>(
+		ChatDocument,
+		baseOptions,
+	);
+}
+export function useChatLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<ChatQuery, ChatQueryVariables>,
+) {
+	return Apollo.useLazyQuery<ChatQuery, ChatQueryVariables>(
+		ChatDocument,
+		baseOptions,
+	);
+}
 export type ChatQueryHookResult = ReturnType<typeof useChatQuery>;
 export type ChatLazyQueryHookResult = ReturnType<typeof useChatLazyQuery>;
 export type ChatQueryResult = Apollo.QueryResult<ChatQuery, ChatQueryVariables>;
 export const ChatsDocument = gql`
-    query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-  Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
-    ...ChatInfo
-    ...LastMessage
-  }
-}
-    ${ChatInfoFragmentDoc}
-${LastMessageFragmentDoc}`;
+	query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
+		Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+			...ChatInfo
+			...LastMessage
+		}
+	}
+	${ChatInfoFragmentDoc}
+	${LastMessageFragmentDoc}
+`;
 
 /**
  * __useChatsQuery__
@@ -1005,26 +1034,40 @@ ${LastMessageFragmentDoc}`;
  *   },
  * });
  */
-export function useChatsQuery(baseOptions?: Apollo.QueryHookOptions<ChatsQuery, ChatsQueryVariables>) {
-        return Apollo.useQuery<ChatsQuery, ChatsQueryVariables>(ChatsDocument, baseOptions);
-      }
-export function useChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChatsQuery, ChatsQueryVariables>) {
-          return Apollo.useLazyQuery<ChatsQuery, ChatsQueryVariables>(ChatsDocument, baseOptions);
-        }
+export function useChatsQuery(
+	baseOptions?: Apollo.QueryHookOptions<ChatsQuery, ChatsQueryVariables>,
+) {
+	return Apollo.useQuery<ChatsQuery, ChatsQueryVariables>(
+		ChatsDocument,
+		baseOptions,
+	);
+}
+export function useChatsLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<ChatsQuery, ChatsQueryVariables>,
+) {
+	return Apollo.useLazyQuery<ChatsQuery, ChatsQueryVariables>(
+		ChatsDocument,
+		baseOptions,
+	);
+}
 export type ChatsQueryHookResult = ReturnType<typeof useChatsQuery>;
 export type ChatsLazyQueryHookResult = ReturnType<typeof useChatsLazyQuery>;
-export type ChatsQueryResult = Apollo.QueryResult<ChatsQuery, ChatsQueryVariables>;
+export type ChatsQueryResult = Apollo.QueryResult<
+	ChatsQuery,
+	ChatsQueryVariables
+>;
 export const AddChatDocument = gql`
-    subscription addChat {
-  AddChat {
-    ...ChatInfo
-    lastMessage {
-      _id
-      text
-    }
-  }
-}
-    ${ChatInfoFragmentDoc}`;
+	subscription addChat {
+		AddChat {
+			...ChatInfo
+			lastMessage {
+				_id
+				text
+			}
+		}
+	}
+	${ChatInfoFragmentDoc}
+`;
 
 /**
  * __useAddChatSubscription__
@@ -1041,18 +1084,28 @@ export const AddChatDocument = gql`
  *   },
  * });
  */
-export function useAddChatSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AddChatSubscription, AddChatSubscriptionVariables>) {
-        return Apollo.useSubscription<AddChatSubscription, AddChatSubscriptionVariables>(AddChatDocument, baseOptions);
-      }
-export type AddChatSubscriptionHookResult = ReturnType<typeof useAddChatSubscription>;
+export function useAddChatSubscription(
+	baseOptions?: Apollo.SubscriptionHookOptions<
+		AddChatSubscription,
+		AddChatSubscriptionVariables
+	>,
+) {
+	return Apollo.useSubscription<
+		AddChatSubscription,
+		AddChatSubscriptionVariables
+	>(AddChatDocument, baseOptions);
+}
+export type AddChatSubscriptionHookResult = ReturnType<
+	typeof useAddChatSubscription
+>;
 export type AddChatSubscriptionResult = Apollo.SubscriptionResult<AddChatSubscription>;
 export const DeleteChatDocument = gql`
-    subscription deleteChat {
-  DeleteChat {
-    _id
-  }
-}
-    `;
+	subscription deleteChat {
+		DeleteChat {
+			_id
+		}
+	}
+`;
 
 /**
  * __useDeleteChatSubscription__
@@ -1069,24 +1122,35 @@ export const DeleteChatDocument = gql`
  *   },
  * });
  */
-export function useDeleteChatSubscription(baseOptions?: Apollo.SubscriptionHookOptions<DeleteChatSubscription, DeleteChatSubscriptionVariables>) {
-        return Apollo.useSubscription<DeleteChatSubscription, DeleteChatSubscriptionVariables>(DeleteChatDocument, baseOptions);
-      }
-export type DeleteChatSubscriptionHookResult = ReturnType<typeof useDeleteChatSubscription>;
+export function useDeleteChatSubscription(
+	baseOptions?: Apollo.SubscriptionHookOptions<
+		DeleteChatSubscription,
+		DeleteChatSubscriptionVariables
+	>,
+) {
+	return Apollo.useSubscription<
+		DeleteChatSubscription,
+		DeleteChatSubscriptionVariables
+	>(DeleteChatDocument, baseOptions);
+}
+export type DeleteChatSubscriptionHookResult = ReturnType<
+	typeof useDeleteChatSubscription
+>;
 export type DeleteChatSubscriptionResult = Apollo.SubscriptionResult<DeleteChatSubscription>;
 export const ChatsUserCurrentDocument = gql`
-    query chatsUserCurrent($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-  Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
-    ...ChatInfo
-    ...LastMessage
-  }
-  UserCurrent {
-    _id
-    chats_id
-  }
-}
-    ${ChatInfoFragmentDoc}
-${LastMessageFragmentDoc}`;
+	query chatsUserCurrent($chatid: ID, $limit: Int, $isIncoming: Boolean) {
+		Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+			...ChatInfo
+			...LastMessage
+		}
+		UserCurrent {
+			_id
+			chats_id
+		}
+	}
+	${ChatInfoFragmentDoc}
+	${LastMessageFragmentDoc}
+`;
 
 /**
  * __useChatsUserCurrentQuery__
@@ -1106,25 +1170,49 @@ ${LastMessageFragmentDoc}`;
  *   },
  * });
  */
-export function useChatsUserCurrentQuery(baseOptions?: Apollo.QueryHookOptions<ChatsUserCurrentQuery, ChatsUserCurrentQueryVariables>) {
-        return Apollo.useQuery<ChatsUserCurrentQuery, ChatsUserCurrentQueryVariables>(ChatsUserCurrentDocument, baseOptions);
-      }
-export function useChatsUserCurrentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChatsUserCurrentQuery, ChatsUserCurrentQueryVariables>) {
-          return Apollo.useLazyQuery<ChatsUserCurrentQuery, ChatsUserCurrentQueryVariables>(ChatsUserCurrentDocument, baseOptions);
-        }
-export type ChatsUserCurrentQueryHookResult = ReturnType<typeof useChatsUserCurrentQuery>;
-export type ChatsUserCurrentLazyQueryHookResult = ReturnType<typeof useChatsUserCurrentLazyQuery>;
-export type ChatsUserCurrentQueryResult = Apollo.QueryResult<ChatsUserCurrentQuery, ChatsUserCurrentQueryVariables>;
-export const FindQueryChatDocument = gql`
-    query findQueryChat($text: String!) {
-  FindMessage(text: $text) {
-    ...chatFindFragment
-  }
-  FindChat(title: $text) {
-    ...chatFindFragment
-  }
+export function useChatsUserCurrentQuery(
+	baseOptions?: Apollo.QueryHookOptions<
+		ChatsUserCurrentQuery,
+		ChatsUserCurrentQueryVariables
+	>,
+) {
+	return Apollo.useQuery<
+		ChatsUserCurrentQuery,
+		ChatsUserCurrentQueryVariables
+	>(ChatsUserCurrentDocument, baseOptions);
 }
-    ${ChatFindFragmentFragmentDoc}`;
+export function useChatsUserCurrentLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		ChatsUserCurrentQuery,
+		ChatsUserCurrentQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<
+		ChatsUserCurrentQuery,
+		ChatsUserCurrentQueryVariables
+	>(ChatsUserCurrentDocument, baseOptions);
+}
+export type ChatsUserCurrentQueryHookResult = ReturnType<
+	typeof useChatsUserCurrentQuery
+>;
+export type ChatsUserCurrentLazyQueryHookResult = ReturnType<
+	typeof useChatsUserCurrentLazyQuery
+>;
+export type ChatsUserCurrentQueryResult = Apollo.QueryResult<
+	ChatsUserCurrentQuery,
+	ChatsUserCurrentQueryVariables
+>;
+export const FindQueryChatDocument = gql`
+	query findQueryChat($text: String!) {
+		FindMessage(text: $text) {
+			...chatFindFragment
+		}
+		FindChat(title: $text) {
+			...chatFindFragment
+		}
+	}
+	${ChatFindFragmentFragmentDoc}
+`;
 
 /**
  * __useFindQueryChatQuery__
@@ -1142,22 +1230,46 @@ export const FindQueryChatDocument = gql`
  *   },
  * });
  */
-export function useFindQueryChatQuery(baseOptions: Apollo.QueryHookOptions<FindQueryChatQuery, FindQueryChatQueryVariables>) {
-        return Apollo.useQuery<FindQueryChatQuery, FindQueryChatQueryVariables>(FindQueryChatDocument, baseOptions);
-      }
-export function useFindQueryChatLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindQueryChatQuery, FindQueryChatQueryVariables>) {
-          return Apollo.useLazyQuery<FindQueryChatQuery, FindQueryChatQueryVariables>(FindQueryChatDocument, baseOptions);
-        }
-export type FindQueryChatQueryHookResult = ReturnType<typeof useFindQueryChatQuery>;
-export type FindQueryChatLazyQueryHookResult = ReturnType<typeof useFindQueryChatLazyQuery>;
-export type FindQueryChatQueryResult = Apollo.QueryResult<FindQueryChatQuery, FindQueryChatQueryVariables>;
-export const ContactsDocument = gql`
-    query contacts {
-  Contacts {
-    ...ContactInfo
-  }
+export function useFindQueryChatQuery(
+	baseOptions: Apollo.QueryHookOptions<
+		FindQueryChatQuery,
+		FindQueryChatQueryVariables
+	>,
+) {
+	return Apollo.useQuery<FindQueryChatQuery, FindQueryChatQueryVariables>(
+		FindQueryChatDocument,
+		baseOptions,
+	);
 }
-    ${ContactInfoFragmentDoc}`;
+export function useFindQueryChatLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		FindQueryChatQuery,
+		FindQueryChatQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<FindQueryChatQuery, FindQueryChatQueryVariables>(
+		FindQueryChatDocument,
+		baseOptions,
+	);
+}
+export type FindQueryChatQueryHookResult = ReturnType<
+	typeof useFindQueryChatQuery
+>;
+export type FindQueryChatLazyQueryHookResult = ReturnType<
+	typeof useFindQueryChatLazyQuery
+>;
+export type FindQueryChatQueryResult = Apollo.QueryResult<
+	FindQueryChatQuery,
+	FindQueryChatQueryVariables
+>;
+export const ContactsDocument = gql`
+	query contacts {
+		Contacts {
+			...ContactInfo
+		}
+	}
+	${ContactInfoFragmentDoc}
+`;
 
 /**
  * __useContactsQuery__
@@ -1174,27 +1286,49 @@ export const ContactsDocument = gql`
  *   },
  * });
  */
-export function useContactsQuery(baseOptions?: Apollo.QueryHookOptions<ContactsQuery, ContactsQueryVariables>) {
-        return Apollo.useQuery<ContactsQuery, ContactsQueryVariables>(ContactsDocument, baseOptions);
-      }
-export function useContactsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContactsQuery, ContactsQueryVariables>) {
-          return Apollo.useLazyQuery<ContactsQuery, ContactsQueryVariables>(ContactsDocument, baseOptions);
-        }
-export type ContactsQueryHookResult = ReturnType<typeof useContactsQuery>;
-export type ContactsLazyQueryHookResult = ReturnType<typeof useContactsLazyQuery>;
-export type ContactsQueryResult = Apollo.QueryResult<ContactsQuery, ContactsQueryVariables>;
-export const FindContactDocument = gql`
-    query findContact($text: String!) {
-  FindContacts(text: $text) {
-    Existing {
-      ...ContactInfo
-    }
-    Incoming {
-      ...ContactInfo
-    }
-  }
+export function useContactsQuery(
+	baseOptions?: Apollo.QueryHookOptions<
+		ContactsQuery,
+		ContactsQueryVariables
+	>,
+) {
+	return Apollo.useQuery<ContactsQuery, ContactsQueryVariables>(
+		ContactsDocument,
+		baseOptions,
+	);
 }
-    ${ContactInfoFragmentDoc}`;
+export function useContactsLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		ContactsQuery,
+		ContactsQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<ContactsQuery, ContactsQueryVariables>(
+		ContactsDocument,
+		baseOptions,
+	);
+}
+export type ContactsQueryHookResult = ReturnType<typeof useContactsQuery>;
+export type ContactsLazyQueryHookResult = ReturnType<
+	typeof useContactsLazyQuery
+>;
+export type ContactsQueryResult = Apollo.QueryResult<
+	ContactsQuery,
+	ContactsQueryVariables
+>;
+export const FindContactDocument = gql`
+	query findContact($text: String!) {
+		FindContacts(text: $text) {
+			Existing {
+				...ContactInfo
+			}
+			Incoming {
+				...ContactInfo
+			}
+		}
+	}
+	${ContactInfoFragmentDoc}
+`;
 
 /**
  * __useFindContactQuery__
@@ -1212,21 +1346,45 @@ export const FindContactDocument = gql`
  *   },
  * });
  */
-export function useFindContactQuery(baseOptions: Apollo.QueryHookOptions<FindContactQuery, FindContactQueryVariables>) {
-        return Apollo.useQuery<FindContactQuery, FindContactQueryVariables>(FindContactDocument, baseOptions);
-      }
-export function useFindContactLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindContactQuery, FindContactQueryVariables>) {
-          return Apollo.useLazyQuery<FindContactQuery, FindContactQueryVariables>(FindContactDocument, baseOptions);
-        }
-export type FindContactQueryHookResult = ReturnType<typeof useFindContactQuery>;
-export type FindContactLazyQueryHookResult = ReturnType<typeof useFindContactLazyQuery>;
-export type FindContactQueryResult = Apollo.QueryResult<FindContactQuery, FindContactQueryVariables>;
-export const SendMessageDocument = gql`
-    mutation sendMessage($chatid: ID!, $text: String!) {
-  SendMessage(chatid: $chatid, text: $text)
+export function useFindContactQuery(
+	baseOptions: Apollo.QueryHookOptions<
+		FindContactQuery,
+		FindContactQueryVariables
+	>,
+) {
+	return Apollo.useQuery<FindContactQuery, FindContactQueryVariables>(
+		FindContactDocument,
+		baseOptions,
+	);
 }
-    `;
-export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
+export function useFindContactLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		FindContactQuery,
+		FindContactQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<FindContactQuery, FindContactQueryVariables>(
+		FindContactDocument,
+		baseOptions,
+	);
+}
+export type FindContactQueryHookResult = ReturnType<typeof useFindContactQuery>;
+export type FindContactLazyQueryHookResult = ReturnType<
+	typeof useFindContactLazyQuery
+>;
+export type FindContactQueryResult = Apollo.QueryResult<
+	FindContactQuery,
+	FindContactQueryVariables
+>;
+export const SendMessageDocument = gql`
+	mutation sendMessage($chatid: ID!, $text: String!) {
+		SendMessage(chatid: $chatid, text: $text)
+	}
+`;
+export type SendMessageMutationFn = Apollo.MutationFunction<
+	SendMessageMutation,
+	SendMessageMutationVariables
+>;
 
 /**
  * __useSendMessageMutation__
@@ -1246,18 +1404,34 @@ export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation,
  *   },
  * });
  */
-export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
-        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, baseOptions);
-      }
-export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
-export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
-export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
-export const ChangeMessageDocument = gql`
-    mutation changeMessage($chatid: ID!, $messageid: ID!, $text: String!) {
-  ChangeMessage(chatid: $chatid, messageid: $messageid, text: $text)
+export function useSendMessageMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		SendMessageMutation,
+		SendMessageMutationVariables
+	>,
+) {
+	return Apollo.useMutation<
+		SendMessageMutation,
+		SendMessageMutationVariables
+	>(SendMessageDocument, baseOptions);
 }
-    `;
-export type ChangeMessageMutationFn = Apollo.MutationFunction<ChangeMessageMutation, ChangeMessageMutationVariables>;
+export type SendMessageMutationHookResult = ReturnType<
+	typeof useSendMessageMutation
+>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<
+	SendMessageMutation,
+	SendMessageMutationVariables
+>;
+export const ChangeMessageDocument = gql`
+	mutation changeMessage($chatid: ID!, $messageid: ID!, $text: String!) {
+		ChangeMessage(chatid: $chatid, messageid: $messageid, text: $text)
+	}
+`;
+export type ChangeMessageMutationFn = Apollo.MutationFunction<
+	ChangeMessageMutation,
+	ChangeMessageMutationVariables
+>;
 
 /**
  * __useChangeMessageMutation__
@@ -1278,18 +1452,34 @@ export type ChangeMessageMutationFn = Apollo.MutationFunction<ChangeMessageMutat
  *   },
  * });
  */
-export function useChangeMessageMutation(baseOptions?: Apollo.MutationHookOptions<ChangeMessageMutation, ChangeMessageMutationVariables>) {
-        return Apollo.useMutation<ChangeMessageMutation, ChangeMessageMutationVariables>(ChangeMessageDocument, baseOptions);
-      }
-export type ChangeMessageMutationHookResult = ReturnType<typeof useChangeMessageMutation>;
-export type ChangeMessageMutationResult = Apollo.MutationResult<ChangeMessageMutation>;
-export type ChangeMessageMutationOptions = Apollo.BaseMutationOptions<ChangeMessageMutation, ChangeMessageMutationVariables>;
-export const RemoveMessageDocument = gql`
-    mutation removeMessage($chatid: ID!, $messageid: ID!) {
-  RemoveMessage(chatid: $chatid, messageid: $messageid)
+export function useChangeMessageMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		ChangeMessageMutation,
+		ChangeMessageMutationVariables
+	>,
+) {
+	return Apollo.useMutation<
+		ChangeMessageMutation,
+		ChangeMessageMutationVariables
+	>(ChangeMessageDocument, baseOptions);
 }
-    `;
-export type RemoveMessageMutationFn = Apollo.MutationFunction<RemoveMessageMutation, RemoveMessageMutationVariables>;
+export type ChangeMessageMutationHookResult = ReturnType<
+	typeof useChangeMessageMutation
+>;
+export type ChangeMessageMutationResult = Apollo.MutationResult<ChangeMessageMutation>;
+export type ChangeMessageMutationOptions = Apollo.BaseMutationOptions<
+	ChangeMessageMutation,
+	ChangeMessageMutationVariables
+>;
+export const RemoveMessageDocument = gql`
+	mutation removeMessage($chatid: ID!, $messageid: ID!) {
+		RemoveMessage(chatid: $chatid, messageid: $messageid)
+	}
+`;
+export type RemoveMessageMutationFn = Apollo.MutationFunction<
+	RemoveMessageMutation,
+	RemoveMessageMutationVariables
+>;
 
 /**
  * __useRemoveMessageMutation__
@@ -1309,32 +1499,51 @@ export type RemoveMessageMutationFn = Apollo.MutationFunction<RemoveMessageMutat
  *   },
  * });
  */
-export function useRemoveMessageMutation(baseOptions?: Apollo.MutationHookOptions<RemoveMessageMutation, RemoveMessageMutationVariables>) {
-        return Apollo.useMutation<RemoveMessageMutation, RemoveMessageMutationVariables>(RemoveMessageDocument, baseOptions);
-      }
-export type RemoveMessageMutationHookResult = ReturnType<typeof useRemoveMessageMutation>;
-export type RemoveMessageMutationResult = Apollo.MutationResult<RemoveMessageMutation>;
-export type RemoveMessageMutationOptions = Apollo.BaseMutationOptions<RemoveMessageMutation, RemoveMessageMutationVariables>;
-export const MessagesDocument = gql`
-    query messages($chatid: ID!, $messageid: ID, $limit: Int, $isIncoming: Boolean = false) {
-  Messages(
-    chatid: $chatid
-    messageid: $messageid
-    limit: $limit
-    isIncoming: $isIncoming
-  ) {
-    Chat {
-      ...ChatMessages
-      ...LastMessage
-    }
-    InfoMore {
-      ...InfoMore
-    }
-  }
+export function useRemoveMessageMutation(
+	baseOptions?: Apollo.MutationHookOptions<
+		RemoveMessageMutation,
+		RemoveMessageMutationVariables
+	>,
+) {
+	return Apollo.useMutation<
+		RemoveMessageMutation,
+		RemoveMessageMutationVariables
+	>(RemoveMessageDocument, baseOptions);
 }
-    ${ChatMessagesFragmentDoc}
-${LastMessageFragmentDoc}
-${InfoMoreFragmentDoc}`;
+export type RemoveMessageMutationHookResult = ReturnType<
+	typeof useRemoveMessageMutation
+>;
+export type RemoveMessageMutationResult = Apollo.MutationResult<RemoveMessageMutation>;
+export type RemoveMessageMutationOptions = Apollo.BaseMutationOptions<
+	RemoveMessageMutation,
+	RemoveMessageMutationVariables
+>;
+export const MessagesDocument = gql`
+	query messages(
+		$chatid: ID!
+		$messageid: ID
+		$limit: Int
+		$isIncoming: Boolean = false
+	) {
+		Messages(
+			chatid: $chatid
+			messageid: $messageid
+			limit: $limit
+			isIncoming: $isIncoming
+		) {
+			Chat {
+				...ChatMessages
+				...LastMessage
+			}
+			InfoMore {
+				...InfoMore
+			}
+		}
+	}
+	${ChatMessagesFragmentDoc}
+	${LastMessageFragmentDoc}
+	${InfoMoreFragmentDoc}
+`;
 
 /**
  * __useMessagesQuery__
@@ -1355,26 +1564,44 @@ ${InfoMoreFragmentDoc}`;
  *   },
  * });
  */
-export function useMessagesQuery(baseOptions: Apollo.QueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
-        return Apollo.useQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
-      }
-export function useMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
-          return Apollo.useLazyQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
-        }
-export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
-export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
-export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
-export const AddMessageDocument = gql`
-    subscription addMessage {
-  AddMessage {
-    _id
-    userid
-    text
-    date
-    isChange
-  }
+export function useMessagesQuery(
+	baseOptions: Apollo.QueryHookOptions<MessagesQuery, MessagesQueryVariables>,
+) {
+	return Apollo.useQuery<MessagesQuery, MessagesQueryVariables>(
+		MessagesDocument,
+		baseOptions,
+	);
 }
-    `;
+export function useMessagesLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		MessagesQuery,
+		MessagesQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<MessagesQuery, MessagesQueryVariables>(
+		MessagesDocument,
+		baseOptions,
+	);
+}
+export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
+export type MessagesLazyQueryHookResult = ReturnType<
+	typeof useMessagesLazyQuery
+>;
+export type MessagesQueryResult = Apollo.QueryResult<
+	MessagesQuery,
+	MessagesQueryVariables
+>;
+export const AddMessageDocument = gql`
+	subscription addMessage {
+		AddMessage {
+			_id
+			userid
+			text
+			date
+			isChange
+		}
+	}
+`;
 
 /**
  * __useAddMessageSubscription__
@@ -1391,20 +1618,30 @@ export const AddMessageDocument = gql`
  *   },
  * });
  */
-export function useAddMessageSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AddMessageSubscription, AddMessageSubscriptionVariables>) {
-        return Apollo.useSubscription<AddMessageSubscription, AddMessageSubscriptionVariables>(AddMessageDocument, baseOptions);
-      }
-export type AddMessageSubscriptionHookResult = ReturnType<typeof useAddMessageSubscription>;
+export function useAddMessageSubscription(
+	baseOptions?: Apollo.SubscriptionHookOptions<
+		AddMessageSubscription,
+		AddMessageSubscriptionVariables
+	>,
+) {
+	return Apollo.useSubscription<
+		AddMessageSubscription,
+		AddMessageSubscriptionVariables
+	>(AddMessageDocument, baseOptions);
+}
+export type AddMessageSubscriptionHookResult = ReturnType<
+	typeof useAddMessageSubscription
+>;
 export type AddMessageSubscriptionResult = Apollo.SubscriptionResult<AddMessageSubscription>;
 export const SwapMessageDocument = gql`
-    subscription swapMessage {
-  SwapMessage {
-    _id
-    text
-    isChange
-  }
-}
-    `;
+	subscription swapMessage {
+		SwapMessage {
+			_id
+			text
+			isChange
+		}
+	}
+`;
 
 /**
  * __useSwapMessageSubscription__
@@ -1421,18 +1658,28 @@ export const SwapMessageDocument = gql`
  *   },
  * });
  */
-export function useSwapMessageSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SwapMessageSubscription, SwapMessageSubscriptionVariables>) {
-        return Apollo.useSubscription<SwapMessageSubscription, SwapMessageSubscriptionVariables>(SwapMessageDocument, baseOptions);
-      }
-export type SwapMessageSubscriptionHookResult = ReturnType<typeof useSwapMessageSubscription>;
+export function useSwapMessageSubscription(
+	baseOptions?: Apollo.SubscriptionHookOptions<
+		SwapMessageSubscription,
+		SwapMessageSubscriptionVariables
+	>,
+) {
+	return Apollo.useSubscription<
+		SwapMessageSubscription,
+		SwapMessageSubscriptionVariables
+	>(SwapMessageDocument, baseOptions);
+}
+export type SwapMessageSubscriptionHookResult = ReturnType<
+	typeof useSwapMessageSubscription
+>;
 export type SwapMessageSubscriptionResult = Apollo.SubscriptionResult<SwapMessageSubscription>;
 export const DeleteMessageDocument = gql`
-    subscription deleteMessage {
-  DeleteMessage {
-    _id
-  }
-}
-    `;
+	subscription deleteMessage {
+		DeleteMessage {
+			_id
+		}
+	}
+`;
 
 /**
  * __useDeleteMessageSubscription__
@@ -1449,18 +1696,29 @@ export const DeleteMessageDocument = gql`
  *   },
  * });
  */
-export function useDeleteMessageSubscription(baseOptions?: Apollo.SubscriptionHookOptions<DeleteMessageSubscription, DeleteMessageSubscriptionVariables>) {
-        return Apollo.useSubscription<DeleteMessageSubscription, DeleteMessageSubscriptionVariables>(DeleteMessageDocument, baseOptions);
-      }
-export type DeleteMessageSubscriptionHookResult = ReturnType<typeof useDeleteMessageSubscription>;
+export function useDeleteMessageSubscription(
+	baseOptions?: Apollo.SubscriptionHookOptions<
+		DeleteMessageSubscription,
+		DeleteMessageSubscriptionVariables
+	>,
+) {
+	return Apollo.useSubscription<
+		DeleteMessageSubscription,
+		DeleteMessageSubscriptionVariables
+	>(DeleteMessageDocument, baseOptions);
+}
+export type DeleteMessageSubscriptionHookResult = ReturnType<
+	typeof useDeleteMessageSubscription
+>;
 export type DeleteMessageSubscriptionResult = Apollo.SubscriptionResult<DeleteMessageSubscription>;
 export const UserDocument = gql`
-    query user($id: ID!) {
-  User(id: $id) {
-    ...UserInfo
-  }
-}
-    ${UserInfoFragmentDoc}`;
+	query user($id: ID!) {
+		User(id: $id) {
+			...UserInfo
+		}
+	}
+	${UserInfoFragmentDoc}
+`;
 
 /**
  * __useUserQuery__
@@ -1478,23 +1736,34 @@ export const UserDocument = gql`
  *   },
  * });
  */
-export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
-        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
-      }
-export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
-          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
-        }
+export function useUserQuery(
+	baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>,
+) {
+	return Apollo.useQuery<UserQuery, UserQueryVariables>(
+		UserDocument,
+		baseOptions,
+	);
+}
+export function useUserLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>,
+) {
+	return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
+		UserDocument,
+		baseOptions,
+	);
+}
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserCurrentDocument = gql`
-    query userCurrent {
-  UserCurrent {
-    ...UserInfo
-    chats_id
-  }
-}
-    ${UserInfoFragmentDoc}`;
+	query userCurrent {
+		UserCurrent {
+			...UserInfo
+			chats_id
+		}
+	}
+	${UserInfoFragmentDoc}
+`;
 
 /**
  * __useUserCurrentQuery__
@@ -1511,12 +1780,33 @@ export const UserCurrentDocument = gql`
  *   },
  * });
  */
-export function useUserCurrentQuery(baseOptions?: Apollo.QueryHookOptions<UserCurrentQuery, UserCurrentQueryVariables>) {
-        return Apollo.useQuery<UserCurrentQuery, UserCurrentQueryVariables>(UserCurrentDocument, baseOptions);
-      }
-export function useUserCurrentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserCurrentQuery, UserCurrentQueryVariables>) {
-          return Apollo.useLazyQuery<UserCurrentQuery, UserCurrentQueryVariables>(UserCurrentDocument, baseOptions);
-        }
+export function useUserCurrentQuery(
+	baseOptions?: Apollo.QueryHookOptions<
+		UserCurrentQuery,
+		UserCurrentQueryVariables
+	>,
+) {
+	return Apollo.useQuery<UserCurrentQuery, UserCurrentQueryVariables>(
+		UserCurrentDocument,
+		baseOptions,
+	);
+}
+export function useUserCurrentLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		UserCurrentQuery,
+		UserCurrentQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<UserCurrentQuery, UserCurrentQueryVariables>(
+		UserCurrentDocument,
+		baseOptions,
+	);
+}
 export type UserCurrentQueryHookResult = ReturnType<typeof useUserCurrentQuery>;
-export type UserCurrentLazyQueryHookResult = ReturnType<typeof useUserCurrentLazyQuery>;
-export type UserCurrentQueryResult = Apollo.QueryResult<UserCurrentQuery, UserCurrentQueryVariables>;
+export type UserCurrentLazyQueryHookResult = ReturnType<
+	typeof useUserCurrentLazyQuery
+>;
+export type UserCurrentQueryResult = Apollo.QueryResult<
+	UserCurrentQuery,
+	UserCurrentQueryVariables
+>;
