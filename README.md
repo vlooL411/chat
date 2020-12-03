@@ -7,7 +7,7 @@ YARN: 1.22.5
 This is a [Next.js](https://nextjs.org) project, within using:
 
 -   TypeScript
--   NextAuth.js
+-   Next.js
 -   Apollo Client (React)
 -   Apollo Server
 -   GraphQL Code Generator
@@ -17,6 +17,7 @@ This is a [Next.js](https://nextjs.org) project, within using:
 -   Storybook
 -   SASS
 -   CSS modules
+-   Docker
 
 ## Getting Started
 
@@ -47,13 +48,14 @@ npm run backend:dev
 yarn prevbuild
 yarn frontend:dev
 yarn backend:dev
+# or
+docker-compose up
 ```
 
 Open
 
 -   [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 -   [http://localhost:4000/graphql](http://localhost:4000/graphql), is opening playground apollo graphql (on the address work subscriprions)
--   [http://localhost:4001](http://localhost:4001) next-auth
 
     You can start editing the page by modifying `pages/index.ts`. The page auto-updates as you edit the file.
 

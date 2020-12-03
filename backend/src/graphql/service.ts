@@ -12,15 +12,18 @@ const pubsub = new PubSub();
 export default class GraphQLService implements GqlOptionsFactory {
 	createGqlOptions(): GqlModuleOptions | Promise<GqlModuleOptions> {
 		const { NODE_ENV } = process.env;
-		const isProd = NODE_ENV === 'production';
+		const isDev =
+			typeof NODE_ENV === 'undefined' || NODE_ENV === 'development';
+		const isProd = !isDev;
 
 		const { NEXTAUTH_URL_CALLBACK: origin } = process.env;
 
 		return {
 			typePaths: ['./src/**/*.graphql'],
 			definitions: {
-				path: join(process.cwd(), 'src/graphql/index.ts'),
+				path: join(process.cwd(), './src/graphql/index.ts'),
 				...Definitions,
+				emitTypenameField: isDev,
 			},
 			context: ({ req, res }) => ({ headers: req?.headers, res, pubsub }),
 			cors: {
@@ -32,25 +35,24 @@ export default class GraphQLService implements GqlOptionsFactory {
 				requireResolversForResolveType: false,
 			},
 			introspection: true,
-			playground: !isProd && {
+			playground: isDev && {
 				settings: {
 					'request.credentials': 'include',
 				},
 			},
-			tracing: !isProd,
-			// cacheControl: isProd && {
-			//     defaultMaxAge: 5,
-			//     stripFormattedExtensions: false,
-			//     calculateHttpHeaders: false
-			// },
+			tracing: isDev,
+			cacheControl: isProd && {
+				defaultMaxAge: 5,
+				stripFormattedExtensions: false,
+				calculateHttpHeaders: false,
+			},
 			installSubscriptionHandlers: true,
 			subscriptions: {
 				keepAlive: 1000,
 				onConnect: async (connectionParams, webSocket, context) =>
-					!isProd &&
-					Logger.debug('🔗  Connected to websocket GraphQL'),
+					isDev && Logger.debug('🔗  Connected to websocket GraphQL'),
 				onDisconnect: async (webSocket, context) =>
-					!isProd &&
+					isDev &&
 					Logger.debug('❌  Disconnected to websocket GraphQL'),
 			},
 		};

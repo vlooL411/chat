@@ -30,7 +30,10 @@ const Chat = Create.chat();
 export const ExplolerMocks: MockedResponse<MockExploler>[] = [
 	...BarExplolerMocks,
 	Create.RequestResultF<ChatQuery>(
-		{ query: ChatDocument, variables: { chatid: Chat._id } as QueryChatArgs },
+		{
+			query: ChatDocument,
+			variables: { chatid: Chat._id } as QueryChatArgs,
+		},
 		{ Chat },
 	),
 	Create.RequestResultF<MessagesQuery>(

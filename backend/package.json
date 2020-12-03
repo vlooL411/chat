@@ -5,23 +5,25 @@
 	"scripts": {
 		"dev": "nest start -w",
 		"build": "nest build",
-		"start": "nest start"
+		"start": "nest start",
+		"start:prod": "node dist/main",
+		"rm": "rmdir /s /q dist"
 	},
 	"peerOptionalDependencies": {
-		"mongodb": "^3.6.2"
+		"mongodb": "^3.6.3"
 	},
 	"dependencies": {
-		"bcrypt": "^5.0.0",
+		"bcryptjs": "^2.4.3",
 		"@nestjs/config": "^0.6.1",
 		"@nestjs/core": "^7.5.5",
 		"@nestjs/common": "^7.5.5",
-		"@nestjs/graphql": "^7.9.0",
+		"@nestjs/graphql": "^7.9.1",
 		"@nestjs/platform-express": "^7.5.5",
 		"@nestjs/passport": "^7.1.5",
 		"@nestjs/jwt": "^7.2.0",
 		"passport-jwt": "^4.0.0",
 		"@nestjs/mongoose": "^7.1.2",
-		"mongoose": "^5.10.17",
+		"mongoose": "5.10.17",
 		"graphql-tools": "^7.0.2",
 		"apollo-server-express": "^2.19.0",
 		"passport": "^0.4.1",
@@ -32,11 +34,10 @@
 		"reflect-metadata": "^0.1.13"
 	},
 	"devDependencies": {
-		"@types/bcrypt": "^3.0.0",
+		"@types/bcryptjs": "^2.4.2",
 		"@nestjs/cli": "^7.5.3",
-		"@types/mongoose": "^5.10.1",
 		"@types/passport-google-oauth20": "^2.0.4",
-		"typescript": "file:../typescript",
-		"@types/node": "file:../@types/node"
+		"typescript": "^4.1.2",
+		"@types/node": "^14.14.10"
 	}
 }

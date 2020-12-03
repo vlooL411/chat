@@ -132,9 +132,12 @@ export default class Create {
 	static contacts = (
 		User: User = Create.userWithoutContacts(),
 		length: number = numberRandomMod(),
-	): Contact[] => crtArray(length, () => Create.contact(numberRandom(), User));
+	): Contact[] =>
+		crtArray(length, () => Create.contact(numberRandom(), User));
 
-	static contactsRandomUser = (length: number = numberRandomMod()): Contact[] =>
+	static contactsRandomUser = (
+		length: number = numberRandomMod(),
+	): Contact[] =>
 		crtArray(length, () =>
 			Create.contact(numberRandom(), Create.userWithoutContacts()),
 		);

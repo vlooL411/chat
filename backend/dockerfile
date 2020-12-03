@@ -1,0 +1,22 @@
+# WORK backend
+FROM node:15-alpine as backend
+
+# Copy source
+COPY . /app
+
+# Installing dependencies
+RUN cd /app && yarn && yarn run build
+
+# WORK app
+FROM node:15-alpine
+
+# For start
+COPY --from=backend /app/dist /app/dist
+COPY --from=backend /app/src/***/**/*.graphql /src/
+COPY --from=backend /app/src/**/*.graphql /src/
+
+COPY --from=backend /app/node_modules /node_modules
+COPY --from=backend /app/package.json .
+
+# Running the app  
+CMD node /app/dist/main

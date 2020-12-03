@@ -80,6 +80,7 @@ export interface IUser {
 }
 
 export interface GoogleNetwork extends SocialNetwork {
+    __typename?: 'GoogleNetwork';
     _id: string;
     givenName: string;
     familyName: string;
@@ -90,6 +91,7 @@ export interface GoogleNetwork extends SocialNetwork {
 }
 
 export interface FacebookNetwork extends SocialNetwork {
+    __typename?: 'FacebookNetwork';
     _id: string;
     givenName: string;
     familyName: string;
@@ -100,11 +102,13 @@ export interface FacebookNetwork extends SocialNetwork {
 }
 
 export interface Authentication {
+    __typename?: 'Authentication';
     accessToken: Token;
     refreshToken: Token;
 }
 
 export interface IQuery {
+    __typename?: 'IQuery';
     Login(input?: LoginInput): Authentication | Promise<Authentication>;
     Refresh(refreshToken: Token): Authentication | Promise<Authentication>;
     Chat(chatid: string): Chat | Promise<Chat>;
@@ -120,6 +124,7 @@ export interface IQuery {
 }
 
 export interface IMutation {
+    __typename?: 'IMutation';
     Register(input: RegisterInput): UserSafe | Promise<UserSafe>;
     CreateChat(title: string): string | Promise<string>;
     InviteChat(chatid: string): string | Promise<string>;
@@ -131,6 +136,7 @@ export interface IMutation {
 }
 
 export interface Chat {
+    __typename?: 'Chat';
     _id: string;
     title: string;
     image?: string;
@@ -144,6 +150,7 @@ export interface Chat {
 }
 
 export interface ISubscription {
+    __typename?: 'ISubscription';
     AddChat(): Chat | Promise<Chat>;
     DeleteChat(): Chat | Promise<Chat>;
     AddMessage(): Message | Promise<Message>;
@@ -152,6 +159,7 @@ export interface ISubscription {
 }
 
 export interface Contact {
+    __typename?: 'Contact';
     _id: string;
     userid: string;
     date: Date;
@@ -160,11 +168,13 @@ export interface Contact {
 }
 
 export interface Contacts {
+    __typename?: 'Contacts';
     Existing?: Contact[];
     Incoming?: Contact[];
 }
 
 export interface InfoMore {
+    __typename?: 'InfoMore';
     _id?: string;
     isEndUp?: string;
     isEndDown?: string;
@@ -173,11 +183,13 @@ export interface InfoMore {
 }
 
 export interface Response {
+    __typename?: 'Response';
     message: string;
     type: TypeResponse;
 }
 
 export interface Message {
+    __typename?: 'Message';
     _id: string;
     userid: string;
     date: Date;
@@ -190,11 +202,13 @@ export interface Message {
 }
 
 export interface Messages {
+    __typename?: 'Messages';
     Chat: Chat;
     InfoMore?: InfoMore;
 }
 
 export interface UserSafe extends IUser {
+    __typename?: 'UserSafe';
     _id: string;
     name: string;
     email: string;
@@ -218,6 +232,7 @@ export interface UserSafe extends IUser {
 }
 
 export interface User extends IUser {
+    __typename?: 'User';
     password?: Password;
     _id: string;
     name: string;

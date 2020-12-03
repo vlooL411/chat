@@ -12,7 +12,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { compareSync } from 'bcrypt';
+import { compareSync } from 'bcryptjs';
 
 import AuthConfig from './config';
 
@@ -71,7 +71,7 @@ export default class AuthService {
 		const { createdAt, email, name, google } = user;
 
 		const userGoogle = await this.userModel.create({
-			_id: new Types.ObjectId(),
+			_id: new Types.ObjectId().toHexString(),
 			provider: Provider.google,
 			createdAt,
 			email,

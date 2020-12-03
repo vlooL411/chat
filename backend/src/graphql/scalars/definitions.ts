@@ -1,8 +1,4 @@
-import { DefinitionsGeneratorOptions } from '@nestjs/graphql';
-
-// import DateScalar from './date';
-// import PasswordScalar from './password';
-// import TokenScalar from './token';
+import { DefinitionsGeneratorOptions } from '@nestjs/graphql'
 
 const Definitions: DefinitionsGeneratorOptions = {
 	defaultScalarType: 'unknown',
@@ -11,13 +7,6 @@ const Definitions: DefinitionsGeneratorOptions = {
 		Password: 'string',
 		Token: 'string',
 	},
-	// additionalHeader: ([
-	// 	[DateScalar.name, 'date'],
-	// 	[PasswordScalar.name, 'password'],
-	// 	[TokenScalar.name, 'token'],
-	// ] as [string, string][])
-	// 	.map(([name, module]) => `import ${name} from './scalars/${module}';`)
-	// 	.join('\n'),
 };
 
 export default Definitions;

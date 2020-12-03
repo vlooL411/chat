@@ -7,14 +7,14 @@
 		"generate:watch": "graphql-codegen -w"
 	},
 	"dependencies": {
-		"@apollo/client": "file:../../@apollo/client"
+		"@apollo/client": "^3.3.2"
 	},
 	"devDependencies": {
-		"@graphql-codegen/cli": "^1.19.3",
-		"@graphql-codegen/typescript": "^1.18.1",
+		"@graphql-codegen/cli": "^1.19.4",
+		"@graphql-codegen/typescript": "^1.19.0",
 		"@graphql-codegen/typescript-operations": "^1.17.12",
 		"@graphql-codegen/typescript-react-apollo": "^2.2.1",
-		"@graphql-codegen/typescript-resolvers": "^1.17.12",
-		"typescript": "file:../../typescript"
+		"@graphql-codegen/typescript-resolvers": "^1.18.0",
+		"typescript": "^4.1.2"
 	}
 }

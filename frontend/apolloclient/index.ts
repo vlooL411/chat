@@ -16,13 +16,9 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import RefreshToken from './RefreshToken';
 import { CacheConfig } from './CacheConfig';
 
-//TODO solve the problem of new WebSocketLink Cannot read property 'protocol' of undefined
-const { NODE_ENV } = process.env;
-const isTest = ['test', 'storybook'].includes(NODE_ENV);
-
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 const isBrowser = typeof window === 'undefined';
-const ssrMode = !isBrowser;
+const isSSR_Mode = !isBrowser;
 
 const { HOST } = process.env;
 const { HOST_GRAPHQL } = process.env;
@@ -34,10 +30,10 @@ const httpLink = new HttpLink({
 	fetch,
 });
 
-const wsLink = isTest
+const wsLink: WebSocketLink = isSSR_Mode
 	? null
 	: new WebSocketLink({
-			uri: HOST_GRAPHGQLSUB,
+			uri: HOST_GRAPHGQLSUB ?? 'ws:://localhost:4000/graphql',
 			reconnect: true,
 			webSocketImpl: w3cwebsocket,
 			options: {
@@ -50,7 +46,7 @@ const wsLink = isTest
 			},
 	  });
 
-const SplitHTTPWS = ssrMode
+const SplitHTTPWS = isSSR_Mode
 	? httpLink
 	: split(
 			({ query }) => {
@@ -64,9 +60,9 @@ const SplitHTTPWS = ssrMode
 			httpLink,
 	  );
 
-const getAuthorization = (): Authentication => {
+const getAuthorization = (): Authentication | null => {
 	const auth = localStorage.getItem(TokenType.Authentication);
-	if (!auth) return;
+	if (!auth) return null;
 
 	try {
 		return JSON.parse(auth);
@@ -104,7 +100,7 @@ const linkError = onError(({ graphQLErrors, operation, forward }) => {
 
 const createApolloClient = (): ApolloClient<NormalizedCacheObject> =>
 	new ApolloClient({
-		ssrMode,
+		ssrMode: isSSR_Mode,
 		cache: new InMemoryCache(CacheConfig),
 		link: authLink.concat(linkError).concat(SplitHTTPWS),
 	});
@@ -115,7 +111,7 @@ export const initializeApollo = (
 	const _apolloClient = apolloClient ?? createApolloClient();
 
 	if (initialState) _apolloClient.cache.restore(initialState ?? {});
-	if (ssrMode) return _apolloClient;
+	if (isSSR_Mode) return _apolloClient;
 	if (!apolloClient) apolloClient = _apolloClient;
 
 	return _apolloClient;

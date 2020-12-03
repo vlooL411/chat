@@ -26,7 +26,7 @@ type UserSafe implements IUser {
 	isActive: Boolean
 }
 
-#TODO if necessary
+#TODO if necessary?
 type User implements IUser {
 	#backend only or client input
 	password: Password

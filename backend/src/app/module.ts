@@ -5,7 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ envFilePath: ['.env', '.env.local'] }),
+		ConfigModule.forRoot({
+			envFilePath: ['.env.production.local', '.env.local'],
+		}),
 		GraphQLModule,
 		MongooseModule.forRoot(process.env.DB_HOST, {
 			useCreateIndex: true,

@@ -1,0 +1,9 @@
+.next
+dist
+out
+node_modules
+package-lock.json
+tests
+mocks
+storybook
+dockerfile
