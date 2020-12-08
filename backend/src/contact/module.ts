@@ -1,5 +1,6 @@
-import Chat, { ChatSchema } from 'src/chat/entity';
-import User, { UserSchema } from 'src/user/entity';
+import AuthModule from 'src/auth/module';
+import { ChatMongooseModule } from 'src/chat/entity';
+import { UserMongooseModule } from 'src/user/entity';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -8,10 +9,8 @@ import ContactService from './service';
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([
-			{ name: Chat.name, schema: ChatSchema },
-			{ name: User.name, schema: UserSchema },
-		]),
+		MongooseModule.forFeature([ChatMongooseModule, UserMongooseModule]),
+		AuthModule,
 	],
 	providers: [ContactService, ContactResolver],
 })

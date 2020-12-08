@@ -1,41 +1,33 @@
 import Message, { MessageSchema } from 'src/message/entity';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { Access, Chat as ChatGQL, Creater } from 'src/graphql';
-import { ObjectID, refUserID, required } from 'src/models/props';
+import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { Access, Chat as ChatGQL, Creater, ObjectID } from 'src/graphql';
+import { required, typeDate, typeObjectID } from 'src/models';
 
 @Schema()
 export default class Chat implements ChatGQL {
-	@Prop(ObjectID)
-	_id: string;
+	@Prop(typeObjectID) _id: ObjectID;
 
-	@Prop(required)
-	title: string;
+	@Prop(required) title: string;
+	@Prop() image?: string;
 
-	@Prop()
-	image?: string;
+	@Prop(typeDate) createdAt: Date;
 
-	@Prop({ ...required, type: Date })
-	date: Date;
+	@Prop({ type: Creater, required: true }) creater: Creater;
+	@Prop({ type: Access, required: true }) access: Access;
 
-	@Prop({ type: [refUserID] })
-	creaters_id: string[];
+	@Prop({ type: [{ type: Types.ObjectId }], required: true })
+	creaters_id: ObjectID[];
 
-	@Prop({ type: Creater, required: true })
-	creater: Creater;
+	@Prop({ type: [{ type: Types.ObjectId }] }) users_id?: ObjectID[];
 
-	@Prop({ type: Access, required: true })
-	access: Access;
-
-	@Prop({ type: [refUserID] })
-	users_id?: string[];
-
-	@Prop({ type: MessageSchema })
-	lastMessage?: Message;
-
-	@Prop({ type: [MessageSchema] })
-	messages?: Message[];
+	@Prop({ type: MessageSchema }) lastMessage?: Message;
+	@Prop({ type: [Message] }) messages?: Message[];
 }
 
 export type ChatDocument = Chat & Document;
-export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const ChatSchema = SchemaFactory.createForClass<Chat>(Chat);
+export const ChatMongooseModule: ModelDefinition = {
+	name: Chat.name,
+	schema: ChatSchema,
+};

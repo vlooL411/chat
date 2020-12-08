@@ -7,11 +7,15 @@ import {
 } from 'src/graphql';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import AuthService from './service';
+import AuthService from './services/auth';
+import { RegisterService } from './services';
 
 @Resolver('Auth')
 export default class AuthResolver {
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private registerService: RegisterService,
+	) {}
 
 	@Query()
 	async Login(@Args('input') input: LoginInput): Promise<Authentication> {
@@ -20,7 +24,7 @@ export default class AuthResolver {
 
 	@Mutation()
 	async Register(@Args('input') input: RegisterInput): Promise<UserSafe> {
-		return this.authService.register(input);
+		return this.registerService.register(input);
 	}
 
 	@Query()

@@ -1,21 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Contact as ContactSQL } from 'src/graphql';
-import { ObjectID, required } from 'src/models/props';
+import { Contact as ContactSQL, ObjectID } from 'src/graphql';
+import { typeDate, typeObjectID } from 'src/models';
 
 @Schema()
 export default class Contact implements ContactSQL {
-	@Prop(ObjectID)
-	_id: string;
+	@Prop(typeObjectID) _id: ObjectID;
+	@Prop(typeObjectID) userid: ObjectID;
 
-	@Prop(ObjectID)
-	userid: string;
+	@Prop(typeDate) createdAt: Date;
 
-	@Prop({ ...required, type: Date })
-	date: Date;
-
-	@Prop()
-	whoIsContact: string;
+	@Prop() whoIsContact?: string;
 }
 
 export type ContactDocument = Contact & Document;
-export const ContactSchema = SchemaFactory.createForClass(Contact);
+export const ContactSchema = SchemaFactory.createForClass<Contact>(Contact);

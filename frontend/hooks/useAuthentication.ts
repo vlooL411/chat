@@ -12,8 +12,8 @@ const useAuthentication = (router: Router, urlAuth: string): boolean => {
 		if (authentication) {
 			try {
 				setAuth(JSON.parse(authentication));
-			} catch {
-				throw new Error('Error parse authentication');
+			} catch (e) {
+				console.error('Error parse authentication', e);
 			}
 			return;
 		}
@@ -35,7 +35,7 @@ const useAuthentication = (router: Router, urlAuth: string): boolean => {
 
 					setAuth(JSON.parse(answer));
 				} catch (e) {
-					throw new Error(`Error authentication: ${e}`);
+					console.error('Error authentication', e);
 				}
 			})();
 	}, []);

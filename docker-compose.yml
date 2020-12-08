@@ -11,7 +11,7 @@ services:
             - /app/backend/node_modules
         env_file:
             - backend/.env.template
-            - backend/.env.production.local # need to add
+            - backend/.env.local # need to add
 
     nextjs:
         depends_on:

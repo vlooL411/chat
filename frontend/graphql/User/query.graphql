@@ -1,4 +1,4 @@
-query user($id: ID!) {
+query user($id: ObjectID!) {
 	User(id: $id) {
 		...UserInfo
 	}

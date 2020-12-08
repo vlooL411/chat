@@ -11,7 +11,7 @@ interface IUserAuth {
 }
 
 interface IUser implements IUserAuth {
-	_id: ID!
+	_id: ObjectID!
 	name: String!
 	email: String!
 
@@ -23,7 +23,7 @@ interface IUser implements IUserAuth {
 	google: GoogleNetwork #auth/social
 	facebook: FacebookNetwork #auth/social
 	#
-	chats_id: [ID!]
+	chats_id: [ObjectID!]
 	contacts: [Contact!] #contact
 	#
 	createdAt: Date!

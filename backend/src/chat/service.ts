@@ -1,6 +1,7 @@
 import User, { UserDocument } from 'src/user/entity';
+import { ApolloError } from 'apollo-server-express';
 import { Injectable } from '@nestjs/common';
-import { Access, Creater } from 'src/graphql';
+import { Access, Creater, ObjectID } from 'src/graphql';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -13,7 +14,7 @@ export default class ChatService {
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 	) {}
 
-	async chat(userid: string, chatid: string): Promise<Chat> {
+	async chat(userid: ObjectID, chatid: ObjectID): Promise<Chat> {
 		const chat = await this.chatModel.findOne(
 			{
 				_id: chatid,
@@ -36,7 +37,7 @@ export default class ChatService {
 		return chat;
 	}
 
-	async chats(userid: string): Promise<Chat[]> {
+	async chats(userid: ObjectID): Promise<Chat[]> {
 		const user = await this.userModel.findOne({ _id: userid }, 'chats_id');
 		const chats_id = user?.chats_id;
 
@@ -47,7 +48,7 @@ export default class ChatService {
 			.match({ _id: { $in: chats_id } })
 			.project({
 				_id: true,
-				date: true,
+				createdAt: true,
 				title: true,
 				creater: true,
 				creaters_id: true,
@@ -56,7 +57,7 @@ export default class ChatService {
 			});
 	}
 
-	findChat = async (userid: string, title: string): Promise<Chat[]> =>
+	findChat = async (userid: ObjectID, title: string): Promise<Chat[]> =>
 		await this.chatModel
 			.aggregate()
 			.match({
@@ -77,18 +78,20 @@ export default class ChatService {
 				lastMessage: { $arrayElemAt: ['$messages', -1] },
 			});
 
-	async create(userid: string, title: string): Promise<Chat | null> {
+	async create(userid: ObjectID, title: string): Promise<Chat | null> {
 		const chat: Chat = {
-			_id: new Types.ObjectId().toHexString(),
+			_id: new Types.ObjectId(),
 			title,
-			date: new Date(),
+			createdAt: new Date(),
 			creaters_id: [userid],
 			creater: Creater.Chat,
 			access: Access.Public,
 		};
 
-		const chats = await this.chatModel.insertMany([chat]);
+		const isExist = await this.chatModel.findOne({ title });
+		if (isExist) throw new ApolloError('Chat with that name exist');
 
+		const chats = await this.chatModel.insertMany([chat]);
 		const chatPop = chats?.pop();
 
 		const { ok } = await this.userModel.updateOne(
@@ -103,7 +106,7 @@ export default class ChatService {
 		return ok != 0 ? chatPop : null;
 	}
 
-	async invite(userid: string, chatid: string): Promise<Chat | null> {
+	async invite(userid: ObjectID, chatid: ObjectID): Promise<Chat | null> {
 		const { okUser } = await this.userModel.updateOne(
 			{ _id: userid },
 			{ $addToSet: { chats_id: chatid as never } },
@@ -121,7 +124,7 @@ export default class ChatService {
 		return await this.chatModel.findOne({ _id: chatid });
 	}
 
-	async leave(userid: string, chatid: string): Promise<Chat | null> {
+	async leave(userid: ObjectID, chatid: ObjectID): Promise<Chat | null> {
 		const { okUser } = await this.userModel.updateOne(
 			{ _id: userid },
 			{ $pull: { chats_id: chatid as never } },
@@ -136,12 +139,10 @@ export default class ChatService {
 			{ multi: true },
 		);
 
-		if (okChat == 0) return null;
-
-		return { _id: chatid } as Chat;
+		return okChat == 0 ? null : ({ _id: chatid } as Chat);
 	}
 
-	async remove(userid: string, chatid: string): Promise<Chat | null> {
+	async remove(userid: ObjectID, chatid: ObjectID): Promise<Chat | null> {
 		const { deletedCount } = await this.chatModel.deleteOne({
 			_id: chatid,
 			creaters_id: { $elemMatch: { $eq: userid } },

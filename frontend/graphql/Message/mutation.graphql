@@ -1,9 +1,13 @@
-mutation sendMessage($chatid: ID!, $text: String!) {
+mutation sendMessage($chatid: ObjectID!, $text: String!) {
 	SendMessage(chatid: $chatid, text: $text)
 }
-mutation changeMessage($chatid: ID!, $messageid: ID!, $text: String!) {
+mutation changeMessage(
+	$chatid: ObjectID!
+	$messageid: ObjectID!
+	$text: String!
+) {
 	ChangeMessage(chatid: $chatid, messageid: $messageid, text: $text)
 }
-mutation removeMessage($chatid: ID!, $messageid: ID!) {
+mutation removeMessage($chatid: ObjectID!, $messageid: ObjectID!) {
 	RemoveMessage(chatid: $chatid, messageid: $messageid)
 }

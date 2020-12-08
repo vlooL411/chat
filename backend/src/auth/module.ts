@@ -3,11 +3,11 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
+import * as Services from './services';
 import * as Strategies from './strategies';
 import AuthConfig from './config';
 import AuthController from './controller';
 import AuthResolver from './resolver';
-import AuthService from './service';
 
 @Module({
 	imports: [
@@ -15,8 +15,12 @@ import AuthService from './service';
 		PassportModule.register({ defaultStrategy: 'jwt' }),
 		JwtModule.registerAsync({ useFactory: () => AuthConfig().accessToken }),
 	],
-	providers: [AuthService, AuthResolver, ...Object.values(Strategies)],
+	providers: [
+		...Object.values(Strategies),
+		...Object.values(Services),
+		AuthResolver,
+	],
 	controllers: [AuthController],
-	// exports: [JwtModule],
+	exports: [JwtModule],
 })
 export default class AuthModule {}

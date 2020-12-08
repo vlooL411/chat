@@ -1,7 +1,7 @@
 type InfoMore {
-	_id: ID
-	isEndUp: ID
-	isEndDown: ID
-	lastIndex: ID
+	_id: ObjectID
+	isEndUp: ObjectID
+	isEndDown: ObjectID
+	lastIndex: ObjectID
 	size: Int
 }

@@ -1,5 +1,7 @@
 enum TokenType {
 	authentication
+	access
+	refresh
 }
 
 type Authentication {

@@ -1,5 +1,5 @@
 type UserSafe implements IUser {
-	_id: ID!
+	_id: ObjectID!
 	name: String!
 	email: String!
 
@@ -11,7 +11,7 @@ type UserSafe implements IUser {
 	google: GoogleNetwork
 	facebook: FacebookNetwork
 
-	chats_id: [ID!]
+	chats_id: [ObjectID!]
 	contacts: [Contact!]
 
 	createdAt: Date!
@@ -32,7 +32,7 @@ type User implements IUser {
 	password: Password
 	#end unsafe
 
-	_id: ID!
+	_id: ObjectID!
 	name: String!
 	email: String!
 
@@ -44,7 +44,7 @@ type User implements IUser {
 	google: GoogleNetwork
 	facebook: FacebookNetwork
 
-	chats_id: [ID!]
+	chats_id: [ObjectID!]
 	contacts: [Contact!]
 
 	createdAt: Date!
@@ -60,7 +60,7 @@ type User implements IUser {
 }
 
 type Query {
-	User(id: ID!): UserSafe
+	User(id: ObjectID!): UserSafe
 	UserCurrent: UserSafe
 	UserUpdateOnline: String
 }

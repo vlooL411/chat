@@ -12,30 +12,30 @@ enum Access {
 }
 
 type Chat {
-	_id: ID!
+	_id: ObjectID!
 	title: String!
 	image: String
-	date: Date!
-	creaters_id: [ID]!
+	createdAt: Date!
+	creaters_id: [ObjectID]!
 	creater: Creater!
 	access: Access!
 	lastMessage: Message
-	users_id: [ID]
+	users_id: [ObjectID]
 	messages: [Message]
 }
 
 type Query {
-	Chat(chatid: ID!): Chat
-	Chats(chatid: ID, limit: Int, isIncoming: Boolean): [Chat]
+	Chat(chatid: ObjectID!): Chat
+	Chats: [Chat]
 
 	FindChat(title: String!): [Chat]
 }
 
 type Mutation {
 	CreateChat(title: String!): String
-	InviteChat(chatid: ID!): String
-	LeaveChat(chatid: ID!): String
-	RemoveChat(chatid: ID!): Chat
+	InviteChat(chatid: ObjectID!): String
+	LeaveChat(chatid: ObjectID!): String
+	RemoveChat(chatid: ObjectID!): Chat
 }
 
 type Subscription {

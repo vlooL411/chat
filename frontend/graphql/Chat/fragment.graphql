@@ -1,0 +1,17 @@
+fragment ChatInfo on Chat {
+	_id
+	title
+	image
+	createdAt
+	creater
+	creaters_id
+	access
+}
+
+fragment LastMessage on Chat {
+	lastMessage {
+		_id
+		text
+		createdAt
+	}
+}

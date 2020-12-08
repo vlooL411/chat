@@ -1,9 +1,11 @@
 import { Aggregate, Model, Types } from 'mongoose';
-import { Contact } from 'src/graphql';
+import { ObjectID } from 'src/graphql';
 import { UserDocument } from 'src/user/entity';
 
+import Contact from './entity';
+
 export const AggregateFilter = (
-	_id: string,
+	_id: ObjectID,
 	users: Model<UserDocument>,
 ): Aggregate<Contact[]> =>
 	users
@@ -20,7 +22,7 @@ export const ContactLookUp = {
 };
 
 export const AggregateLookUp = (
-	_id: string,
+	_id: ObjectID,
 	users: Model<UserDocument>,
 ): Aggregate<Contact[]> => AggregateFilter(_id, users).lookup(ContactLookUp);
 

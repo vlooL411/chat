@@ -1,16 +1,17 @@
 import AuthGuard from 'src/auth/guards';
-import { Args, ID, Query, Resolver } from '@nestjs/graphql';
-import { UserSafe } from 'src/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
+import { ObjectID, UserSafe } from 'src/graphql';
 import { CurrentUser } from 'src/auth/decorators';
 
-import UserService from './service';
+import { UserService } from './services';
 
 @Resolver('User')
 export default class UserResolver {
 	constructor(private userService: UserService) {}
 
+	@AuthGuard()
 	@Query()
-	async User(@Args('id', ID) id: string): Promise<UserSafe> {
+	async User(@Args('id') id: ObjectID): Promise<UserSafe> {
 		return await this.userService.user(id);
 	}
 

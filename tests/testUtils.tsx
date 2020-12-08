@@ -18,7 +18,9 @@ export default class Render<T> {
 	}
 
 	Mock = (mocks: MockedResponse<Record<string, T>>[]) =>
-		this.Wrapper(<MockedProvider mocks={mocks}>{this.wrapper}</MockedProvider>);
+		this.Wrapper(
+			<MockedProvider mocks={mocks}>{this.wrapper}</MockedProvider>,
+		);
 
 	Apollo = () =>
 		this.Wrapper(

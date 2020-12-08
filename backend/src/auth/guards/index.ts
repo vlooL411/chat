@@ -3,5 +3,5 @@ import GqlGuard from './gql';
 
 const AuthGuard = GqlGuard;
 
-export { GoogleGuard, GqlGuard };
+export { GoogleGuard };
 export default AuthGuard;

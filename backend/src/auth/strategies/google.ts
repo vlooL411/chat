@@ -7,6 +7,7 @@ import {
 } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { Provider, UserSafe } from 'src/graphql';
+import { Types } from 'mongoose';
 
 @Injectable()
 export default class GoogleStrategy extends PassportStrategy(
@@ -40,12 +41,14 @@ export default class GoogleStrategy extends PassportStrategy(
 			provider: Provider.google,
 			google: {
 				_id: id,
-				accessToken,
-				refreshToken,
 				email,
 				familyName,
 				givenName,
 				middleName,
+				auth: {
+					accessToken,
+					refreshToken,
+				},
 			},
 			createdAt: new Date(),
 			email,

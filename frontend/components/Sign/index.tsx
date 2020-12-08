@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { Provider, TokenType } from '@frontend/types';
+import { Provider, TokenType, useLoginLazyQuery } from '@frontend/types';
 
 import Password from './Password';
 import style from './sign.module.sass';
@@ -9,6 +9,7 @@ const { ICON_GOOGLE } = process.env;
 
 const Signin = (): ReactElement => {
 	const { sign, sign_title, signin, sign_notife, signin_forms } = style;
+	const [loginQuery, { data }] = useLoginLazyQuery();
 
 	const [isAuth, setIsAuth] = useState<boolean>();
 	const [notifeText] = useState<string>(null!);
@@ -19,6 +20,25 @@ const Signin = (): ReactElement => {
 		const isAuth = localStorage.getItem(TokenType.Authentication);
 		setIsAuth(isAuth != null && isAuth != '');
 	});
+
+	useEffect(() => {
+		if (!data?.Login) return;
+		console.log(data);
+		localStorage.setItem(
+			TokenType.Authentication,
+			JSON.stringify(data?.Login),
+		);
+
+		setIsAuth(true);
+	}, [data?.Login]);
+
+	const onLogin = (): void => {
+		const { value: login } = loginRef.current;
+		const { value: password } = passwordRef.current;
+
+		if (login && password)
+			loginQuery({ variables: { name: login, password } });
+	};
 
 	const forms = useMemo<ReactElement[]>(() => {
 		const formsGenerate: FormGenerateProps[] = [
@@ -40,7 +60,7 @@ const Signin = (): ReactElement => {
 					<br />
 					<p className={sign_notife}>{notifeText}</p>
 					<br />
-					<button>Sign in</button>
+					<button onClick={onLogin}>Sign in</button>
 					<div className={signin_forms}>{forms}</div>
 				</div>
 			</div>

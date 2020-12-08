@@ -1,10 +1,7 @@
 subscription addChat {
 	AddChat {
 		...ChatInfo
-		lastMessage {
-			_id
-			text
-		}
+		...LastMessage
 	}
 }
 subscription deleteChat {

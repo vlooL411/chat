@@ -5,31 +5,3 @@ fragment InfoMore on InfoMore {
 	isEndDown
 	lastIndex
 }
-
-fragment ChatMessages on Chat {
-	messages {
-		_id
-		userid
-		text
-		date
-		isChange
-	}
-}
-
-fragment ChatInfo on Chat {
-	_id
-	title
-	image
-	date
-	creater
-	creaters_id
-	access
-}
-
-fragment LastMessage on Chat {
-	lastMessage {
-		_id
-		text
-		date
-	}
-}

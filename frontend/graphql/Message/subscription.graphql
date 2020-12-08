@@ -3,7 +3,7 @@ subscription addMessage {
 		_id
 		userid
 		text
-		date
+		createdAt
 		isChange
 	}
 }

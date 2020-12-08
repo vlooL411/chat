@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -16,12 +15,22 @@ export type Scalars = {
 	Boolean: boolean;
 	Int: number;
 	Float: number;
+	ObjectID: any;
 	/** Date custom scalar type */
 	Date: any;
 	/** Token custom scalar string */
 	Token: any;
 	/** Password custom scalar type */
 	Password: any;
+};
+
+export type SocialNetwork = {
+	_id: Scalars['ID'];
+	auth: Authentication;
+	givenName: Scalars['String'];
+	familyName: Scalars['String'];
+	middleName: Scalars['String'];
+	email: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -35,16 +44,6 @@ export type RegisterInput = {
 	password: Scalars['Password'];
 };
 
-export type SocialNetwork = {
-	_id: Scalars['ID'];
-	accessToken: Scalars['Token'];
-	refreshToken: Scalars['Token'];
-	givenName: Scalars['String'];
-	familyName: Scalars['String'];
-	middleName: Scalars['String'];
-	email: Scalars['String'];
-};
-
 export type GoogleNetwork = SocialNetwork & {
 	__typename?: 'GoogleNetwork';
 	_id: Scalars['ID'];
@@ -52,8 +51,7 @@ export type GoogleNetwork = SocialNetwork & {
 	familyName: Scalars['String'];
 	middleName: Scalars['String'];
 	email: Scalars['String'];
-	accessToken: Scalars['Token'];
-	refreshToken: Scalars['Token'];
+	auth: Authentication;
 };
 
 export type FacebookNetwork = SocialNetwork & {
@@ -63,12 +61,13 @@ export type FacebookNetwork = SocialNetwork & {
 	familyName: Scalars['String'];
 	middleName: Scalars['String'];
 	email: Scalars['String'];
-	accessToken: Scalars['Token'];
-	refreshToken: Scalars['Token'];
+	auth: Authentication;
 };
 
 export enum TokenType {
 	Authentication = 'authentication',
+	Access = 'access',
+	Refresh = 'refresh',
 }
 
 export type Authentication = {
@@ -102,13 +101,7 @@ export type QueryRefreshArgs = {
 };
 
 export type QueryChatArgs = {
-	chatid: Scalars['ID'];
-};
-
-export type QueryChatsArgs = {
-	chatid?: Maybe<Scalars['ID']>;
-	limit?: Maybe<Scalars['Int']>;
-	isIncoming?: Maybe<Scalars['Boolean']>;
+	chatid: Scalars['ObjectID'];
 };
 
 export type QueryFindChatArgs = {
@@ -120,8 +113,8 @@ export type QueryFindContactsArgs = {
 };
 
 export type QueryMessagesArgs = {
-	chatid: Scalars['ID'];
-	messageid?: Maybe<Scalars['ID']>;
+	chatid: Scalars['ObjectID'];
+	messageid?: Maybe<Scalars['ObjectID']>;
 	limit?: Maybe<Scalars['Int']>;
 	isIncoming?: Maybe<Scalars['Boolean']>;
 };
@@ -131,7 +124,7 @@ export type QueryFindMessageArgs = {
 };
 
 export type QueryUserArgs = {
-	id: Scalars['ID'];
+	id: Scalars['ObjectID'];
 };
 
 export type Mutation = {
@@ -155,31 +148,31 @@ export type MutationCreateChatArgs = {
 };
 
 export type MutationInviteChatArgs = {
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 };
 
 export type MutationLeaveChatArgs = {
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 };
 
 export type MutationRemoveChatArgs = {
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 };
 
 export type MutationSendMessageArgs = {
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 	text: Scalars['String'];
 };
 
 export type MutationChangeMessageArgs = {
-	chatid: Scalars['ID'];
-	messageid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
+	messageid: Scalars['ObjectID'];
 	text: Scalars['String'];
 };
 
 export type MutationRemoveMessageArgs = {
-	chatid: Scalars['ID'];
-	messageid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
+	messageid: Scalars['ObjectID'];
 };
 
 export enum Creater {
@@ -197,15 +190,15 @@ export enum Access {
 
 export type Chat = {
 	__typename?: 'Chat';
-	_id: Scalars['ID'];
+	_id: Scalars['ObjectID'];
 	title: Scalars['String'];
 	image?: Maybe<Scalars['String']>;
-	date: Scalars['Date'];
-	creaters_id: Array<Maybe<Scalars['ID']>>;
+	createdAt: Scalars['Date'];
+	creaters_id: Array<Maybe<Scalars['ObjectID']>>;
 	creater: Creater;
 	access: Access;
 	lastMessage?: Maybe<Message>;
-	users_id?: Maybe<Array<Maybe<Scalars['ID']>>>;
+	users_id?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 	messages?: Maybe<Array<Maybe<Message>>>;
 };
 
@@ -220,9 +213,9 @@ export type Subscription = {
 
 export type Contact = {
 	__typename?: 'Contact';
-	_id: Scalars['ID'];
-	userid: Scalars['ID'];
-	date: Scalars['Date'];
+	_id: Scalars['ObjectID'];
+	userid: Scalars['ObjectID'];
+	createdAt: Scalars['Date'];
 	whoIsContact?: Maybe<Scalars['String']>;
 	User?: Maybe<UserSafe>;
 };
@@ -235,10 +228,10 @@ export type Contacts = {
 
 export type InfoMore = {
 	__typename?: 'InfoMore';
-	_id?: Maybe<Scalars['ID']>;
-	isEndUp?: Maybe<Scalars['ID']>;
-	isEndDown?: Maybe<Scalars['ID']>;
-	lastIndex?: Maybe<Scalars['ID']>;
+	_id?: Maybe<Scalars['ObjectID']>;
+	isEndUp?: Maybe<Scalars['ObjectID']>;
+	isEndDown?: Maybe<Scalars['ObjectID']>;
+	lastIndex?: Maybe<Scalars['ObjectID']>;
 	size?: Maybe<Scalars['Int']>;
 };
 
@@ -256,9 +249,9 @@ export type Response = {
 
 export type Message = {
 	__typename?: 'Message';
-	_id: Scalars['ID'];
-	userid: Scalars['ID'];
-	date: Scalars['Date'];
+	_id: Scalars['ObjectID'];
+	userid: Scalars['ObjectID'];
+	createdAt: Scalars['Date'];
 	text?: Maybe<Scalars['String']>;
 	attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
 	isSend?: Maybe<Scalars['Boolean']>;
@@ -280,7 +273,7 @@ export enum Provider {
 }
 
 export type IUser = {
-	_id: Scalars['ID'];
+	_id: Scalars['ObjectID'];
 	name: Scalars['String'];
 	email: Scalars['String'];
 	avatar?: Maybe<Scalars['String']>;
@@ -289,7 +282,7 @@ export type IUser = {
 	auth?: Maybe<Authentication>;
 	google?: Maybe<GoogleNetwork>;
 	facebook?: Maybe<FacebookNetwork>;
-	chats_id?: Maybe<Array<Scalars['ID']>>;
+	chats_id?: Maybe<Array<Scalars['ObjectID']>>;
 	contacts?: Maybe<Array<Contact>>;
 	createdAt: Scalars['Date'];
 	dateLastOnline?: Maybe<Scalars['Date']>;
@@ -304,7 +297,7 @@ export type IUser = {
 
 export type UserSafe = IUser & {
 	__typename?: 'UserSafe';
-	_id: Scalars['ID'];
+	_id: Scalars['ObjectID'];
 	name: Scalars['String'];
 	email: Scalars['String'];
 	avatar?: Maybe<Scalars['String']>;
@@ -313,7 +306,7 @@ export type UserSafe = IUser & {
 	auth?: Maybe<Authentication>;
 	google?: Maybe<GoogleNetwork>;
 	facebook?: Maybe<FacebookNetwork>;
-	chats_id?: Maybe<Array<Scalars['ID']>>;
+	chats_id?: Maybe<Array<Scalars['ObjectID']>>;
 	contacts?: Maybe<Array<Contact>>;
 	createdAt: Scalars['Date'];
 	dateLastOnline?: Maybe<Scalars['Date']>;
@@ -329,7 +322,7 @@ export type UserSafe = IUser & {
 export type User = IUser & {
 	__typename?: 'User';
 	password?: Maybe<Scalars['Password']>;
-	_id: Scalars['ID'];
+	_id: Scalars['ObjectID'];
 	name: Scalars['String'];
 	email: Scalars['String'];
 	avatar?: Maybe<Scalars['String']>;
@@ -338,7 +331,7 @@ export type User = IUser & {
 	auth?: Maybe<Authentication>;
 	google?: Maybe<GoogleNetwork>;
 	facebook?: Maybe<FacebookNetwork>;
-	chats_id?: Maybe<Array<Scalars['ID']>>;
+	chats_id?: Maybe<Array<Scalars['ObjectID']>>;
 	contacts?: Maybe<Array<Contact>>;
 	createdAt: Scalars['Date'];
 	dateLastOnline?: Maybe<Scalars['Date']>;
@@ -363,8 +356,25 @@ export type LoginQuery = { __typename?: 'Query' } & {
 	>;
 };
 
+export type ChatInfoFragment = { __typename?: 'Chat' } & Pick<
+	Chat,
+	| '_id'
+	| 'title'
+	| 'image'
+	| 'createdAt'
+	| 'creater'
+	| 'creaters_id'
+	| 'access'
+>;
+
+export type LastMessageFragment = { __typename?: 'Chat' } & {
+	lastMessage?: Maybe<
+		{ __typename?: 'Message' } & Pick<Message, '_id' | 'text' | 'createdAt'>
+	>;
+};
+
 export type InviteChatMutationVariables = Exact<{
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 }>;
 
 export type InviteChatMutation = { __typename?: 'Mutation' } & Pick<
@@ -373,7 +383,7 @@ export type InviteChatMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type LeaveChatMutationVariables = Exact<{
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 }>;
 
 export type LeaveChatMutation = { __typename?: 'Mutation' } & Pick<
@@ -382,7 +392,7 @@ export type LeaveChatMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type RemoveChatMutationVariables = Exact<{
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 }>;
 
 export type RemoveChatMutation = { __typename?: 'Mutation' } & {
@@ -399,7 +409,7 @@ export type CreateChatMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type ChatQueryVariables = Exact<{
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 }>;
 
 export type ChatQuery = { __typename?: 'Query' } & {
@@ -408,11 +418,7 @@ export type ChatQuery = { __typename?: 'Query' } & {
 	>;
 };
 
-export type ChatsQueryVariables = Exact<{
-	chatid?: Maybe<Scalars['ID']>;
-	limit?: Maybe<Scalars['Int']>;
-	isIncoming?: Maybe<Scalars['Boolean']>;
-}>;
+export type ChatsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ChatsQuery = { __typename?: 'Query' } & {
 	Chats?: Maybe<
@@ -428,11 +434,7 @@ export type AddChatSubscriptionVariables = Exact<{ [key: string]: never }>;
 
 export type AddChatSubscription = { __typename?: 'Subscription' } & {
 	AddChat?: Maybe<
-		{ __typename?: 'Chat' } & {
-			lastMessage?: Maybe<
-				{ __typename?: 'Message' } & Pick<Message, '_id' | 'text'>
-			>;
-		} & ChatInfoFragment
+		{ __typename?: 'Chat' } & ChatInfoFragment & LastMessageFragment
 	>;
 };
 
@@ -442,11 +444,7 @@ export type DeleteChatSubscription = { __typename?: 'Subscription' } & {
 	DeleteChat?: Maybe<{ __typename?: 'Chat' } & Pick<Chat, '_id'>>;
 };
 
-export type ChatsUserCurrentQueryVariables = Exact<{
-	chatid?: Maybe<Scalars['ID']>;
-	limit?: Maybe<Scalars['Int']>;
-	isIncoming?: Maybe<Scalars['Boolean']>;
-}>;
+export type ChatsUserCurrentQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ChatsUserCurrentQuery = { __typename?: 'Query' } & {
 	Chats?: Maybe<
@@ -480,7 +478,7 @@ export type ChatFindFragmentFragment = { __typename?: 'Chat' } & {
 			Maybe<
 				{ __typename?: 'Message' } & Pick<
 					Message,
-					'_id' | 'text' | 'date'
+					'_id' | 'text' | 'createdAt'
 				>
 			>
 		>
@@ -490,7 +488,7 @@ export type ChatFindFragmentFragment = { __typename?: 'Chat' } & {
 
 export type ContactInfoFragment = { __typename?: 'Contact' } & Pick<
 	Contact,
-	'_id' | 'userid' | 'date' | 'whoIsContact'
+	'_id' | 'userid' | 'createdAt' | 'whoIsContact'
 > & { User?: Maybe<{ __typename?: 'UserSafe' } & UserInfoFragment> };
 
 export type ContactsQueryVariables = Exact<{ [key: string]: never }>;
@@ -518,8 +516,21 @@ export type FindContactQuery = { __typename?: 'Query' } & {
 	>;
 };
 
+export type MessagesChatFragment = { __typename?: 'Chat' } & {
+	messages?: Maybe<
+		Array<
+			Maybe<
+				{ __typename?: 'Message' } & Pick<
+					Message,
+					'_id' | 'userid' | 'text' | 'createdAt' | 'isChange'
+				>
+			>
+		>
+	>;
+};
+
 export type SendMessageMutationVariables = Exact<{
-	chatid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
 	text: Scalars['String'];
 }>;
 
@@ -529,8 +540,8 @@ export type SendMessageMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type ChangeMessageMutationVariables = Exact<{
-	chatid: Scalars['ID'];
-	messageid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
+	messageid: Scalars['ObjectID'];
 	text: Scalars['String'];
 }>;
 
@@ -540,8 +551,8 @@ export type ChangeMessageMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type RemoveMessageMutationVariables = Exact<{
-	chatid: Scalars['ID'];
-	messageid: Scalars['ID'];
+	chatid: Scalars['ObjectID'];
+	messageid: Scalars['ObjectID'];
 }>;
 
 export type RemoveMessageMutation = { __typename?: 'Mutation' } & Pick<
@@ -550,8 +561,8 @@ export type RemoveMessageMutation = { __typename?: 'Mutation' } & Pick<
 >;
 
 export type MessagesQueryVariables = Exact<{
-	chatid: Scalars['ID'];
-	messageid?: Maybe<Scalars['ID']>;
+	chatid: Scalars['ObjectID'];
+	messageid?: Maybe<Scalars['ObjectID']>;
 	limit?: Maybe<Scalars['Int']>;
 	isIncoming?: Maybe<Scalars['Boolean']>;
 }>;
@@ -559,7 +570,7 @@ export type MessagesQueryVariables = Exact<{
 export type MessagesQuery = { __typename?: 'Query' } & {
 	Messages?: Maybe<
 		{ __typename?: 'Messages' } & {
-			Chat: { __typename?: 'Chat' } & ChatMessagesFragment &
+			Chat: { __typename?: 'Chat' } & MessagesChatFragment &
 				LastMessageFragment;
 			InfoMore?: Maybe<{ __typename?: 'InfoMore' } & InfoMoreFragment>;
 		}
@@ -571,7 +582,7 @@ export type AddMessageSubscriptionVariables = Exact<{ [key: string]: never }>;
 export type AddMessageSubscription = { __typename?: 'Subscription' } & {
 	AddMessage: { __typename?: 'Message' } & Pick<
 		Message,
-		'_id' | 'userid' | 'text' | 'date' | 'isChange'
+		'_id' | 'userid' | 'text' | 'createdAt' | 'isChange'
 	>;
 };
 
@@ -604,7 +615,7 @@ export type UserInfoFragment = { __typename?: 'UserSafe' } & Pick<
 >;
 
 export type UserQueryVariables = Exact<{
-	id: Scalars['ID'];
+	id: Scalars['ObjectID'];
 }>;
 
 export type UserQuery = { __typename?: 'Query' } & {
@@ -625,36 +636,12 @@ export type InfoMoreFragment = { __typename?: 'InfoMore' } & Pick<
 	'_id' | 'size' | 'isEndUp' | 'isEndDown' | 'lastIndex'
 >;
 
-export type ChatMessagesFragment = { __typename?: 'Chat' } & {
-	messages?: Maybe<
-		Array<
-			Maybe<
-				{ __typename?: 'Message' } & Pick<
-					Message,
-					'_id' | 'userid' | 'text' | 'date' | 'isChange'
-				>
-			>
-		>
-	>;
-};
-
-export type ChatInfoFragment = { __typename?: 'Chat' } & Pick<
-	Chat,
-	'_id' | 'title' | 'image' | 'date' | 'creater' | 'creaters_id' | 'access'
->;
-
-export type LastMessageFragment = { __typename?: 'Chat' } & {
-	lastMessage?: Maybe<
-		{ __typename?: 'Message' } & Pick<Message, '_id' | 'text' | 'date'>
-	>;
-};
-
 export const ChatInfoFragmentDoc = gql`
 	fragment ChatInfo on Chat {
 		_id
 		title
 		image
-		date
+		createdAt
 		creater
 		creaters_id
 		access
@@ -665,7 +652,7 @@ export const LastMessageFragmentDoc = gql`
 		lastMessage {
 			_id
 			text
-			date
+			createdAt
 		}
 	}
 `;
@@ -675,7 +662,7 @@ export const ChatFindFragmentFragmentDoc = gql`
 		messages {
 			_id
 			text
-			date
+			createdAt
 		}
 		...LastMessage
 	}
@@ -697,13 +684,24 @@ export const ContactInfoFragmentDoc = gql`
 	fragment ContactInfo on Contact {
 		_id
 		userid
-		date
+		createdAt
 		whoIsContact
 		User {
 			...UserInfo
 		}
 	}
 	${UserInfoFragmentDoc}
+`;
+export const MessagesChatFragmentDoc = gql`
+	fragment MessagesChat on Chat {
+		messages {
+			_id
+			userid
+			text
+			createdAt
+			isChange
+		}
+	}
 `;
 export const InfoMoreFragmentDoc = gql`
 	fragment InfoMore on InfoMore {
@@ -712,17 +710,6 @@ export const InfoMoreFragmentDoc = gql`
 		isEndUp
 		isEndDown
 		lastIndex
-	}
-`;
-export const ChatMessagesFragmentDoc = gql`
-	fragment ChatMessages on Chat {
-		messages {
-			_id
-			userid
-			text
-			date
-			isChange
-		}
 	}
 `;
 export const LoginDocument = gql`
@@ -774,7 +761,7 @@ export type LoginQueryResult = Apollo.QueryResult<
 	LoginQueryVariables
 >;
 export const InviteChatDocument = gql`
-	mutation inviteChat($chatid: ID!) {
+	mutation inviteChat($chatid: ObjectID!) {
 		InviteChat(chatid: $chatid)
 	}
 `;
@@ -820,7 +807,7 @@ export type InviteChatMutationOptions = Apollo.BaseMutationOptions<
 	InviteChatMutationVariables
 >;
 export const LeaveChatDocument = gql`
-	mutation leaveChat($chatid: ID!) {
+	mutation leaveChat($chatid: ObjectID!) {
 		LeaveChat(chatid: $chatid)
 	}
 `;
@@ -866,7 +853,7 @@ export type LeaveChatMutationOptions = Apollo.BaseMutationOptions<
 	LeaveChatMutationVariables
 >;
 export const RemoveChatDocument = gql`
-	mutation removeChat($chatid: ID!) {
+	mutation removeChat($chatid: ObjectID!) {
 		RemoveChat(chatid: $chatid) {
 			_id
 		}
@@ -960,7 +947,7 @@ export type CreateChatMutationOptions = Apollo.BaseMutationOptions<
 	CreateChatMutationVariables
 >;
 export const ChatDocument = gql`
-	query chat($chatid: ID!) {
+	query chat($chatid: ObjectID!) {
 		Chat(chatid: $chatid) {
 			...ChatInfo
 			...LastMessage
@@ -1006,8 +993,8 @@ export type ChatQueryHookResult = ReturnType<typeof useChatQuery>;
 export type ChatLazyQueryHookResult = ReturnType<typeof useChatLazyQuery>;
 export type ChatQueryResult = Apollo.QueryResult<ChatQuery, ChatQueryVariables>;
 export const ChatsDocument = gql`
-	query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-		Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+	query chats {
+		Chats {
 			...ChatInfo
 			...LastMessage
 		}
@@ -1028,9 +1015,6 @@ export const ChatsDocument = gql`
  * @example
  * const { data, loading, error } = useChatsQuery({
  *   variables: {
- *      chatid: // value for 'chatid'
- *      limit: // value for 'limit'
- *      isIncoming: // value for 'isIncoming'
  *   },
  * });
  */
@@ -1060,13 +1044,11 @@ export const AddChatDocument = gql`
 	subscription addChat {
 		AddChat {
 			...ChatInfo
-			lastMessage {
-				_id
-				text
-			}
+			...LastMessage
 		}
 	}
 	${ChatInfoFragmentDoc}
+	${LastMessageFragmentDoc}
 `;
 
 /**
@@ -1138,8 +1120,8 @@ export type DeleteChatSubscriptionHookResult = ReturnType<
 >;
 export type DeleteChatSubscriptionResult = Apollo.SubscriptionResult<DeleteChatSubscription>;
 export const ChatsUserCurrentDocument = gql`
-	query chatsUserCurrent($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-		Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+	query chatsUserCurrent {
+		Chats {
 			...ChatInfo
 			...LastMessage
 		}
@@ -1164,9 +1146,6 @@ export const ChatsUserCurrentDocument = gql`
  * @example
  * const { data, loading, error } = useChatsUserCurrentQuery({
  *   variables: {
- *      chatid: // value for 'chatid'
- *      limit: // value for 'limit'
- *      isIncoming: // value for 'isIncoming'
  *   },
  * });
  */
@@ -1377,7 +1356,7 @@ export type FindContactQueryResult = Apollo.QueryResult<
 	FindContactQueryVariables
 >;
 export const SendMessageDocument = gql`
-	mutation sendMessage($chatid: ID!, $text: String!) {
+	mutation sendMessage($chatid: ObjectID!, $text: String!) {
 		SendMessage(chatid: $chatid, text: $text)
 	}
 `;
@@ -1424,7 +1403,11 @@ export type SendMessageMutationOptions = Apollo.BaseMutationOptions<
 	SendMessageMutationVariables
 >;
 export const ChangeMessageDocument = gql`
-	mutation changeMessage($chatid: ID!, $messageid: ID!, $text: String!) {
+	mutation changeMessage(
+		$chatid: ObjectID!
+		$messageid: ObjectID!
+		$text: String!
+	) {
 		ChangeMessage(chatid: $chatid, messageid: $messageid, text: $text)
 	}
 `;
@@ -1472,7 +1455,7 @@ export type ChangeMessageMutationOptions = Apollo.BaseMutationOptions<
 	ChangeMessageMutationVariables
 >;
 export const RemoveMessageDocument = gql`
-	mutation removeMessage($chatid: ID!, $messageid: ID!) {
+	mutation removeMessage($chatid: ObjectID!, $messageid: ObjectID!) {
 		RemoveMessage(chatid: $chatid, messageid: $messageid)
 	}
 `;
@@ -1520,8 +1503,8 @@ export type RemoveMessageMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const MessagesDocument = gql`
 	query messages(
-		$chatid: ID!
-		$messageid: ID
+		$chatid: ObjectID!
+		$messageid: ObjectID
 		$limit: Int
 		$isIncoming: Boolean = false
 	) {
@@ -1532,7 +1515,7 @@ export const MessagesDocument = gql`
 			isIncoming: $isIncoming
 		) {
 			Chat {
-				...ChatMessages
+				...MessagesChat
 				...LastMessage
 			}
 			InfoMore {
@@ -1540,7 +1523,7 @@ export const MessagesDocument = gql`
 			}
 		}
 	}
-	${ChatMessagesFragmentDoc}
+	${MessagesChatFragmentDoc}
 	${LastMessageFragmentDoc}
 	${InfoMoreFragmentDoc}
 `;
@@ -1597,7 +1580,7 @@ export const AddMessageDocument = gql`
 			_id
 			userid
 			text
-			date
+			createdAt
 			isChange
 		}
 	}
@@ -1712,7 +1695,7 @@ export type DeleteMessageSubscriptionHookResult = ReturnType<
 >;
 export type DeleteMessageSubscriptionResult = Apollo.SubscriptionResult<DeleteMessageSubscription>;
 export const UserDocument = gql`
-	query user($id: ID!) {
+	query user($id: ObjectID!) {
 		User(id: $id) {
 			...UserInfo
 		}

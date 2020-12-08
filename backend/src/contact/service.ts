@@ -1,10 +1,11 @@
 import Chat, { ChatDocument } from 'src/chat/entity';
 import User, { UserDocument } from 'src/user/entity';
 import { Injectable } from '@nestjs/common';
-import { Access, Contact, Contacts, Creater } from 'src/graphql';
+import { Access, Contacts, Creater, ObjectID } from 'src/graphql';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
+import Contact from './entity';
 import { AggregateFilter, AggregateLookUp, ContactProject } from './common';
 
 @Injectable()
@@ -14,21 +15,21 @@ export default class ContactService {
 		@InjectModel(User.name) private userModel: Model<UserDocument>,
 	) {}
 
-	contact = async (userid: string): Promise<Contact> =>
+	contact = async (userid: ObjectID): Promise<Contact> =>
 		await AggregateLookUp(userid, this.userModel)
 			.replaceRoot('$contacts')
 			.unwind('$User')
 			.project(ContactProject)
 			.then(contacts => contacts.pop() as Contact);
 
-	contacts = async (userid: string): Promise<Contact[]> =>
+	contacts = async (userid: ObjectID): Promise<Contact[]> =>
 		await AggregateLookUp(userid, this.userModel)
 			.replaceRoot('$contacts')
 			.unwind('$User')
 			.project(ContactProject)
 			.then(contacts => contacts.map((contact: Contact) => contact));
 
-	async findContacts(userid: string, text: string): Promise<Contacts> {
+	async findContacts(userid: ObjectID, text: string): Promise<Contacts> {
 		const Existing: Contact[] = await AggregateLookUp(
 			userid,
 			this.userModel,
@@ -49,16 +50,14 @@ export default class ContactService {
 			.project(ContactProject)
 			.then(contacts => contacts.map((contact: Contact) => contact));
 
-		const contactUserID: string[] = await AggregateFilter(
+		const contactUserID: ObjectID[] = await AggregateFilter(
 			userid,
 			this.userModel,
 		)
-			.group({
-				_id: '$contacts.userid',
-			})
+			.group({ _id: '$contacts.userid' })
 			.then(contacts => contacts.map((contact: Contact) => contact._id));
 
-		contactUserID.push(new Types.ObjectId(userid).toHexString());
+		contactUserID.push(userid);
 		const Incoming: Contact[] = await this.userModel
 			.aggregate()
 			.match({
@@ -68,7 +67,7 @@ export default class ContactService {
 			})
 			.addFields({
 				userid: '$_id',
-				date: "Don't exist",
+				createdAt: "Don't exist",
 				User: {
 					_id: '$_id',
 					name: '$name',
@@ -83,14 +82,14 @@ export default class ContactService {
 	}
 
 	async create(
-		userid: string,
-		contactid: string,
+		userid: ObjectID,
+		contactid: ObjectID,
 		title: string,
 	): Promise<Contact | null> {
 		const chat: Chat = {
-			_id: new Types.ObjectId().toHexString(),
+			_id: new Types.ObjectId(),
 			title,
-			date: new Date(),
+			createdAt: new Date(),
 			creaters_id: [userid, contactid],
 			creater: Creater.Contact,
 			access: Access.Private,
@@ -98,7 +97,7 @@ export default class ContactService {
 
 		const contact: Contact = {
 			_id: chat._id,
-			date: chat.date,
+			createdAt: chat.createdAt,
 			userid,
 			whoIsContact: title,
 		};

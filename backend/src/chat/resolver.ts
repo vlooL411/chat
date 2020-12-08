@@ -1,8 +1,9 @@
 import AuthGuard from 'src/auth/guards';
+import { ApolloError } from 'apollo-server-express';
 import { PubSub } from 'graphql-subscriptions';
-import { Args, Context, ID, Resolver } from '@nestjs/graphql';
+import { Args, Context, Resolver } from '@nestjs/graphql';
 import { Mutation, Query, Subscription } from '@nestjs/graphql';
-import { Chat, UserSafe } from 'src/graphql';
+import { Chat, ObjectID, UserSafe } from 'src/graphql';
 import { CurrentUser } from 'src/auth/decorators';
 
 import ChatService from './service';
@@ -19,7 +20,7 @@ export default class ChatResolver {
 	@AuthGuard()
 	@Query()
 	async Chat(
-		@Args('chatid', ID) chatid: string,
+		@Args('chatid') chatid: ObjectID,
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<Chat> {
 		return this.chatService.chat(_id, chatid);
@@ -47,8 +48,9 @@ export default class ChatResolver {
 		@Args('title') title: string,
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
+		console.log(title);
 		const AddChat = await this.chatService.create(_id, title);
-		if (!AddChat) throw new Error("Chat don't created");
+		if (!AddChat) throw new ApolloError("Chat don't created");
 
 		await pubsub.publish(ChatSubs.ADD_CHAT, { AddChat });
 		return 'Chat created';
@@ -58,11 +60,11 @@ export default class ChatResolver {
 	@Mutation()
 	async InviteChat(
 		@Context('pubsub') pubsub: PubSub,
-		@Args('chatid', ID) chatid: string,
+		@Args('chatid') chatid: ObjectID,
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
 		const AddChat = await this.chatService.invite(_id, chatid);
-		if (!AddChat) throw new Error("You don't invited chat");
+		if (!AddChat) throw new ApolloError("You don't invited chat");
 
 		await pubsub.publish(ChatSubs.ADD_CHAT, { AddChat });
 		return 'You invited chat';
@@ -72,11 +74,11 @@ export default class ChatResolver {
 	@Mutation()
 	async LeaveChat(
 		@Context('pubsub') pubsub: PubSub,
-		@Args('chatid', ID) chatid: string,
+		@Args('chatid') chatid: ObjectID,
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
 		const DeleteChat = await this.chatService.leave(_id, chatid);
-		if (DeleteChat) throw new Error("User don't leaved chat");
+		if (DeleteChat) throw new ApolloError("User don't leaved chat");
 
 		await pubsub.publish(ChatSubs.DELETE_CHAT, { DeleteChat });
 		return 'User leaved chat';
@@ -86,11 +88,11 @@ export default class ChatResolver {
 	@Mutation()
 	async RemoveChat(
 		@Context('pubsub') pubsub: PubSub,
-		@Args('chatid', ID) chatid: string,
+		@Args('chatid') chatid: ObjectID,
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
 		const DeleteChat = await this.chatService.remove(_id, chatid);
-		if (DeleteChat) throw new Error("User don't removed chat");
+		if (DeleteChat) throw new ApolloError("User don't removed chat");
 
 		await pubsub.publish(ChatSubs.DELETE_CHAT, { DeleteChat });
 		return 'User removed chat';

@@ -68,7 +68,7 @@ const getAuthorization = (): Authentication | null => {
 		return JSON.parse(auth);
 	} catch (e) {
 		localStorage.clear();
-		throw e;
+		console.error('Apollo client, error parse authentication', e);
 	}
 };
 

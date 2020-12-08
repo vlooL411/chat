@@ -1,6 +1,6 @@
 query messages(
-	$chatid: ID!
-	$messageid: ID
+	$chatid: ObjectID!
+	$messageid: ObjectID
 	$limit: Int
 	$isIncoming: Boolean = false
 ) {
@@ -11,7 +11,7 @@ query messages(
 		isIncoming: $isIncoming
 	) {
 		Chat {
-			...ChatMessages
+			...MessagesChat
 			...LastMessage
 		}
 		InfoMore {

@@ -6,14 +6,14 @@ import {
 	UnauthorizedException,
 	UseGuards,
 } from '@nestjs/common';
-import { AuthGuard as authGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { Token, TokenType } from 'src/graphql';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 import AuthConfig from '../config';
 
 @Injectable()
-class gqlGuard extends authGuard('jwt') {
+class gqlGuard extends AuthGuard('jwt') {
 	constructor(private readonly jwtService: JwtService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,11 +21,11 @@ class gqlGuard extends authGuard('jwt') {
 		});
 	}
 
-	validate(token: Token) {
+	validate(token: Token): boolean {
 		try {
-			return this.jwtService.verify(token);
-		} catch {
-			throw new UnauthorizedException();
+			return !!this.jwtService.verify(token);
+		} catch (e) {
+			throw new UnauthorizedException(e);
 		}
 	}
 

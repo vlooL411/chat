@@ -1,28 +1,22 @@
+import Message, { MessageSchema } from 'src/message/entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Creater } from 'src/graphql';
 
-import Message, { MessageSchema } from '../message/entity';
-import { refUserID, required } from './props';
+import { typeDate, typeObjectID } from '.';
 
 @Schema()
 export class Channel {
-	@Prop(refUserID)
-	creaters_id: string;
+	@Prop({ type: [typeObjectID] }) creaters_id: string;
+	@Prop({ type: [typeObjectID] }) users_id: string[];
 
-	@Prop()
-	creater: string;
+	@Prop({ type: Creater, required: true }) creater: string;
 
-	@Prop({ ...required, type: Date })
+	@Prop(typeDate)
 	date: Date;
 
-	@Prop()
-	title: string;
-
-	@Prop()
-	image: string;
-
-	@Prop({ type: [refUserID] })
-	users_id: string[];
+	@Prop() title: string;
+	@Prop() image: string;
 
 	@Prop({ type: [MessageSchema] })
 	messages: Message[];

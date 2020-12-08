@@ -88,7 +88,7 @@ const MessageBlock = ({
 				</p>
 				<span className={mes_block_info}>
 					<p className={mes_block_info_date}>
-						{getHHMMSSPA(new Date(message?.date))}
+						{getHHMMSSPA(new Date(message?.createdAt))}
 					</p>
 					{message?.isRead ? (
 						<FontAwesomeIcon icon={faCheck} />

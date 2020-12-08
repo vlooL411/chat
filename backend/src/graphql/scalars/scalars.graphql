@@ -1,3 +1,4 @@
+scalar ObjectID
 scalar Date
 scalar Token
 scalar Password

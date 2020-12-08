@@ -8,10 +8,20 @@ describe('Sidebar Component', () => {
 			(
 				<Sidebar
 					faBlocks={[
-						{ fa: null, text: 'RandomText', href: '', onClick: () => {} },
+						{
+							fa: null,
+							text: 'RandomText',
+							href: '',
+							onClick: () => {},
+						},
 					]}
 					extendBlocks={[
-						{ fa: null, text: 'RandomText', href: '', onClick: () => {} },
+						{
+							fa: null,
+							text: 'RandomText',
+							href: '',
+							onClick: () => {},
+						},
 					]}
 				/>
 			),

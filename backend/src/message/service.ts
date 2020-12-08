@@ -1,9 +1,12 @@
 import Chat, { ChatDocument } from 'src/chat/entity';
 import User, { UserDocument } from 'src/user/entity';
 import { Injectable } from '@nestjs/common';
-import { Access, InfoMore, Message, Messages } from 'src/graphql';
+import { Access, InfoMore, Messages, ObjectID } from 'src/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { ApolloError } from 'apollo-server-express';
+
+import Message from './entity';
 
 @Injectable()
 export default class MessageService {
@@ -13,25 +16,22 @@ export default class MessageService {
 	) {}
 
 	async messages(
-		chatid: string,
-		messageid: string,
+		chatid: ObjectID,
+		messageid: ObjectID,
 		limit: number,
 	): Promise<Messages> {
-		const [{ index, size }]: {
-			size: number;
-			index?: number;
-		}[] = await this.chatModel
+		const [messages] = (await this.chatModel
 			.aggregate()
-			.match({ _id: new Types.ObjectId(chatid) })
+			.match({ _id: chatid })
 			.project({
-				index: {
-					$indexOfArray: [
-						'$messages._id',
-						new Types.ObjectId(messageid),
-					],
-				},
+				index: { $indexOfArray: ['$messages._id', messageid] },
 				size: { $size: '$messages' },
-			});
+			})) as { size: number; index?: number }[];
+
+		if (!messages || !messages?.size || messages?.size <= 0)
+			throw new ApolloError('No messages');
+
+		const { index, size } = messages;
 
 		let start;
 		if (limit > 0) start = index < 0 ? size - limit + 1 : index;
@@ -41,22 +41,18 @@ export default class MessageService {
 		const end = start < 0 ? (index < 0 ? start + Limit : index) : Limit;
 		start = start < 0 ? 0 : start;
 
-		const chat_s: Chat[] = await this.chatModel.aggregate([
-			{ $match: { _id: new Types.ObjectId(chatid) } },
-			{
-				$project: {
-					_id: true,
-					firstMessage: { $arrayElemAt: ['$messages._id', 0] },
-					lastMessage: { $arrayElemAt: ['$messages', -1] },
-					messages: {
-						$slice: ['$messages', start, end],
-					},
-				},
-			},
-		]);
+		const chat_s = (await this.chatModel
+			.aggregate()
+			.match({ _id: chatid })
+			.project({
+				_id: true,
+				firstMessage: { $arrayElemAt: ['$messages._id', 0] },
+				lastMessage: { $arrayElemAt: ['$messages', -1] },
+				messages: { $slice: ['$messages', start, end] },
+			})) as (Chat & { firstMessage: ObjectID })[];
 
 		const chat = chat_s?.length > 0 ? chat_s[0] : null;
-		const isEndUp = (chat as any)?.firstMessage as string;
+		const isEndUp = chat?.firstMessage;
 		const isEndDown = chat?.lastMessage?._id;
 
 		const InfoMore: InfoMore = {
@@ -73,7 +69,7 @@ export default class MessageService {
 	async findMessage(userid: string, text: string): Promise<Chat[]> {
 		const { chats_id }: User = await this.userModel.findOne(
 			{ _id: userid },
-			'_id this.chatModel_id',
+			['_id', 'chat_id'],
 		);
 
 		const chat_s: Chat[] = await this.chatModel
@@ -84,7 +80,7 @@ export default class MessageService {
 			})
 			.project({
 				title: true,
-				date: true,
+				createdAt: true,
 				creater: true,
 				creaters_id: true,
 				access: true,
@@ -107,15 +103,16 @@ export default class MessageService {
 	}
 
 	async send(
-		userid: string,
-		chatid: string,
+		userid: ObjectID,
+		chatid: ObjectID,
 		text: string,
 	): Promise<Message | null> {
 		const message: Message = {
-			_id: new Types.ObjectId() as any,
+			_id: new Types.ObjectId(),
 			text,
-			date: new Date(),
+			createdAt: new Date(),
 			userid,
+			isSend: true,
 		};
 
 		const { ok } = await this.chatModel.updateOne(
@@ -127,16 +124,16 @@ export default class MessageService {
 					{ users_id: { $elemMatch: { $eq: userid } } },
 				],
 			},
-			{ $push: { messages: message as never } },
+			{ $push: { messages: message } },
 		);
 
 		return ok != 0 ? message : null;
 	}
 
 	async remove(
-		userid: string,
-		chatid: string,
-		messageid: string,
+		userid: ObjectID,
+		chatid: ObjectID,
+		messageid: ObjectID,
 	): Promise<Message | null> {
 		const { ok } = await this.chatModel.updateOne(
 			{
@@ -153,8 +150,8 @@ export default class MessageService {
 	}
 
 	async change(
-		chatid: string,
-		messageid: string,
+		chatid: ObjectID,
+		messageid: ObjectID,
 		text: string,
 	): Promise<Message | null> {
 		const message = {

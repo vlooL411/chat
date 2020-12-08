@@ -1,7 +1,7 @@
 type Message {
-	_id: ID!
-	userid: ID!
-	date: Date!
+	_id: ObjectID!
+	userid: ObjectID!
+	createdAt: Date!
 	text: String
 	attachments: [String]
 	isSend: Boolean
@@ -17,8 +17,8 @@ type Messages {
 
 type Query {
 	Messages(
-		chatid: ID!
-		messageid: ID
+		chatid: ObjectID!
+		messageid: ObjectID
 		limit: Int
 		isIncoming: Boolean
 	): Messages
@@ -27,9 +27,13 @@ type Query {
 }
 
 type Mutation {
-	SendMessage(chatid: ID!, text: String!): String
-	ChangeMessage(chatid: ID!, messageid: ID!, text: String!): String
-	RemoveMessage(chatid: ID!, messageid: ID!): String
+	SendMessage(chatid: ObjectID!, text: String!): String
+	ChangeMessage(
+		chatid: ObjectID!
+		messageid: ObjectID!
+		text: String!
+	): String
+	RemoveMessage(chatid: ObjectID!, messageid: ObjectID!): String
 }
 
 type Subscription {

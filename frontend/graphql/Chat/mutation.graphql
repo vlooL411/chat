@@ -1,10 +1,10 @@
-mutation inviteChat($chatid: ID!) {
+mutation inviteChat($chatid: ObjectID!) {
 	InviteChat(chatid: $chatid)
 }
-mutation leaveChat($chatid: ID!) {
+mutation leaveChat($chatid: ObjectID!) {
 	LeaveChat(chatid: $chatid)
 }
-mutation removeChat($chatid: ID!) {
+mutation removeChat($chatid: ObjectID!) {
 	RemoveChat(chatid: $chatid) {
 		_id
 	}

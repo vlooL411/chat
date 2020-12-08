@@ -11,7 +11,7 @@ import {
 	DeleteChatDocument,
 	Message,
 	RemoveChatMutation,
-	useChatsUserCurrentQuery,
+	useChatsQuery,
 	useFindQueryChatLazyQuery,
 } from '@frontend/types';
 
@@ -32,7 +32,7 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 	const runFind = () => (storage.IsSearch = true);
 	const stopFind = () => (storage.IsSearch = false);
 
-	const { loading, data, subscribeToMore } = useChatsUserCurrentQuery();
+	const { loading, data, subscribeToMore } = useChatsQuery();
 	const [
 		getFind,
 		{ loading: loadFind, data: dataFind },
@@ -49,13 +49,13 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 					?.AddChat as Chat;
 				if (!AddChat) return null;
 
-				variables.isIncoming = true;
+				// variables.isIncoming = true;
 				return {
 					Chats: [AddChat],
-					UserCurrent: {
-						_id: data?.UserCurrent?._id,
-						chats_id: [AddChat?._id],
-					},
+					// UserCurrent: {
+					// 	_id: data?.UserCurrent?._id,
+					// 	chats_id: [AddChat?._id],
+					// },
 				};
 			},
 		});
@@ -73,17 +73,17 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 				const chats = prev?.Chats?.filter(
 					chat => chat._id != RemoveChat._id,
 				);
-				const chats_id = prev?.UserCurrent?.chats_id.filter(
-					id => id != RemoveChat._id,
-				);
+				// const chats_id = prev?.UserCurrent?.chats_id.filter(
+				// 	id => id != RemoveChat._id,
+				// );
 
-				variables.isIncoming = true;
+				// variables.isIncoming = true;
 				return {
 					Chats: chats,
-					UserCurrent: {
-						_id: data?.UserCurrent?._id,
-						chats_id: chats_id,
-					},
+					// UserCurrent: {
+					// 	_id: data?.UserCurrent?._id,
+					// 	chats_id: chats_id,
+					// },
 				};
 			},
 		});
@@ -120,7 +120,7 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 			title={chat?.title}
 			text={mes?.text}
 			image={chat?.image ?? EMPTY_AVATAR_CHAT}
-			date={WhatDate(new Date(mes?.date))}
+			date={WhatDate(new Date(mes?.createdAt))}
 			onClick={() => onSelectChat(chat?._id)}
 			key={mes?._id}
 		/>
@@ -133,10 +133,10 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 	const dataFindChats = dataFind?.FindChat;
 	const dataFindMess = dataFind?.FindMessage;
 
-	const isChatsEmpty = dataChats?.length == 0;
-	const countFindChats = dataFindChats?.length;
-	const countFindMess = dataFindMess?.reduce(
-		(sum, curr) => sum + (curr?.messages ? curr?.messages.length : 0),
+	const isChatsEmpty: boolean = dataChats?.length == 0;
+	const countFindChats: number = dataFindChats?.length;
+	const countFindMess: number = dataFindMess?.reduce(
+		(sum, { messages }) => sum + (messages ? messages.length : 0),
 		0,
 	);
 

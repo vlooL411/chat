@@ -1,12 +1,12 @@
-query chat($chatid: ID!) {
+query chat($chatid: ObjectID!) {
 	Chat(chatid: $chatid) {
 		...ChatInfo
 		...LastMessage
 	}
 }
 
-query chats($chatid: ID, $limit: Int, $isIncoming: Boolean) {
-	Chats(chatid: $chatid, limit: $limit, isIncoming: $isIncoming) {
+query chats {
+	Chats {
 		...ChatInfo
 		...LastMessage
 	}

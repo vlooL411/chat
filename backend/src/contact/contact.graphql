@@ -1,7 +1,7 @@
 type Contact {
-	_id: ID!
-	userid: ID!
-	date: Date!
+	_id: ObjectID!
+	userid: ObjectID!
+	createdAt: Date!
 	whoIsContact: String
 	User: UserSafe
 }

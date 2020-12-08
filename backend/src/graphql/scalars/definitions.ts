@@ -1,4 +1,4 @@
-import { DefinitionsGeneratorOptions } from '@nestjs/graphql'
+import { DefinitionsGeneratorOptions } from '@nestjs/graphql';
 
 const Definitions: DefinitionsGeneratorOptions = {
 	defaultScalarType: 'unknown',
@@ -6,7 +6,9 @@ const Definitions: DefinitionsGeneratorOptions = {
 		Date: 'Date',
 		Password: 'string',
 		Token: 'string',
+		ObjectID: 'Types.ObjectId',
 	},
+	additionalHeader: 'import { Types } from "mongoose"',
 };
 
 export default Definitions;

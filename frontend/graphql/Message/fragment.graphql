@@ -1,0 +1,9 @@
+fragment MessagesChat on Chat {
+	messages {
+		_id
+		userid
+		text
+		createdAt
+		isChange
+	}
+}

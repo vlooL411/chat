@@ -1,13 +1,12 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { Authentication, UserSafe } from 'src/graphql';
-import { Request } from 'express';
 
-import AuthService from './service';
 import { GoogleGuard } from './guards';
+import { RegisterService } from './services';
 
 @Controller('auth')
 export default class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(private registerService: RegisterService) {}
 
 	@Get('google')
 	@GoogleGuard()
@@ -18,8 +17,8 @@ export default class AuthController {
 	@Get('google/callback')
 	@GoogleGuard()
 	async googleRedirect(
-		@Req() req: Request & { user: UserSafe },
+		@Req() req: { user: UserSafe },
 	): Promise<Authentication> {
-		return await this.authService.registerGoogle(req?.user);
+		return await this.registerService.registerGoogle(req?.user);
 	}
 }

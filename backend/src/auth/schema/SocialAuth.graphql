@@ -6,8 +6,7 @@ type GoogleNetwork implements SocialNetwork {
 	middleName: String!
 	email: String!
 
-	accessToken: Token!
-	refreshToken: Token!
+	auth: Authentication!
 }
 
 type FacebookNetwork implements SocialNetwork {
@@ -18,6 +17,5 @@ type FacebookNetwork implements SocialNetwork {
 	middleName: String!
 	email: String!
 
-	accessToken: Token!
-	refreshToken: Token!
+	auth: Authentication!
 }

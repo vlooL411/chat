@@ -28,9 +28,9 @@ const AuthConfig = (): Config => {
 	return {
 		accessToken: {
 			secret: env.ACCESS_SECRET,
-			signOptions: { expiresIn: '5m' },
+			signOptions: { expiresIn: '60m' },
 		},
-		refreshToken: crtToken(env.REFRESH_SECRET, '10m'),
+		refreshToken: crtToken(env.REFRESH_SECRET, '90m'),
 	};
 };
 
