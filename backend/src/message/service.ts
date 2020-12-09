@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { Access, InfoMore, Messages, ObjectID } from 'src/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { ApolloError } from 'apollo-server-express';
 
 import Message from './entity';
 
@@ -29,7 +28,7 @@ export default class MessageService {
 			})) as { size: number; index?: number }[];
 
 		if (!messages || !messages?.size || messages?.size <= 0)
-			throw new ApolloError('No messages');
+			return { Chat: null, InfoMore: null };
 
 		const { index, size } = messages;
 
@@ -117,7 +116,7 @@ export default class MessageService {
 
 		const { ok } = await this.chatModel.updateOne(
 			{
-				_id: chatid,
+				_id: new Types.ObjectId(chatid),
 				$or: [
 					{ access: Access.Public },
 					{ creaters_id: { $elemMatch: { $eq: userid } } },

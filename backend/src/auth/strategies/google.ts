@@ -7,7 +7,6 @@ import {
 } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { Provider, UserSafe } from 'src/graphql';
-import { Types } from 'mongoose';
 
 @Injectable()
 export default class GoogleStrategy extends PassportStrategy(

@@ -1,5 +1,5 @@
 import Loader from 'components/Loader';
-import { ReactElement, useEffect, useState } from 'react';
+import { MouseEvent, ReactElement, useEffect, useState } from 'react';
 import { getHHMMSSPA } from 'components/common/WhatDate';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,19 +24,17 @@ const MessageBlock = ({
 	countCharForExpanded = 300,
 	switchMessageAction = () => null,
 }: Props): ReactElement => {
-	const { mes, mes_block, edit } = style;
-	const {
-		mes_block_text,
-		expend,
-		mes_block_info,
-		mes_block_info_date,
-	} = style;
+	const { mes, edit, expend } = style;
+	const { mes_block, mes_block_text } = style;
+	const { mes_block_info, mes_block_info_date } = style;
+
 	const [isExpandMes, setIsExpandMes] = useState<boolean>(false);
 
-	const isExpand = message?.text?.length > countCharForExpanded;
+	const isExpand = (): boolean =>
+		message?.text?.length > countCharForExpanded;
 
 	useEffect(() => {
-		if (isExpand) setIsExpandMes(true);
+		if (isExpand()) setIsExpandMes(true);
 	}, [message?.text?.length]);
 
 	const [
@@ -45,15 +43,23 @@ const MessageBlock = ({
 	] = useRemoveMessageMutation();
 	const { data } = useUserQuery({ variables: { id: message?.userid } });
 
-	const removeMes = () =>
+	const removeMes = (): void => {
 		removeMessage({ variables: { chatid, messageid: message?._id } });
+	};
 
-	const onMouseEnter = () => {
+	const onMouseEnter = (): void => {
 		if (chatid)
 			localStorage.setItem(
 				`ChatLastMes${chatid.toString()}`,
 				message?._id.toString(),
 			);
+	};
+
+	const onSwitchMessageAction = (e: MouseEvent<HTMLDivElement>): void => {
+		if (e.ctrlKey && e.button == 0) switchMessageAction(message);
+	};
+	const onRemoveMessage = (e: MouseEvent<HTMLDivElement>): void => {
+		if (e.ctrlKey) removeMes();
 	};
 
 	const user = data?.User;
@@ -63,16 +69,11 @@ const MessageBlock = ({
 			<img src={user?.avatar ?? EMPTY_AVATAR_USER} />
 			<div
 				className={mes_block}
-				onClick={e => {
-					if (e.ctrlKey && e.button == 0)
-						switchMessageAction(message);
-				}}
-				onDoubleClick={e => {
-					if (e.ctrlKey) removeMes();
-				}}>
+				onClick={onSwitchMessageAction}
+				onDoubleClick={onRemoveMessage}>
 				<Loader loading={loadingRemove} />
 				<p className={mes_block_text}>
-					{isExpandMes && isExpand ? (
+					{isExpandMes && isExpand() ? (
 						<>
 							{message?.text?.slice(0, countCharForExpanded)}...
 							<br />
@@ -90,15 +91,13 @@ const MessageBlock = ({
 					<p className={mes_block_info_date}>
 						{getHHMMSSPA(new Date(message?.createdAt))}
 					</p>
-					{message?.isRead ? (
-						<FontAwesomeIcon icon={faCheck} />
-					) : null}
-					{message?.isRead ? (
+					{message?.isRead && <FontAwesomeIcon icon={faCheck} />}
+					{message?.isRead && (
 						<FontAwesomeIcon
 							icon={faCheck}
-							style={{ marginLeft: '-0.5em', zIndex: 100 }}
+							style={{ marginLeft: '-.5em', zIndex: 100 }}
 						/>
-					) : null}
+					)}
 					{message?.isChange ? <p className={edit}>edited</p> : null}
 				</span>
 			</div>

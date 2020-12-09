@@ -17,17 +17,19 @@ export const ThemeContext = createContext<ThemeProps>({
 
 type ThemeProviderProps = {
 	children: ReactElement | ReactElement[];
+	className?: string;
 	defaultTheme?: Themes;
 };
 
 export const ThemeProvider = ({
 	children,
+	className = '',
 	defaultTheme = DefaultTheme,
 }: ThemeProviderProps): ReactElement => {
 	const [theme, setTheme] = useState<Themes>(defaultTheme);
 
 	useEffect(() => {
-		const themeLocal =
+		const themeLocal: Themes =
 			(localStorage.getItem(`Theme`) as Themes) ?? defaultTheme;
 		setTheme(themeLocal);
 	}, []);
@@ -36,7 +38,7 @@ export const ThemeProvider = ({
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleThemes: setTheme }}>
-			<div className={theme}>{children}</div>
+			<div className={`${theme} ${className}`}>{children}</div>
 		</ThemeContext.Provider>
 	);
 };

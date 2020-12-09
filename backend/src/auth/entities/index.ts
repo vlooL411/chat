@@ -1,7 +1,7 @@
-import Authentication from './authentication';
-import SocialNetwork from './socialNetwork';
+import Authentication from './authentication.entity';
+import SocialNetwork from './socialNetwork.entity';
 
-export * from './authentication';
-export * from './socialNetwork';
+export * from './authentication.entity';
+export * from './socialNetwork.entity';
 
 export { Authentication, SocialNetwork };

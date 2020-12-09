@@ -1,135 +1,68 @@
 import Loader from 'components/Loader';
 import Search from 'components/Search';
 import BlockInfo from 'components/Search/BlockInfo';
-import { ReactElement, useEffect, useState } from 'react';
-import { WhatDate } from 'components/common/WhatDate';
+import { ReactElement, useState } from 'react';
 import {
-	AddChatDocument,
-	AddChatSubscription,
 	Chat,
 	ChatFindFragmentFragment,
-	DeleteChatDocument,
 	Message,
-	RemoveChatMutation,
 	useChatsQuery,
 	useFindQueryChatLazyQuery,
 } from '@frontend/types';
 
-import BlockPanel from './BlockPanel';
+import BlockMessage from './BlockMessage';
 import style from './styles/panel.module.sass';
+import useMore from './useMore';
 
-type Props = {
-	onSelectChat: (id: string) => void;
-};
+type Props = { onSelectChat: (id: string) => void };
 
-const { EMPTY_AVATAR_CHAT } = process.env;
 const Chats = ({ onSelectChat }: Props): ReactElement => {
 	const { panel } = style;
 
-	const [storage] = useState<{ IsSearch: boolean; Date?: Date }>({
-		IsSearch: false,
-	});
-	const runFind = () => (storage.IsSearch = true);
-	const stopFind = () => (storage.IsSearch = false);
+	const [state, setState] = useState<{ IsSearch?: boolean; Date?: Date }>({});
+
+	const runFind = (text: string): void => {
+		state.IsSearch = true;
+		getFind({ variables: { text } });
+	};
+	const stopFind = (): void => setState({});
 
 	const { loading, data, subscribeToMore } = useChatsQuery();
+	useMore(subscribeToMore);
 	const [
 		getFind,
 		{ loading: loadFind, data: dataFind },
 	] = useFindQueryChatLazyQuery({ fetchPolicy: 'no-cache' });
 
-	//#region Subscription
-	const addMore = () =>
-		subscribeToMore({
-			document: AddChatDocument,
-			updateQuery: (_, { subscriptionData, variables }) => {
-				const data = subscriptionData?.data;
-
-				const AddChat = ((data as unknown) as AddChatSubscription)
-					?.AddChat as Chat;
-				if (!AddChat) return null;
-
-				// variables.isIncoming = true;
-				return {
-					Chats: [AddChat],
-					// UserCurrent: {
-					// 	_id: data?.UserCurrent?._id,
-					// 	chats_id: [AddChat?._id],
-					// },
-				};
-			},
-		});
-
-	const remMore = () =>
-		subscribeToMore({
-			document: DeleteChatDocument,
-			updateQuery: (prev, { subscriptionData, variables }) => {
-				const { data } = subscriptionData;
-
-				const RemoveChat = ((data as unknown) as RemoveChatMutation)
-					?.RemoveChat;
-				if (!RemoveChat) return null;
-
-				const chats = prev?.Chats?.filter(
-					chat => chat._id != RemoveChat._id,
-				);
-				// const chats_id = prev?.UserCurrent?.chats_id.filter(
-				// 	id => id != RemoveChat._id,
-				// );
-
-				// variables.isIncoming = true;
-				return {
-					Chats: chats,
-					// UserCurrent: {
-					// 	_id: data?.UserCurrent?._id,
-					// 	chats_id: chats_id,
-					// },
-				};
-			},
-		});
-
-	useEffect(() => {
-		if (!subscribeToMore) return;
-		addMore();
-		remMore();
-	}, []);
-	//#endregion
-
 	const onFindChatsMess = (text: string) => {
 		if (!text) {
-			storage.Date = null;
+			state.Date = null;
 			stopFind();
 			return;
 		}
 
 		const date = new Date();
-		storage.Date = date;
+		state.Date = date;
 		setTimeout(() => {
-			if (storage.Date == date) {
-				getFind({ variables: { text } });
-				runFind();
-			}
+			if (state.Date == date) runFind(text);
 		}, 400);
 	};
 
-	const blockMes = (
+	const BlockMes = (
 		chat: ChatFindFragmentFragment,
-		mes: Partial<Message>,
+		message: Partial<Message>,
 	): ReactElement => (
-		<BlockPanel
-			title={chat?.title}
-			text={mes?.text}
-			image={chat?.image ?? EMPTY_AVATAR_CHAT}
-			date={WhatDate(new Date(mes?.createdAt))}
-			onClick={() => onSelectChat(chat?._id)}
-			key={mes?._id}
+		<BlockMessage
+			chat={chat}
+			message={message}
+			onSelectChat={onSelectChat}
 		/>
 	);
 
-	const block = (chat: Chat): ReactElement =>
-		blockMes(chat, chat?.lastMessage);
+	const Block = (chat: Chat): ReactElement =>
+		BlockMes(chat, chat?.lastMessage);
 
-	const dataChats = data?.Chats;
+	const dataChats: ChatFindFragmentFragment[] = data?.Chats;
 	const dataFindChats = dataFind?.FindChat;
 	const dataFindMess = dataFind?.FindMessage;
 
@@ -149,19 +82,19 @@ const Chats = ({ onSelectChat }: Props): ReactElement => {
 				onChange={e => onFindChatsMess(e?.target?.value)}
 			/>
 			<Loader loading={loading} />
-			{!storage.IsSearch ? (
+			{!state.IsSearch ? (
 				isChatsEmpty ? (
 					<BlockInfo what={`Chats empty`} />
 				) : (
-					dataChats?.map(block)
+					dataChats?.map(Block)
 				)
 			) : (
 				<>
 					<BlockInfo what={`Found chats ${countFindChats ?? 0}`} />
-					{dataFindChats?.map(block)}
+					{dataFindChats?.map(Block)}
 					<BlockInfo what={`Found messages ${countFindMess ?? 0}`} />
 					{dataFindMess?.map(chat =>
-						chat?.messages?.map(mes => blockMes(chat, mes)),
+						chat?.messages?.map(mes => BlockMes(chat, mes)),
 					)}
 				</>
 			)}

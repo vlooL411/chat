@@ -32,14 +32,16 @@ const ContactExploler = ({ contact }: Props): ReactElement => {
 			user?.contacts?.findIndex(el => el._id == chat?._id) != -1;
 
 		const onIsCreater = (): DropElem =>
-			isCreater
-				? { text: 'Delete chat', onClick: () => removeChat(chatid) }
-				: null;
+			isCreater && {
+				text: 'Delete chat',
+				onClick: () => removeChat(chatid),
+			};
 
 		const onIsInvite = (): DropElem =>
-			!isInvite
-				? { text: 'Invite chat', onClick: () => inviteChat(chatid) }
-				: null;
+			!isInvite && {
+				text: 'Invite chat',
+				onClick: () => inviteChat(chatid),
+			};
 
 		strategy.pushAction(onIsCreater);
 		strategy.pushAction(onIsInvite);
@@ -53,7 +55,7 @@ const ContactExploler = ({ contact }: Props): ReactElement => {
 			chatid={contact?._id}
 			BarProps={chat => ({
 				title: contact?.whoIsContact
-					? contact?.whoIsContact
+					? contact.whoIsContact
 					: user?.name,
 				image: user?.avatar ?? EMPTY_AVATAR_USER,
 				dropList: user => dropList(chat, user),

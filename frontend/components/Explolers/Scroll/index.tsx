@@ -63,7 +63,7 @@ const Scroll = ({
 		refetch(limitQT * (isUp ? -1 : 1), message?._id);
 	};
 
-	const cmdEnd = (end: string, el: Message) => end == el?._id;
+	const cmdEnd = (end: string, mes: Message) => end == mes?._id;
 
 	return (
 		<ScrollLoadMore

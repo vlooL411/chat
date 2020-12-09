@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { PropOptions } from '@nestjs/mongoose';
+import { AuthenticationSchema } from 'src/auth/entities';
 
-import { AuthenticationSchema } from './../auth/entities/authentication';
 import { required } from './options';
 
 //here only required

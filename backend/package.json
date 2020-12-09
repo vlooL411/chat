@@ -7,7 +7,8 @@
 		"build": "nest build",
 		"start": "nest start",
 		"start:prod": "node dist/main",
-		"rm": "rmdir /s /q dist"
+		"rm": "rmdir /s /q dist",
+		"type-check": "tsc --pretty --noEmit"
 	},
 	"peerOptionalDependencies": {
 		"mongodb": "^3.6.3"
@@ -22,8 +23,8 @@
 		"@nestjs/passport": "^7.1.5",
 		"@nestjs/jwt": "^7.2.0",
 		"passport-jwt": "^4.0.0",
-		"@nestjs/mongoose": "^7.1.2",
-		"mongoose": "5.10.17",
+		"@nestjs/mongoose": "7.1.2",
+		"mongoose": "5.10.7",
 		"graphql-tools": "^7.0.2",
 		"apollo-server-express": "^2.19.0",
 		"passport": "^0.4.1",

@@ -2,7 +2,7 @@ import Message, { MessageSchema } from 'src/message/entity';
 import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Access, Chat as ChatGQL, Creater, ObjectID } from 'src/graphql';
-import { required, typeDate, typeObjectID } from 'src/models';
+import { Ref, required, typeDate, typeObjectID } from 'src/models';
 
 @Schema()
 export default class Chat implements ChatGQL {
@@ -16,13 +16,13 @@ export default class Chat implements ChatGQL {
 	@Prop({ type: Creater, required: true }) creater: Creater;
 	@Prop({ type: Access, required: true }) access: Access;
 
-	@Prop({ type: [{ type: Types.ObjectId }], required: true })
+	@Prop({ type: [{ type: Types.ObjectId, ref: Ref.User }], required: true })
 	creaters_id: ObjectID[];
-
-	@Prop({ type: [{ type: Types.ObjectId }] }) users_id?: ObjectID[];
+	@Prop({ type: [{ type: Types.ObjectId, ref: Ref.User }] })
+	users_id?: ObjectID[];
 
 	@Prop({ type: MessageSchema }) lastMessage?: Message;
-	@Prop({ type: [Message] }) messages?: Message[];
+	@Prop({ type: [MessageSchema] }) messages?: Message[];
 }
 
 export type ChatDocument = Chat & Document;

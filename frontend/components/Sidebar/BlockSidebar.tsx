@@ -14,18 +14,15 @@ export type SidebarBlock = {
 };
 
 type Props = {
-	className: string;
+	className?: string;
 	sideblock: SidebarBlock;
 };
 
-const BlockSidebar = (
-	{ className, sideblock }: Props,
-	key: string | number,
-): ReactElement => {
+const BlockSidebar = ({ className = '', sideblock }: Props): ReactElement => {
 	const { fa, text, href, onClick } = sideblock;
 
 	return (
-		<Link key={key} href={href ?? '/'} prefetch={false}>
+		<Link href={href ?? '/'} prefetch={false}>
 			<a className={className} onClick={onClick}>
 				<FontAwesomeIcon icon={fa ?? faThermometerEmpty} />
 				<p>{text}</p>

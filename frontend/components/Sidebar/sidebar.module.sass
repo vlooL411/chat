@@ -39,13 +39,13 @@ $extend_off_trans: .2s
     left: 0
     width: 0
     height: 100%
-    width: 15rem 
+    width: 15rem
     background-color: $back_extend
     &_on
-        transform: translateX(0%) 
+        transform: translateX(0%)
         transition: all $extend_on_trans ease-in-out
     &_off
-        transform: translateX(-100%) 
+        transform: translateX(-100%)
         transition: all $extend_off_trans ease-in-out
     &_block
         display: grid
@@ -73,8 +73,3 @@ $extend_off_trans: .2s
         .email
             font-size: .8em
             margin-top: .1rem
-@keyframes extendside
-    0%
-        transform: translateX(-100%) 
-    100%
-        transform: translateX(0%)

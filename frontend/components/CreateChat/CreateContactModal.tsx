@@ -16,14 +16,9 @@ const CreateContactModal = ({
 	onOpen = () => true,
 	onClose,
 }: Props): ReactElement => {
-	const {
-		createmodalwindow,
-		create,
-		create_title,
-		create_upload,
-		label_focus,
-	} = style;
-	const { create_chat, loader, warning } = style;
+	const { createmodalwindow, create } = style;
+	const { create_chat, create_title, create_upload } = style;
+	const { label_focus, loader, warning } = style;
 
 	const [getCrtChat, { loading, data }] = useCreateChatMutation();
 	const titleRef = useRef<HTMLInputElement>(null!);
@@ -44,6 +39,9 @@ const CreateContactModal = ({
 		onClose();
 	};
 
+	const isTitleFocus = () => setTitleFocus(true);
+	const isTitleBlur = () => setTitleFocus(titleRef?.current?.value != '');
+
 	return (
 		<ModalWindow
 			className={createmodalwindow}
@@ -57,12 +55,10 @@ const CreateContactModal = ({
 					<input
 						ref={titleRef}
 						maxLength={50}
-						onFocus={() => setTitleFocus(true)}
-						onBlur={() =>
-							setTitleFocus(titleRef?.current?.value != '')
-						}
+						onFocus={isTitleFocus}
+						onBlur={isTitleBlur}
 					/>
-					<label className={titleFocus ? label_focus : null}>
+					<label className={titleFocus ? label_focus : ''}>
 						Who is contact
 					</label>
 				</div>

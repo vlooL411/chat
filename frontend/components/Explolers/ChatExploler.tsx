@@ -25,13 +25,14 @@ const ChatExploler = ({ chatid }: Props): ReactElement => {
 		const chatid = { variables: { chatid: chat?._id } };
 		const strategy = new Strategy<DropElem>();
 
-		const isCreater = user?._id && chat?.creaters_id?.includes(user?._id);
-		const isInvite = chat?._id && user?.chats_id?.includes(chat?._id);
+		const isCreater = user?._id && chat?.creaters_id?.includes(user._id);
+		const isInvite = chat?._id && user?.chats_id?.includes(chat._id);
 
 		const onIsCreater = (): DropElem =>
-			isCreater
-				? { text: 'Delete chat', onClick: () => removeChat(chatid) }
-				: null;
+			isCreater && {
+				text: 'Delete chat',
+				onClick: () => removeChat(chatid),
+			};
 
 		const onIsInvite = (): DropElem =>
 			isInvite

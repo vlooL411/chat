@@ -14,6 +14,7 @@ export const WhatDate = (
 export const getHHMMPA = (date: Date): string => {
 	const minutes = date.getMinutes();
 	const localeDate = date.toLocaleTimeString();
+
 	return (
 		`${date.getHours()}:` +
 		`${minutes < 10 ? '0' : ''}${minutes}` +
@@ -25,6 +26,7 @@ export const getHHMMSSPA = (date: Date): string => {
 	const seconds = date.getSeconds();
 	const minutes = date.getMinutes();
 	const localeDate = date.toLocaleTimeString();
+
 	return (
 		`${date.getHours()}:` +
 		`${minutes < 10 ? '0' : ''}${minutes}:` +

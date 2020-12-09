@@ -1,5 +1,7 @@
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
+
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
 	[K in keyof T]: T[K];
@@ -15,14 +17,16 @@ export type Scalars = {
 	Boolean: boolean;
 	Int: number;
 	Float: number;
-	ObjectID: any;
+	ObjectID: string;
 	/** Date custom scalar type */
-	Date: any;
+	Date: string;
 	/** Token custom scalar string */
-	Token: any;
+	Token: string;
 	/** Password custom scalar type */
-	Password: any;
+	Password: string;
 };
+
+export type ObjectID = Scalars['ObjectID'];
 
 export type SocialNetwork = {
 	_id: Scalars['ID'];

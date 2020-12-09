@@ -1,0 +1,13 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"baseUrl": "../",
+		"paths": {
+			"@frontend/types": ["generated/src/types.ts"],
+			"@common/utils": ["utils/index.ts"],
+			"apolloclient": ["apolloclient"],
+			"apolloclient/*": ["apolloclient/*"]
+		}
+	}
+}

@@ -23,5 +23,11 @@
 		// e.g. "@typescript-eslint/explicit-function-return-type": "off",
 		"react/react-in-jsx-scope": "off", //for nextjs
 		"@typescript-eslint/no-non-null-assertion": "off" //react hook useRef(null!)
+	},
+	"env": {
+		"es6": true,
+		"browser": true,
+		"jest": true,
+		"node": true
 	}
 }

@@ -127,7 +127,7 @@ const Index = (): ReactElement => {
 	);
 
 	return (
-		<div style={{ display: 'flex', height: 'inherit' }}>
+		<div className='index' style={{ display: 'flex' }}>
 			{sidebar}
 			{switchPanel}
 			{switchExploler}

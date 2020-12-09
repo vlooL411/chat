@@ -2,11 +2,5 @@
 	"version": "0.0.1",
 	"npmClient": "yarn",
 	"useWorkspaces": true,
-	"packages": [
-		"frontend",
-		"frontend/**/*",
-		"backend",
-		"common/**/*",
-		"storybook"
-	]
+	"packages": ["frontend", "frontend/**/*", "backend"]
 }

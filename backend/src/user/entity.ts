@@ -2,7 +2,7 @@ import Contact, { ContactSchema } from 'src/contact/entity';
 import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { ObjectID, Provider, User as UserGQL } from 'src/graphql';
-import { typeDate, typeObjectID, unique } from 'src/models';
+import { Ref, typeDate, typeObjectID, unique } from 'src/models';
 import { Authentication, SocialNetwork } from 'src/auth/entities';
 
 @Schema()
@@ -23,7 +23,8 @@ export default class User implements UserGQL {
 	@Prop(typeDate) createdAt: Date;
 	@Prop({ type: Date }) dateLastOnline?: Date;
 
-	@Prop({ type: [{ type: Types.ObjectId }] }) chats_id?: ObjectID[];
+	@Prop({ type: [{ type: Types.ObjectId, ref: Ref.Chat }] })
+	chats_id?: ObjectID[];
 	@Prop({ type: [ContactSchema] }) contacts?: Contact[];
 
 	@Prop() isOnline?: boolean;

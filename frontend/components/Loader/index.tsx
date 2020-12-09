@@ -1,22 +1,25 @@
-import { CSSProperties, ReactElement } from 'react';
+import { ReactElement } from 'react';
 
-import styleLoader from './loader.module.sass';
+import style from './loader.module.sass';
 
 type Props = {
 	loading: boolean;
 	className?: string;
-	style?: CSSProperties;
+	borderColor?: string;
 };
 
 const Loader = ({
 	loading,
-	style = null,
 	className = '',
+	borderColor = null,
 }: Props): ReactElement => {
-	const { circle } = styleLoader;
-	return loading ? (
-		<div className={`${circle} ${className}`} style={style}></div>
-	) : null;
+	const { circle } = style;
+
+	return (
+		loading && (
+			<div className={`${circle} ${className}`} style={{ borderColor }} />
+		)
+	);
 };
 
 export default Loader;

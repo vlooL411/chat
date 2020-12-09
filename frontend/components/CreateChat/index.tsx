@@ -16,34 +16,36 @@ const CreateChatModal = ({
 	onOpen = () => true,
 	onClose,
 }: Props): ReactElement => {
-	const {
-		createmodalwindow,
-		create,
-		create_title,
-		create_upload,
-		label_focus,
-	} = style;
+	const { createmodalwindow, label_focus } = style;
+	const { create, create_title, create_upload } = style;
 	const { create_chat, loader, warning } = style;
-	const [getCrtChat, { loading, data }] = useCreateChatMutation();
+
+	const [getCrtChat, { loading, data }] = useCreateChatMutation({
+		fetchPolicy: 'no-cache',
+	});
+
 	const titleRef = useRef<HTMLInputElement>(null!);
 	const [titleFocus, setTitleFocus] = useState<boolean>(false);
 
 	const createChat = () => {
 		const { value: title } = titleRef.current;
 
-		if (!title) return;
-		getCrtChat({ variables: { title } });
+		title ? getCrtChat({ variables: { title } }) : titleRef.current.focus();
 	};
 
 	const CreateChat = data?.CreateChat;
 
 	const onCloseModal = () => {
-		if (data) data.CreateChat = null;
 		setTitleFocus(false);
 		onClose();
 	};
 
-	const isTitleEmpty = titleRef?.current?.value == '';
+	const isTitleEmpty = () => titleRef.current.value == '';
+	const onFocus = () => setTitleFocus(true);
+	const onBlur = () => {
+		if (isTitleEmpty()) setTitleFocus(false);
+	};
+
 	return (
 		<ModalWindow
 			className={createmodalwindow}
@@ -57,10 +59,10 @@ const CreateChatModal = ({
 					<input
 						ref={titleRef}
 						maxLength={50}
-						onFocus={() => setTitleFocus(true)}
-						onBlur={() => setTitleFocus(!isTitleEmpty)}
+						onFocus={onFocus}
+						onBlur={onBlur}
 					/>
-					<label className={titleFocus ? label_focus : null}>
+					<label className={titleFocus ? label_focus : ''}>
 						Chat name
 					</label>
 				</div>

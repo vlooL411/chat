@@ -1,24 +1,16 @@
-import {
-	CSSProperties,
-	MouseEvent,
-	ReactElement,
-	useRef,
-	useState,
-} from 'react';
+import { MouseEvent, ReactElement, useRef, useState } from 'react';
 
 import styleModal from './modalwindow.module.sass';
 
 type Props = {
 	children?: ReactElement;
-	style?: CSSProperties;
 	className?: string;
 	visible?: boolean;
 };
 
 const ModalWindowMove = ({
 	children,
-	style,
-	className,
+	className = '',
 	visible = true,
 }: Props): ReactElement => {
 	const { modalwindow, movewindow } = styleModal;
@@ -26,7 +18,7 @@ const ModalWindowMove = ({
 	const totalRef = useRef<HTMLDivElement>(null!);
 	const [keep, setKeep] = useState<boolean>(false);
 
-	const onMouseMove = (e: MouseEvent) => {
+	const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
 		if (e.buttons != 1 || !keep) return;
 		const { clientX, clientY } = e;
 		const { current } = modalRef;
@@ -35,20 +27,19 @@ const ModalWindowMove = ({
 		current.style.left = `calc(${clientX}px - ${clientWidth}px / 2)`;
 	};
 
-	return visible ? (
-		<div ref={totalRef} className='total' onMouseMove={e => onMouseMove(e)}>
-			<div
-				ref={modalRef}
-				style={style}
-				className={`${modalwindow} ${className ?? ''}`}>
-				<div
-					className={movewindow}
-					onMouseDown={() => setKeep(true)}
-					onMouseUp={() => setKeep(false)}></div>
-				{children}
+	return (
+		visible && (
+			<div ref={totalRef} className='total' onMouseMove={onMouseMove}>
+				<div ref={modalRef} className={`${modalwindow} ${className}`}>
+					<div
+						className={movewindow}
+						onMouseDown={() => setKeep(true)}
+						onMouseUp={() => setKeep(false)}></div>
+					{children}
+				</div>
 			</div>
-		</div>
-	) : null;
+		)
+	);
 };
 
 export default ModalWindowMove;

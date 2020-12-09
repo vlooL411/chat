@@ -1,9 +1,9 @@
-import { ReactElement, CSSProperties } from 'react';
+import { ReactElement } from 'react';
+
 import styleModal from './modalwindow.module.sass';
 
 type Props = {
 	children?: ReactElement;
-	style?: CSSProperties;
 	className?: string;
 	onOpen: () => boolean;
 	onClose?: () => void;
@@ -11,24 +11,23 @@ type Props = {
 
 const ModalWindow = ({
 	children,
-	style,
-	className,
+	className = '',
 	onOpen,
 	onClose,
 }: Props): ReactElement => {
 	const { modalwindow } = styleModal;
 
-	return onOpen() ? (
-		<div className='total' style={{ background: 'none' }}>
-			<div
-				className='total'
-				style={{ backgroundColor: '#000000aa' }}
-				onMouseDown={onClose}></div>
-			<div style={style} className={`${modalwindow} ${className ?? ''}`}>
-				{children}
+	return (
+		onOpen() && (
+			<div className='total' style={{ background: 'none' }}>
+				<div
+					className='total'
+					style={{ backgroundColor: '#000000aa' }}
+					onMouseDown={onClose}></div>
+				<div className={`${modalwindow} ${className}`}>{children}</div>
 			</div>
-		</div>
-	) : null;
+		)
+	);
 };
 
 export default ModalWindow;

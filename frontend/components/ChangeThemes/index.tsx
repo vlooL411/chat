@@ -5,9 +5,7 @@ import { ThemeContext } from 'components/Theme';
 
 import style from './changeThemes.module.sass';
 
-type Props = {
-	className?: string;
-};
+type Props = { className?: string };
 
 const ChangeThemes = ({ className = '' }: Props): ReactElement => {
 	const { changetheme } = style;

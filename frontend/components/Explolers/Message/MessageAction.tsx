@@ -1,13 +1,7 @@
 import Loader from 'components/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	KeyboardEvent,
-	ReactElement,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { KeyboardEvent, ReactElement } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
 	faAnchor,
 	faArrowRight,
@@ -57,40 +51,44 @@ const MessageAction = ({
 
 	const isModeSend = mode == 'send';
 
-	const textBlockEmpty = () => (textBlockRef.current.value = '');
-
-	const resetSend = () => {
-		setCurrentMode(sendInit());
-		textBlockEmpty();
+	const setTextBlockEmpty = (): void => {
+		textBlockRef.current.value = '';
 	};
 
-	const onSend = () => {
+	const resetSend = (): void => {
+		setCurrentMode(sendInit());
+		setTextBlockEmpty();
+	};
+
+	const onSend = (): void => {
 		const { value: text } = textBlockRef?.current;
 		if (!text || !chatid) return;
+
 		sendMessage({ variables: { chatid, text } });
-		textBlockEmpty();
+		setTextBlockEmpty();
 	};
 
-	const onChange = () => {
+	const onChange = (): void => {
 		const { value: text } = textBlockRef.current;
 		if (!text || !mes || text == mes?.text) return;
+
 		changeMessage({ variables: { chatid, messageid: mes?._id, text } });
 		resetSend();
 	};
 
-	const messageKey = (
+	const onMessageKey = (
 		e: KeyboardEvent<HTMLTextAreaElement>,
 		action: () => void,
-	) => {
+	): boolean => {
 		if (e.ctrlKey && e.key == 'Enter') {
 			action();
 			return true;
 		}
 	};
 
-	const change = useMemo<ReactElement>(
+	const Change = useMemo<ReactElement>(
 		() =>
-			isModeSend ? null : (
+			!isModeSend && (
 				<div className={message_change}>
 					<FontAwesomeIcon icon={faEdit} />
 					<span>Editable message</span>
@@ -104,16 +102,16 @@ const MessageAction = ({
 	const onAction = isModeSend ? onSend : onChange;
 	return (
 		<div className={message}>
-			{change}
+			{Change}
 			<div className={message_send}>
 				{loadingSend || loadingChange ? (
-					<Loader loading={loadingSend || loadingChange} />
+					<Loader loading />
 				) : (
 					<FontAwesomeIcon icon={faPaperclip} />
 				)}
 				<TextAreaMessage
 					ref={textBlockRef}
-					onKeyDownToAreaChange={e => messageKey(e, onAction)}
+					onKeyDownToAreaChange={e => onMessageKey(e, onAction)}
 					placeholder={`${
 						isModeSend ? 'Write' : 'Edit'
 					} a message...`}

@@ -20,18 +20,34 @@ const Search = ({
 	onClear = () => null,
 	loading = false,
 }: Props): ReactElement => {
-	const {
-		search,
-		search_char,
-		X,
-		loader,
-		container_search,
-		container_search_media,
-	} = style;
-	const [mediaMinSearch, setMediaMinSearch] = useState<boolean>(false);
+	const { X, loader } = style;
+	const { search, search_char } = style;
+	const { container_search, container_search_media } = style;
 
 	const inputRef = useRef<HTMLInputElement>(null!);
+	const [mediaMinSearch, setMediaMinSearch] = useState<boolean>(false);
 
+	const onBlurSearch = (): void => {
+		setMediaMinSearch(true);
+		onBlur();
+	};
+
+	const onChangeSearch = (e: ChangeEvent<HTMLInputElement>): void => {
+		e.target.value == '' ? onClear() : onChange(e);
+	};
+
+	const onClearSearch = (): void => {
+		inputRef.current.value = '';
+		onClear();
+	};
+
+	const onClickSearch = (): void => {
+		inputRef?.current?.focus();
+		setMediaMinSearch(false);
+		onClick();
+	};
+
+	const isInputEmpty = inputRef?.current?.value != '';
 	return (
 		<div
 			className={`${container_search} ${
@@ -43,33 +59,25 @@ const Search = ({
 					type='serch'
 					placeholder='Search'
 					maxLength={30}
-					onChange={e => onChange(e)}
-					onBlur={() => {
-						setMediaMinSearch(true);
-						onBlur();
-					}}
+					onChange={onChangeSearch}
+					onBlur={onBlurSearch}
 				/>
 				{loading ? (
-					<Loader className={loader} loading={true} />
-				) : inputRef?.current?.value != '' ? (
-					<FontAwesomeIcon
-						className={X}
-						icon={faTimes}
-						onClick={() => {
-							inputRef.current.value = '';
-							onClear();
-						}}
-					/>
-				) : null}
+					<Loader className={loader} loading />
+				) : (
+					isInputEmpty && (
+						<FontAwesomeIcon
+							className={X}
+							icon={faTimes}
+							onClick={onClearSearch}
+						/>
+					)
+				)}
 			</label>
 			<FontAwesomeIcon
 				className={search_char}
 				icon={faSearch}
-				onClick={() => {
-					inputRef?.current?.focus();
-					setMediaMinSearch(false);
-					onClick();
-				}}
+				onClick={onClickSearch}
 			/>
 		</div>
 	);

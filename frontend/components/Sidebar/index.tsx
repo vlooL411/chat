@@ -36,17 +36,25 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 
 	const blocks = useMemo<ReactElement[]>(
 		() =>
-			faBlocks?.map((sideblock, key) =>
-				BlockSidebar({ className: sidebar_block, sideblock }, key),
-			),
+			faBlocks?.map((sideblock, key) => (
+				<BlockSidebar
+					key={key}
+					sideblock={sideblock}
+					className={sidebar_block}
+				/>
+			)),
 		[faBlocks],
 	);
 
 	const blocksExtend = useMemo<ReactElement[]>(
 		() =>
-			extendBlocks?.map((sideblock, key) =>
-				BlockSidebar({ className: extend_block, sideblock }, key),
-			),
+			extendBlocks?.map((sideblock, key) => (
+				<BlockSidebar
+					key={key}
+					sideblock={sideblock}
+					className={extend_block}
+				/>
+			)),
 		[extendBlocks],
 	);
 
@@ -66,7 +74,8 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 				</div>
 				<div
 					className={isExtend ? 'total' : ''}
-					onMouseDown={onUnextend}></div>
+					onMouseDown={onUnextend}
+				/>
 			</div>
 			<div className={sidebar}>
 				<div className={sidebar_default}>
@@ -77,7 +86,6 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 							text: '',
 							onClick: onExtend,
 						}}
-						key={-2}
 					/>
 					{blocks}
 					<BlockSidebar
@@ -87,7 +95,6 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 							text: 'Exit',
 							onClick: onSignOut,
 						}}
-						key={-1}
 					/>
 				</div>
 			</div>

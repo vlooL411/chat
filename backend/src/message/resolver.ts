@@ -44,7 +44,7 @@ export default class MessageResolver {
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
 		const AddMessage = await this.messageService.send(_id, chatid, text);
-		if (AddMessage) throw new ApolloError("Message don't sent");
+		if (!AddMessage) throw new ApolloError("Message don't sent");
 
 		await pubsub.publish(MessageSubs.ADD_MESSAGE, { AddMessage });
 		return 'Message sent';
@@ -59,7 +59,7 @@ export default class MessageResolver {
 		@CurrentUser() { _id }: UserSafe,
 	): Promise<string> {
 		const SwapMessage = await this.messageService.change(_id, chatid, text);
-		if (SwapMessage) throw new ApolloError("Message don't changed");
+		if (!SwapMessage) throw new ApolloError("Message don't changed");
 
 		await pubsub.publish(MessageSubs.SWAP_MESSAGE, { SwapMessage });
 		return 'Message changed';
@@ -78,7 +78,7 @@ export default class MessageResolver {
 			chatid,
 			messageid,
 		);
-		if (DeleteMessage) throw new ApolloError("Message don't removed");
+		if (!DeleteMessage) throw new ApolloError("Message don't removed");
 
 		await pubsub.publish(MessageSubs.DELETE_MESSAGE, { DeleteMessage });
 		return 'Message removed';

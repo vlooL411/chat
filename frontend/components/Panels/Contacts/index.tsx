@@ -10,7 +10,7 @@ import {
 import { ReactElement, useState } from 'react';
 
 import style from '../styles/panel.module.sass';
-import Block from './Block';
+import BlockContact from './BlockContact';
 
 type Props = {
 	onSelectContact: (contact: Contact) => void;
@@ -25,15 +25,15 @@ const Contacts = ({
 }: Props): ReactElement => {
 	const { panel } = style;
 
-	const [storage] = useState<{ Date?: Date; IsSearch: boolean }>({
+	const [state] = useState<{ Date?: Date; IsSearch: boolean }>({
 		IsSearch: false,
 	});
 
 	const runFind = (text: string) => {
 		getFind({ variables: { text } });
-		storage.IsSearch = true;
+		state.IsSearch = true;
 	};
-	const stopFind = () => (storage.IsSearch = false);
+	const stopFind = () => (state.IsSearch = false);
 
 	const { loading, data } = useContactsQuery({
 		pollInterval: timeUpdateContact,
@@ -45,28 +45,28 @@ const Contacts = ({
 
 	const onFindContacts = (text: string) => {
 		if (!text) {
-			storage.Date = null;
+			state.Date = null;
 			stop();
 			return;
 		}
 
 		const date = new Date();
-		storage.Date = date;
+		state.Date = date;
 		setTimeout(() => {
-			if (storage.Date == date) runFind(text);
+			if (state.Date == date) runFind(text);
 		}, 400);
 	};
 
-	const block = (contact: Contact, key): ReactElement => (
-		<Block
+	const Block = (contact: Contact, key: number): ReactElement => (
+		<BlockContact
 			contact={contact}
 			onSelectContact={() => onSelectContact(contact)}
 			key={key}
 		/>
 	);
 
-	const blockExistning = (contact: Contact, key): ReactElement => (
-		<Block
+	const BlockExistning = (contact: Contact, key: number): ReactElement => (
+		<BlockContact
 			contact={contact}
 			onSelectContact={() => onCreateContact(contact)}
 			key={key}
@@ -79,7 +79,7 @@ const Contacts = ({
 	const dataFindIncom: ContactInfoFragment[] =
 		dataFind?.FindContacts?.Incoming;
 
-	const isContactsEmpty = dataContacts?.length == 0;
+	const isContactsEmpty: boolean = dataContacts?.length == 0;
 	const countFindExist: number = dataFindExist?.length ?? 0;
 	const countFindIncom: number = dataFindIncom?.length ?? 0;
 
@@ -92,18 +92,18 @@ const Contacts = ({
 				onChange={e => onFindContacts(e?.target?.value)}
 			/>
 			<Loader loading={loading} />
-			{!storage?.IsSearch ? (
+			{!state?.IsSearch ? (
 				isContactsEmpty ? (
 					<BlockInfo what={`Contacts empty`} />
 				) : (
-					dataContacts?.map(block)
+					dataContacts?.map(Block)
 				)
 			) : (
 				<>
 					<BlockInfo what={`Found your contacts ${countFindExist}`} />
-					{dataFindExist?.map(block)}
+					{dataFindExist?.map(Block)}
 					<BlockInfo what={`Found contacts ${countFindIncom}`} />
-					{dataFindIncom?.map(blockExistning)}
+					{dataFindIncom?.map(BlockExistning)}
 				</>
 			)}
 		</div>
