@@ -12,6 +12,7 @@ import {
 import style from './styles/messageBlock.module.sass';
 
 type Props = {
+	id?: string;
 	chatid: string;
 	message: Message;
 	countCharForExpanded?: number;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 const MessageBlock = ({
+	id = '',
 	chatid,
 	message,
 	countCharForExpanded = 300,
@@ -65,7 +67,7 @@ const MessageBlock = ({
 	const user = data?.User;
 	const { EMPTY_AVATAR_USER } = process.env;
 	return (
-		<div className={mes} onMouseEnter={onMouseEnter}>
+		<div id={id} className={mes} onMouseEnter={onMouseEnter}>
 			<img src={user?.avatar ?? EMPTY_AVATAR_USER} />
 			<div
 				className={mes_block}

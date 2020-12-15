@@ -1,7 +1,9 @@
-import UserModule from 'src/user/module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ExistService } from 'src/user/services';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserMongooseModule } from 'src/user/entity';
 
 import * as Services from './services';
 import * as Strategies from './strategies';
@@ -11,13 +13,14 @@ import AuthResolver from './resolver';
 
 @Module({
 	imports: [
-		UserModule,
 		PassportModule.register({ defaultStrategy: 'jwt' }),
 		JwtModule.registerAsync({ useFactory: () => AuthConfig().accessToken }),
+		MongooseModule.forFeature([UserMongooseModule]), //UserModule
 	],
 	providers: [
 		...Object.values(Strategies),
 		...Object.values(Services),
+		ExistService, //UserModule
 		AuthResolver,
 	],
 	controllers: [AuthController],

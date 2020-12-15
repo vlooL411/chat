@@ -17,14 +17,14 @@ export default class ChatService {
 	async chat(userid: ObjectID, chatid: ObjectID): Promise<Chat> {
 		const chat = await this.chatModel.findOne(
 			{
-				_id: chatid,
+				_id: new Types.ObjectId(chatid),
 				$or: [
 					{ access: Access.Public },
 					{ creaters_id: { $elemMatch: { $eq: userid } } },
 					{ users_id: { $elemMatch: { $eq: userid } } },
 				],
 			},
-			'_id title image date creater creaters_id access',
+			'_id title image date creater createdAt creaters_id access',
 		);
 
 		/* if (chat) {

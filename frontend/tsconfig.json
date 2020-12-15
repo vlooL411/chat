@@ -15,10 +15,10 @@
 		"jsx": "preserve",
 		"baseUrl": ".",
 		"paths": {
-			"@frontend/types": ["generated/src/types.ts"],
-			"@common/utils": ["utils/index.ts"]
+			"@frontend/types": ["generated"],
+			"@common/utils": ["utils"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules", "dist", "out", "tests", "mocks"]
+	"exclude": ["node_modules", "dist", ".next", "out", "tests", "mocks"]
 }

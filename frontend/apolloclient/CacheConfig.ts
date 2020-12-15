@@ -1,4 +1,4 @@
-import { InMemoryCacheConfig } from '@apollo/client';
+import { FieldPolicy, InMemoryCacheConfig } from '@apollo/client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //Existing Incoming
@@ -6,8 +6,10 @@ type EI = {
 	__ref: string; //string => __types:_id
 };
 
-const MergeDefault = { merge: (_: EI[], incoming: EI[]): EI[] => incoming };
-const MergeAdding = {
+const MergeDefault: FieldPolicy = {
+	merge: (existing: EI, incoming: EI): EI => incoming ?? existing,
+};
+const MergeAdding: FieldPolicy = {
 	merge: (existing: EI[], incoming: EI[], { variables }): EI[] => {
 		const isIncoming = variables?.isIncoming;
 		if (!isIncoming && (!incoming || incoming?.length < 1)) return existing;
@@ -29,12 +31,13 @@ export const CacheConfig: InMemoryCacheConfig = {
 	typePolicies: {
 		User: {
 			fields: {
-				chats_id: MergeAdding as any,
+				chats_id: MergeAdding,
 			},
 		},
 		Chat: {
 			fields: {
-				messages: MergeAdding as any,
+				messages: MergeAdding,
+				lastMessage: MergeDefault,
 			},
 		},
 		Query: {

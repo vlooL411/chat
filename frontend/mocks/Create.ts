@@ -11,7 +11,7 @@ import {
 	Messages,
 	ObjectID,
 	UserSafe,
-} from '../generated/src/types';
+} from '../generated';
 
 export const numberRandom = (): string => (Math.random() * 100000).toString();
 export const numberRandomMod = (max = 10): number =>

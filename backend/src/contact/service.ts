@@ -71,7 +71,7 @@ export default class ContactService {
 				User: {
 					_id: '$_id',
 					name: '$name',
-					image: '$image',
+					avatar: '$avatar',
 					status: '$status',
 					dateLastOnline: '$dateLastOnline',
 				},

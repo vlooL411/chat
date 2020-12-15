@@ -10,7 +10,7 @@
 		"type-check": "tsc --pretty --noEmit"
 	},
 	"dependencies": {
-		"@apollo/client": "^3.3.4",
+		"@apollo/client": "^3.3.6",
 		"graphql": "^15.4.0",
 		"subscriptions-transport-ws": "^0.9.18",
 		"next": "^10.0.3",
@@ -21,13 +21,13 @@
 		"@fortawesome/react-fontawesome": "^0.1.13",
 		"@zeit/next-sass": "^1.0.1",
 		"sass": "^1.30.0",
-		"websocket": "^1.0.32"
+		"websocket": "^1.0.33"
 	},
 	"devDependencies": {
 		"@types/websocket": "^1.0.1",
 		"@types/react": "^17.0.0",
 		"@types/react-dom": "^17.0.0",
-		"@types/node": "^14.14.10",
-		"typescript": "^4.1.2"
+		"@types/node": "^14.14.12",
+		"typescript": "^4.1.3"
 	}
 }

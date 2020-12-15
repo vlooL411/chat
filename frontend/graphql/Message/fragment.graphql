@@ -1,4 +1,5 @@
 fragment MessagesChat on Chat {
+	_id
 	messages {
 		_id
 		userid

@@ -1,6 +1,6 @@
 import { createContext, ReactElement, useEffect, useState } from 'react';
 
-//название css стилей .light
+//name css styles .<file name>
 //../styles/themes/*.sass
 export type Themes = 'light' | 'dark';
 const DefaultTheme: Themes = 'dark';

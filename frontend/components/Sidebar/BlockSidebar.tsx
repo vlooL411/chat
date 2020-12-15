@@ -21,13 +21,22 @@ type Props = {
 const BlockSidebar = ({ className = '', sideblock }: Props): ReactElement => {
 	const { fa, text, href, onClick } = sideblock;
 
+	const Wrap = ({ children }: { children: ReactElement }) =>
+		href ? (
+			<Link href={href ?? '/'} prefetch={false}>
+				{children}
+			</Link>
+		) : (
+			children
+		);
+
 	return (
-		<Link href={href ?? '/'} prefetch={false}>
-			<a className={className} onClick={onClick}>
+		<Wrap>
+			<button className={className} onClick={onClick}>
 				<FontAwesomeIcon icon={fa ?? faThermometerEmpty} />
 				<p>{text}</p>
-			</a>
-		</Link>
+			</button>
+		</Wrap>
 	);
 };
 

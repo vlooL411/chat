@@ -23,7 +23,7 @@ class gqlGuard extends AuthGuard('jwt') {
 
 	validate(token: Token): boolean {
 		try {
-			return !!this.jwtService.verify(token);
+			return Boolean(this.jwtService.verify(token));
 		} catch (e) {
 			throw new UnauthorizedException(e);
 		}

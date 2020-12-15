@@ -5,8 +5,8 @@ type Props = {
 	children: ReactElement | ReactElement[];
 	scrollUp?: number;
 	scrollDown?: number;
-	onScrollUp?: (e: EventTarget & HTMLDivElement) => void;
-	onScrollDown?: (e: EventTarget & HTMLDivElement) => void;
+	onScrollUp?: (e: UIEvent<HTMLDivElement>) => void;
+	onScrollDown?: (e: UIEvent<HTMLDivElement>) => void;
 };
 
 const Scroll = (
@@ -23,9 +23,12 @@ const Scroll = (
 	const OnScroll = (e: UIEvent<HTMLDivElement>) => {
 		const { scrollTop, offsetHeight, scrollHeight } = e?.currentTarget;
 
-		if (scrollTop < scrollUp) onScrollUp(e?.currentTarget);
+		if (scrollTop < scrollUp) {
+			if (scrollTop == 0) e.currentTarget.scrollTop = 1;
+			onScrollUp(e);
+		}
 		if (scrollTop + offsetHeight > scrollHeight - scrollDown)
-			onScrollDown(e?.currentTarget);
+			onScrollDown(e);
 	};
 
 	return (

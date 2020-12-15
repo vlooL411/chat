@@ -72,7 +72,7 @@ const getAuthorization = (): Authentication | null => {
 	}
 };
 
-const authLink = setContext((_, req: NextApiRequest) => {
+const authLink = setContext((_, req: NextApiRequest & { headers }) => {
 	const headers = { ...req?.headers };
 
 	const authentication = getAuthorization();
@@ -83,15 +83,23 @@ const authLink = setContext((_, req: NextApiRequest) => {
 
 const linkError = onError(({ graphQLErrors, operation, forward }) => {
 	if (graphQLErrors)
-		for (const { extensions } of graphQLErrors) {
+		for (const { extensions, message } of graphQLErrors) {
+			if (message == 'Refresh token wrong') {
+				console.error(message, 'Local storage clear');
+				localStorage.clear();
+				continue;
+			}
+
 			if (extensions?.exception?.status != 401) continue;
 
 			const authentication = getAuthorization();
-			const refreshToken = authentication?.refreshToken;
+			if (!authentication) continue;
 
+			const refreshToken = authentication?.refreshToken;
 			if (!refreshToken) {
+				console.error('Refresh token empty', 'Local storage clear');
 				localStorage.clear();
-				return;
+				continue;
 			}
 
 			return RefreshToken(refreshToken, operation, forward);

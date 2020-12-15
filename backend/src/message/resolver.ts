@@ -24,15 +24,17 @@ export default class MessageResolver {
 		@Args('chatid') chatid: ObjectID,
 		@Args('messageid') messageid: ObjectID,
 		@Args('limit', Int) limit: number,
-		@Args('isIncoming') isIncoming: boolean,
 	): Promise<Messages> {
-		return await this.messageService.messages(chatid, messageid, limit);
+		return this.messageService.messages(chatid, messageid, limit);
 	}
 
 	@AuthGuard()
 	@Query()
-	async FindMessage(@Args('text') text: string): Promise<Chat[]> {
-		return await this.messageService.findMessage('userid', text);
+	async FindMessage(
+		@Args('text') text: string,
+		@CurrentUser() { _id }: UserSafe,
+	): Promise<Chat[]> {
+		return this.messageService.findMessage(_id, text);
 	}
 
 	@AuthGuard()
@@ -84,16 +86,19 @@ export default class MessageResolver {
 		return 'Message removed';
 	}
 
+	@AuthGuard()
 	@Subscription()
 	AddMessage(@Context('pubsub') pubsub: PubSub): AsyncIterator<Message> {
 		return pubsub.asyncIterator(MessageSubs.ADD_MESSAGE);
 	}
 
+	@AuthGuard()
 	@Subscription()
 	SwapMessage(@Context('pubsub') pubsub: PubSub): AsyncIterator<Message> {
 		return pubsub.asyncIterator(MessageSubs.SWAP_MESSAGE);
 	}
 
+	@AuthGuard()
 	@Subscription()
 	DeleteMessage(@Context('pubsub') pubsub: PubSub): AsyncIterator<Message> {
 		return pubsub.asyncIterator(MessageSubs.DELETE_MESSAGE);

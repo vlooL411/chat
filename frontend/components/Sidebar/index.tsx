@@ -1,8 +1,8 @@
-import ChangeThemes from 'components/ChangeThemes';
+import ChangeTheme from 'components/Theme/Change';
 import useSignOut from 'hooks/useSignOut';
 import { ReactElement, useMemo, useState } from 'react';
 import { faAlignJustify, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
-import { UserSafe, useUserCurrentQuery } from '@frontend/types';
+import { UserInfoFragment, useUserCurrentQuery } from '@frontend/types';
 
 import style from './sidebar.module.sass';
 import BlockSidebar, { SidebarBlock } from './BlockSidebar';
@@ -22,7 +22,7 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 	const onSignOut = useSignOut();
 
 	const BlockUser = useMemo<ReactElement>(() => {
-		const user = data?.UserCurrent as UserSafe;
+		const user: UserInfoFragment = data?.UserCurrent;
 		const { blockuser, login, email } = style;
 
 		return (
@@ -70,7 +70,7 @@ const Sidebar = ({ faBlocks, extendBlocks }: Props): ReactElement => {
 					}`}>
 					{BlockUser}
 					{blocksExtend}
-					<ChangeThemes className={sidebar_block} />
+					<ChangeTheme className={sidebar_block} />
 				</div>
 				<div
 					className={isExtend ? 'total' : ''}

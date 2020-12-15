@@ -27,7 +27,7 @@ const BarExploler = ({
 	const onBarDrop = () => setIsBarDrop(true);
 	const onBarUnDrop = () => setIsBarDrop(false);
 
-	const barDrop = useMemo(
+	const BarDropExploler = useMemo(
 		() => <BarDrop visible={isBarDrop} dropList={dropList} />,
 		[isBarDrop],
 	);
@@ -43,7 +43,7 @@ const BarExploler = ({
 				</button>
 				<button onClick={onBarDrop}>
 					<FontAwesomeIcon icon={faEllipsisV} />
-					{barDrop}
+					{BarDropExploler}
 				</button>
 			</div>
 		</div>

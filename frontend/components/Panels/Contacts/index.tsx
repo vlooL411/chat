@@ -1,13 +1,13 @@
 import Loader from 'components/Loader';
-import Search from 'components/Search';
 import BlockInfo from 'components/Search/BlockInfo';
+import SearchControl from 'components/Search/Control';
 import {
 	Contact,
 	ContactInfoFragment,
 	useContactsQuery,
 	useFindContactLazyQuery,
 } from '@frontend/types';
-import { ReactElement, useState } from 'react';
+import { ReactElement } from 'react';
 
 import style from '../styles/panel.module.sass';
 import BlockContact from './BlockContact';
@@ -25,15 +25,7 @@ const Contacts = ({
 }: Props): ReactElement => {
 	const { panel } = style;
 
-	const [state] = useState<{ Date?: Date; IsSearch: boolean }>({
-		IsSearch: false,
-	});
-
-	const runFind = (text: string) => {
-		getFind({ variables: { text } });
-		state.IsSearch = true;
-	};
-	const stopFind = () => (state.IsSearch = false);
+	const onRunFind = (text: string): void => getFind({ variables: { text } });
 
 	const { loading, data } = useContactsQuery({
 		pollInterval: timeUpdateContact,
@@ -43,33 +35,19 @@ const Contacts = ({
 		{ data: dataFind, loading: loadFind },
 	] = useFindContactLazyQuery({ fetchPolicy: 'no-cache' });
 
-	const onFindContacts = (text: string) => {
-		if (!text) {
-			state.Date = null;
-			stop();
-			return;
-		}
-
-		const date = new Date();
-		state.Date = date;
-		setTimeout(() => {
-			if (state.Date == date) runFind(text);
-		}, 400);
-	};
-
-	const Block = (contact: Contact, key: number): ReactElement => (
+	const Block = (contact: Contact): ReactElement => (
 		<BlockContact
 			contact={contact}
 			onSelectContact={() => onSelectContact(contact)}
-			key={key}
+			key={contact._id}
 		/>
 	);
 
-	const BlockExistning = (contact: Contact, key: number): ReactElement => (
+	const BlockExistning = (contact: Contact): ReactElement => (
 		<BlockContact
 			contact={contact}
 			onSelectContact={() => onCreateContact(contact)}
-			key={key}
+			key={contact._id}
 		/>
 	);
 
@@ -84,29 +62,22 @@ const Contacts = ({
 	const countFindIncom: number = dataFindIncom?.length ?? 0;
 
 	return (
-		<div className={panel}>
-			<Search
-				loading={loadFind}
-				onClick={() => null}
-				onClear={stopFind}
-				onChange={e => onFindContacts(e?.target?.value)}
-			/>
-			<Loader loading={loading} />
-			{!state?.IsSearch ? (
-				isContactsEmpty ? (
+		<SearchControl className={panel} loading={loadFind} onRun={onRunFind}>
+			<>
+				<BlockInfo what={`Found your contacts ${countFindExist}`} />
+				{dataFindExist?.map(Block)}
+				<BlockInfo what={`Found contacts ${countFindIncom}`} />
+				{dataFindIncom?.map(BlockExistning)}
+			</>
+			<>
+				<Loader loading={loading} />
+				{isContactsEmpty ? (
 					<BlockInfo what={`Contacts empty`} />
 				) : (
 					dataContacts?.map(Block)
-				)
-			) : (
-				<>
-					<BlockInfo what={`Found your contacts ${countFindExist}`} />
-					{dataFindExist?.map(Block)}
-					<BlockInfo what={`Found contacts ${countFindIncom}`} />
-					{dataFindIncom?.map(BlockExistning)}
-				</>
-			)}
-		</div>
+				)}
+			</>
+		</SearchControl>
 	);
 };
 

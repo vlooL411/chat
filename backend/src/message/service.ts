@@ -1,7 +1,7 @@
 import Chat, { ChatDocument } from 'src/chat/entity';
 import User, { UserDocument } from 'src/user/entity';
 import { Injectable } from '@nestjs/common';
-import { Access, InfoMore, Messages, ObjectID } from 'src/graphql';
+import { Access, InfoMore, Messages, ObjectID, UserSafe } from 'src/graphql';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
@@ -19,6 +19,10 @@ export default class MessageService {
 		messageid: ObjectID,
 		limit: number,
 	): Promise<Messages> {
+		limit = limit ?? 15;
+		chatid = new Types.ObjectId(chatid);
+		messageid = new Types.ObjectId(messageid);
+
 		const [messages] = (await this.chatModel
 			.aggregate()
 			.match({ _id: chatid })
@@ -39,6 +43,8 @@ export default class MessageService {
 		const Limit = Math.abs(limit);
 		const end = start < 0 ? (index < 0 ? start + Limit : index) : Limit;
 		start = start < 0 ? 0 : start;
+
+		if (end == 0) return null;
 
 		const chat_s = (await this.chatModel
 			.aggregate()
@@ -65,12 +71,15 @@ export default class MessageService {
 		return { Chat: chat, InfoMore };
 	}
 
-	async findMessage(userid: string, text: string): Promise<Chat[]> {
-		const { chats_id }: User = await this.userModel.findOne(
-			{ _id: userid },
-			['_id', 'chat_id'],
-		);
+	async findMessage(userid: ObjectID, text: string): Promise<Chat[]> {
+		const user: UserSafe = await this.userModel.findOne({ _id: userid }, [
+			'_id',
+			'chats_id',
+		]);
 
+		if (!user || user?.chats_id?.length > 0) return;
+
+		const chats_id = user?.chats_id;
 		const chat_s: Chat[] = await this.chatModel
 			.aggregate()
 			.match({
@@ -106,6 +115,8 @@ export default class MessageService {
 		chatid: ObjectID,
 		text: string,
 	): Promise<Message | null> {
+		chatid = new Types.ObjectId(chatid);
+
 		const message: Message = {
 			_id: new Types.ObjectId(),
 			text,
@@ -116,7 +127,7 @@ export default class MessageService {
 
 		const { ok } = await this.chatModel.updateOne(
 			{
-				_id: new Types.ObjectId(chatid),
+				_id: chatid,
 				$or: [
 					{ access: Access.Public },
 					{ creaters_id: { $elemMatch: { $eq: userid } } },
@@ -134,6 +145,8 @@ export default class MessageService {
 		chatid: ObjectID,
 		messageid: ObjectID,
 	): Promise<Message | null> {
+		chatid = new Types.ObjectId(chatid);
+
 		const { ok } = await this.chatModel.updateOne(
 			{
 				_id: chatid,
@@ -153,6 +166,9 @@ export default class MessageService {
 		messageid: ObjectID,
 		text: string,
 	): Promise<Message | null> {
+		messageid = new Types.ObjectId(messageid);
+		chatid = new Types.ObjectId(chatid);
+
 		const message = {
 			_id: messageid,
 			text,

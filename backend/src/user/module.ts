@@ -1,3 +1,4 @@
+import AuthModule from 'src/auth/module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -6,7 +7,7 @@ import UserResolver from './resolver';
 import { UserMongooseModule } from './entity';
 
 @Module({
-	imports: [MongooseModule.forFeature([UserMongooseModule])],
+	imports: [AuthModule, MongooseModule.forFeature([UserMongooseModule])],
 	providers: [...Object.values(Services), UserResolver],
 	exports: [...Object.values(Services), MongooseModule],
 })

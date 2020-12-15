@@ -1,11 +1,16 @@
 import Loader from 'components/Loader';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
-import { Chat } from '@frontend/types';
 import {
-	useChatQuery,
-	useMessagesQuery,
-	useSwapMessageSubscription,
+	Chat,
+	ChatInfoFragment,
+	InfoMore,
+	MessagesChatFragment,
+	useAddMessageSubscription,
+	useDeleteMessageSubscription,
+	useMessagesLazyQuery,
 } from '@frontend/types';
+import { useChatLazyQuery, useSwapMessageSubscription } from '@frontend/types';
+import { Errors } from 'utils';
 
 import Scroll from '../Scroll';
 import style from './exploler.module.sass';
@@ -23,52 +28,58 @@ type Props = {
 const Exploler = ({
 	chatid,
 	BarProps,
-	limit = 100,
+	limit = 5,
 	scrollLoad = 100,
 }: Props): ReactElement => {
 	const { exploler, scrollcontainer } = style;
 	const { loader, loader_up, loader_down } = style;
+	console.log('render Exploler');
 
 	const [mesActionMode, setMesActionMode] = useState<MessageActionMode>({
-		mes: null,
 		mode: 'send',
 	});
 
-	const { loading, data } = useChatQuery({ variables: { chatid } });
-	const {
-		data: dataMess,
-		loading: loadMess,
-		refetch,
-		subscribeToMore,
-	} = useMessagesQuery({ variables: { chatid } });
-	useSwapMessageSubscription();
+	const [getChat, { loading, data, error }] = useChatLazyQuery();
+	const [
+		getMessages,
+		{ data: dataMess, loading: loadMess, error: errMess, subscribeToMore },
+	] = useMessagesLazyQuery();
+
+	//#region Subscription
+	const { error: errSwap } = useSwapMessageSubscription();
+	const { error: errAdd } = useAddMessageSubscription();
+	const { error: errDel } = useDeleteMessageSubscription();
 
 	useMore(subscribeToMore);
+	//#endregion
+
+	Errors('Exploler', error, errMess, errSwap, errAdd, errDel);
 
 	const Refetch = (
 		limit: number,
 		messageid: string,
 		isIncoming = false,
-	): void => {
-		refetch({ chatid, limit, messageid, isIncoming });
-	};
+	): void =>
+		getMessages({ variables: { chatid, limit, messageid, isIncoming } });
 
 	useEffect(() => {
 		if (!chatid) return;
-		const lastMessageID = localStorage.getItem(
-			`ChatLastMes${chatid?.toString()}`,
-		);
+
+		const lastMessageID =
+			localStorage.getItem(`ChatLastMes${chatid?.toString()}`) ?? null;
+
+		getChat({ variables: { chatid } });
 		Refetch(limit, lastMessageID, true);
 	}, [chatid]);
 
-	const chat = data?.Chat;
-	const infoMore = dataMess?.Messages?.InfoMore;
-	const chatMess = dataMess?.Messages?.Chat;
+	const chat: ChatInfoFragment = data?.Chat;
+	const infoMore: InfoMore = dataMess?.Messages?.InfoMore;
+	const chatMess: MessagesChatFragment = dataMess?.Messages?.Chat;
 
-	const scroll = useMemo(
+	const ScrollChat = useMemo<ReactElement>(
 		() => (
 			<Scroll
-				chat={chatMess as Chat}
+				chat={chatMess}
 				infoMore={infoMore}
 				loadMess={loadMess}
 				limit={limit}
@@ -80,24 +91,24 @@ const Exploler = ({
 		[infoMore, chatMess],
 	);
 
-	const bar = useMemo<ReactElement>(
-		() => <BarExploler {...BarProps(chat as Chat)} />,
+	const Bar = useMemo<ReactElement>(
+		() => <BarExploler {...BarProps(chat)} />,
 		[chatid, chat],
 	);
-	const messageAction = useMemo<ReactElement>(
+	const MessageAct = useMemo<ReactElement>(
 		() => <MessageAction chatid={chatid} action={mesActionMode} />,
 		[chatid, mesActionMode],
 	);
 
 	return (
 		<div className={exploler}>
-			{bar}
+			{Bar}
 			<div className={scrollcontainer}>
 				<Loader
 					loading={loadMess}
 					className={`${loader} ${loader_up}`}
 				/>
-				{scroll}
+				{ScrollChat}
 				{/* {loadMess || loading ? */}
 				<Loader
 					loading={loadMess || loading}
@@ -106,7 +117,7 @@ const Exploler = ({
 				{/* : */}
 				{/* <FontAwesomeIcon icon={faChevronCircleDown} className={`${down} ${loader} ${loader_down}`} />} */}
 			</div>
-			{messageAction}
+			{MessageAct}
 		</div>
 	);
 };

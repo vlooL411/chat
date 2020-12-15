@@ -2,7 +2,7 @@ import { ChatFindFragmentFragment, Message } from '@frontend/types';
 import { WhatDate } from 'components/common/WhatDate';
 import { ReactElement } from 'react';
 
-import BlockPanel from './BlockPanel';
+import BlockPanel from '../BlockPanel';
 
 type Props = {
 	chat: ChatFindFragmentFragment;

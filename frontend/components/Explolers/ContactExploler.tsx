@@ -10,9 +10,7 @@ import {
 import Exploler from './Exploler';
 import { DropElem } from './Bar/BarDrop';
 
-type Props = {
-	contact: Contact;
-};
+type Props = { contact: Contact };
 
 const { EMPTY_AVATAR_USER } = process.env;
 const ContactExploler = ({ contact }: Props): ReactElement => {
@@ -33,13 +31,13 @@ const ContactExploler = ({ contact }: Props): ReactElement => {
 
 		const onIsCreater = (): DropElem =>
 			isCreater && {
-				text: 'Delete chat',
+				text: 'Delete contact',
 				onClick: () => removeChat(chatid),
 			};
 
 		const onIsInvite = (): DropElem =>
 			!isInvite && {
-				text: 'Invite chat',
+				text: 'Invite contact',
 				onClick: () => inviteChat(chatid),
 			};
 

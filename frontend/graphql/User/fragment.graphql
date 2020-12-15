@@ -1,9 +1,8 @@
 fragment UserInfo on UserSafe {
 	_id
 	name
+	email
 	avatar
 	status
-	isClosed
-	isOnlineMobile
 	dateLastOnline
 }

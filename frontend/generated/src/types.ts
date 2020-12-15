@@ -26,8 +26,6 @@ export type Scalars = {
 	Password: string;
 };
 
-export type ObjectID = Scalars['ObjectID'];
-
 export type SocialNetwork = {
 	_id: Scalars['ID'];
 	auth: Authentication;
@@ -520,18 +518,21 @@ export type FindContactQuery = { __typename?: 'Query' } & {
 	>;
 };
 
-export type MessagesChatFragment = { __typename?: 'Chat' } & {
-	messages?: Maybe<
-		Array<
-			Maybe<
-				{ __typename?: 'Message' } & Pick<
-					Message,
-					'_id' | 'userid' | 'text' | 'createdAt' | 'isChange'
+export type MessagesChatFragment = { __typename?: 'Chat' } & Pick<
+	Chat,
+	'_id'
+> & {
+		messages?: Maybe<
+			Array<
+				Maybe<
+					{ __typename?: 'Message' } & Pick<
+						Message,
+						'_id' | 'userid' | 'text' | 'createdAt' | 'isChange'
+					>
 				>
 			>
-		>
-	>;
-};
+		>;
+	};
 
 export type SendMessageMutationVariables = Exact<{
 	chatid: Scalars['ObjectID'];
@@ -609,13 +610,7 @@ export type DeleteMessageSubscription = { __typename?: 'Subscription' } & {
 
 export type UserInfoFragment = { __typename?: 'UserSafe' } & Pick<
 	UserSafe,
-	| '_id'
-	| 'name'
-	| 'avatar'
-	| 'status'
-	| 'isClosed'
-	| 'isOnlineMobile'
-	| 'dateLastOnline'
+	'_id' | 'name' | 'email' | 'avatar' | 'status' | 'dateLastOnline'
 >;
 
 export type UserQueryVariables = Exact<{
@@ -634,6 +629,13 @@ export type UserCurrentQuery = { __typename?: 'Query' } & {
 			UserInfoFragment
 	>;
 };
+
+export type UserUpdateOnlineQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserUpdateOnlineQuery = { __typename?: 'Query' } & Pick<
+	Query,
+	'UserUpdateOnline'
+>;
 
 export type InfoMoreFragment = { __typename?: 'InfoMore' } & Pick<
 	InfoMore,
@@ -677,10 +679,9 @@ export const UserInfoFragmentDoc = gql`
 	fragment UserInfo on UserSafe {
 		_id
 		name
+		email
 		avatar
 		status
-		isClosed
-		isOnlineMobile
 		dateLastOnline
 	}
 `;
@@ -698,6 +699,7 @@ export const ContactInfoFragmentDoc = gql`
 `;
 export const MessagesChatFragmentDoc = gql`
 	fragment MessagesChat on Chat {
+		_id
 		messages {
 			_id
 			userid
@@ -1796,4 +1798,57 @@ export type UserCurrentLazyQueryHookResult = ReturnType<
 export type UserCurrentQueryResult = Apollo.QueryResult<
 	UserCurrentQuery,
 	UserCurrentQueryVariables
+>;
+export const UserUpdateOnlineDocument = gql`
+	query userUpdateOnline {
+		UserUpdateOnline
+	}
+`;
+
+/**
+ * __useUserUpdateOnlineQuery__
+ *
+ * To run a query within a React component, call `useUserUpdateOnlineQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserUpdateOnlineQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserUpdateOnlineQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserUpdateOnlineQuery(
+	baseOptions?: Apollo.QueryHookOptions<
+		UserUpdateOnlineQuery,
+		UserUpdateOnlineQueryVariables
+	>,
+) {
+	return Apollo.useQuery<
+		UserUpdateOnlineQuery,
+		UserUpdateOnlineQueryVariables
+	>(UserUpdateOnlineDocument, baseOptions);
+}
+export function useUserUpdateOnlineLazyQuery(
+	baseOptions?: Apollo.LazyQueryHookOptions<
+		UserUpdateOnlineQuery,
+		UserUpdateOnlineQueryVariables
+	>,
+) {
+	return Apollo.useLazyQuery<
+		UserUpdateOnlineQuery,
+		UserUpdateOnlineQueryVariables
+	>(UserUpdateOnlineDocument, baseOptions);
+}
+export type UserUpdateOnlineQueryHookResult = ReturnType<
+	typeof useUserUpdateOnlineQuery
+>;
+export type UserUpdateOnlineLazyQueryHookResult = ReturnType<
+	typeof useUserUpdateOnlineLazyQuery
+>;
+export type UserUpdateOnlineQueryResult = Apollo.QueryResult<
+	UserUpdateOnlineQuery,
+	UserUpdateOnlineQueryVariables
 >;

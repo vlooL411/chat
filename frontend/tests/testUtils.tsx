@@ -1,9 +1,9 @@
-import { render, RenderResult } from '@testing-library/react'
-import { MockedProvider, MockedResponse } from '@apollo/client/testing'
-import { ReactElement } from 'react'
-import { ApolloProvider } from '@apollo/client'
+import { render, RenderResult } from '@testing-library/react';
+import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { ReactElement } from 'react';
+import { ApolloProvider } from '@apollo/client';
 
-import { initializeApollo } from '../apolloclient'
+import { initializeApollo } from '../apolloclient';
 
 export default class Render<T> {
 	private wrapper: ReactElement;

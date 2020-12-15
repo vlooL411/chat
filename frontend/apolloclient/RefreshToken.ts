@@ -9,7 +9,7 @@ import { Authentication, TokenType } from '@frontend/types';
 import { initializeApollo } from 'apolloclient';
 
 const QueryRefreshToken = gql`
-	query refresh($refreshToken: Token) {
+	query refresh($refreshToken: Token!) {
 		Refresh(refreshToken: $refreshToken) {
 			accessToken
 			refreshToken
@@ -17,28 +17,29 @@ const QueryRefreshToken = gql`
 	}
 `;
 
-const query = (refreshToken: string) =>
+const query = (refreshToken: string): Promise<Authentication> =>
 	initializeApollo()
 		.query({
 			query: QueryRefreshToken,
 			variables: { refreshToken },
 		})
-		.then(({ data }) => data.Refresh);
+		.then(({ data }) => data?.Refresh)
+		.catch(e => console.error('Query refresh token', e));
 
 const RefreshToken = (
 	refreshToken: string,
 	operation: Operation,
 	forward: NextLink,
 ): Observable<unknown> =>
-	fromPromise<Authentication>(query(refreshToken)).flatMap(data => {
-		if (!data) return new Observable(() => null);
+	fromPromise<Authentication>(query(refreshToken)).flatMap(auth => {
+		if (!auth) return new Observable(() => null);
 
 		const oldHeaders = operation.getContext()?.headers;
 
 		const headers = { ...oldHeaders };
-		headers[TokenType.Authentication] = data?.accessToken;
+		headers[TokenType.Authentication] = auth?.accessToken;
 
-		localStorage.setItem(TokenType.Authentication, JSON.stringify(data));
+		localStorage.setItem(TokenType.Authentication, JSON.stringify(auth));
 
 		operation.setContext({ headers });
 

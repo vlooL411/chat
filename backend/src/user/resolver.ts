@@ -12,18 +12,18 @@ export default class UserResolver {
 	@AuthGuard()
 	@Query()
 	async User(@Args('id') id: ObjectID): Promise<UserSafe> {
-		return await this.userService.user(id);
+		return this.userService.user(id);
 	}
 
 	@AuthGuard()
 	@Query()
 	async UserCurrent(@CurrentUser() { _id }: UserSafe): Promise<UserSafe> {
-		return await this.userService.current(_id);
+		return this.userService.current(_id);
 	}
 
 	@AuthGuard()
 	@Query()
 	async UserUpdateOnline(@CurrentUser() { _id }: UserSafe): Promise<string> {
-		return await this.userService.userUpdateOnline(_id);
+		return this.userService.userUpdateOnline(_id);
 	}
 }
